@@ -1,0 +1,56 @@
+.root {
+    -fx-font-family: "Inter", "System";
+    font-family: "Inter", "System";
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+    background-color: transparent;
+}
+
+.button {
+    -fx-cursor: hand;
+    cursor: pointer;
+}
+
+.card {
+    -fx-background-color: #1c2433;
+    background-color: #1c2433;
+    -fx-background-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+
+.card:hover {
+    -fx-background-color: #232d3f;
+    background-color: #232d3f;
+    -fx-translate-y: -2;
+}
+
+.banner {
+    -fx-background-color: linear-gradient(to right, #000000, transparent);
+    background-color: linear-gradient(to right, #000000, transparent);
+    -fx-background-radius: 16;
+}
+
+.nav-item:hover {
+    -fx-opacity: 0.8;
+    opacity: 0.8;
+}
+
+.fab {
+    -fx-effect: dropshadow(three-pass-box, rgba(19, 91, 236, 0.3), 15, 0, 0, 5);
+}
+
+.text-field {
+    -fx-prompt-text-fill: #6b7280;
+    -fx-highlight-fill: #135bec;
+}
+
+.category-icon {
+    -fx-background-radius: 16;
+}
