@@ -7,8 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -16,9 +14,7 @@ import javafx.scene.text.FontWeight;
 public class PropertyMapView extends StackPane {
 
         private static final String BACKGROUND_DARK = "#101922";
-        private static final String CARD_BG = "#1c2433";
         private static final String PRIMARY = "#137fec";
-        private static final String TEXT_GRAY = "#9da6b9";
 
         public PropertyMapView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
