@@ -195,6 +195,7 @@ public class TenantProfileView extends StackPane {
                                 createSettingRow("Invite & Earn", "\ud83c\udf81"),
                                 createSettingRow("Notifications", "\ud83d\udd14"),
                                 createSettingRow("Privacy & Security", "\ud83d\udee1\ufe0f"),
+                                createSettingRow("Legal & Terms", "\ud83d\udcdc"),
                                 createSettingRow("Help Center", "\ud83d\udca1"));
 
                 Button logoutBtn = new Button("Log Out");
@@ -316,6 +317,8 @@ public class TenantProfileView extends StackPane {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new HelpSupportView()));
                 } else if (text.contains("Notifications")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new NotificationView()));
+                } else if (text.contains("Legal") || text.contains("Privacy")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new LegalTermsView()));
                 }
 
                 return row;
