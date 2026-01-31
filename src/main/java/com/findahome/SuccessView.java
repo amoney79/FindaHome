@@ -15,6 +15,11 @@ public class SuccessView extends VBox {
         private static final String PRIMARY = "#13ec5b";
 
         public SuccessView() {
+                this("Booking Confirmed!", "Your viewing has been scheduled.\nThe agent will contact you soon.",
+                                "Back to Explore");
+        }
+
+        public SuccessView(String titleText, String descText, String btnText) {
                 setAlignment(Pos.CENTER);
                 setSpacing(30);
                 setPadding(new Insets(40, 20, 100, 20));
@@ -31,10 +36,10 @@ public class SuccessView extends VBox {
                 // Text
                 VBox textBox = new VBox(10);
                 textBox.setAlignment(Pos.CENTER);
-                Label title = new Label("Booking Confirmed!");
+                Label title = new Label(titleText);
                 title.setTextFill(Color.WHITE);
                 title.setFont(Font.font("System", FontWeight.BOLD, 28));
-                Label desc = new Label("Your viewing has been scheduled.\nThe agent will contact you soon.");
+                Label desc = new Label(descText);
                 desc.setTextFill(Color.web("#9db9a6"));
                 desc.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
                 textBox.getChildren().addAll(title, desc);
@@ -62,12 +67,12 @@ public class SuccessView extends VBox {
                 cal.setStyle(
                                 "-fx-background-color: #28392e; -fx-text-fill: white; -fx-background-radius: 12; -fx-font-weight: bold;");
 
-                Button backExplore = new Button("Back to Explore");
-                backExplore.setStyle("-fx-background-color: transparent; -fx-text-fill: " + PRIMARY
+                Button actionBtn = new Button(btnText);
+                actionBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: " + PRIMARY
                                 + "; -fx-font-weight: bold;");
-                backExplore.setOnAction(e -> MainApp.showHome());
+                actionBtn.setOnAction(e -> MainApp.showHome());
 
-                buttons.getChildren().addAll(chat, cal, backExplore);
+                buttons.getChildren().addAll(chat, cal, actionBtn);
 
                 getChildren().addAll(iconBox, textBox, card, buttons);
         }
