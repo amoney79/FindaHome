@@ -4,7 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -12,7 +11,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -164,7 +162,12 @@ public class PushNotificationView extends StackPane {
         HBox.setHgrow(viewBtn, Priority.ALWAYS);
         viewBtn.setStyle("-fx-background-color: " + PRIMARY
                 + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11; -fx-background-radius: 8;");
-        viewBtn.setOnAction(e -> MainApp.navigateTo(new PropertyDetailView()));
+        viewBtn.setOnAction(e -> {
+            // Create dummy property for the notification link
+            Property p = new Property("Kileleshwa Apartment", "Kileleshwa, Nairobi", "KES 60,000", "", true,
+                    "New Listing");
+            MainApp.navigateTo(new PropertyDetailView(p));
+        });
 
         Button dismissBtn = new Button("Dismiss");
         dismissBtn.setMaxWidth(Double.MAX_VALUE);

@@ -354,6 +354,200 @@ public class FilterView extends VBox {
                 locBox.setAlignment(Pos.CENTER_LEFT);
                 Label locIcon = new Label("\ud83d\udccd");
                 locIcon.setStyle("-fx-font-size: 12;");
+                counterBox.setStyle(
+                                "-fx-background-color: #1c2433; -fx-background-radius: 16; -fx-border-color: #282e39; -fx-border-radius: 16;");
+
+                Label counterLabel = new Label("Number of rooms");
+                counterLabel.setTextFill(Color.web(TEXT_GRAY));
+                HBox.setHgrow(counterLabel, Priority.ALWAYS);
+                counterLabel.setMaxWidth(Double.MAX_VALUE);
+
+                HBox controls = new HBox(12);
+                controls.setAlignment(Pos.CENTER);
+                Button minus = new Button("-");
+                minus.setStyle(
+                                "-fx-background-color: #282e39; -fx-text-fill: white; -fx-background-radius: 8; -fx-min-width: 32; -fx-min-height: 32;");
+                Label bedCount = new Label("2");
+                bedCount.setTextFill(Color.WHITE);
+                bedCount.setFont(Font.font("System", FontWeight.BOLD, 16));
+                Button plus = new Button("+");
+                plus.setStyle("-fx-background-color: " + PRIMARY
+                                + "; -fx-text-fill: white; -fx-background-radius: 8; -fx-min-width: 32; -fx-min-height: 32;");
+
+                controls.getChildren().addAll(minus, bedCount, plus);
+                counterBox.getChildren().addAll(counterLabel, controls);
+                bedroomSection.getChildren().addAll(bedTitle, counterBox);
+
+                // Amenities
+                VBox amenitiesSection = new VBox(15);
+                amenitiesSection.setPadding(new Insets(0, 20, 0, 20));
+                Label amTitle = new Label("Amenities");
+                amTitle.setTextFill(Color.WHITE);
+                amTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+
+                GridPane amGrid = new GridPane();
+                amGrid.setHgap(12);
+                amGrid.setVgap(12);
+                amGrid.add(createAmenity("WiFi", "\ud83d\udcf6", true), 0, 0);
+                amGrid.add(createAmenity("Parking", "\ud83c\udd7f\ufe0f", false), 1, 0);
+                amGrid.add(createAmenity("Gym", "\ud83c\udfcb\ufe0f", false), 2, 0);
+                amGrid.add(createAmenity("Pool", "\ud83c\udfca", false), 0, 1);
+                amGrid.add(createAmenity("Security", "\ud83d\udee1\ufe0f", false), 1, 1);
+                amGrid.add(createAmenity("Backup", "\u26a1", false), 2, 1);
+
+                amenitiesSection.getChildren().addAll(amTitle, amGrid);
+
+                // Properties Found Header
+                HBox resultsHeader = new HBox();
+                resultsHeader.setPadding(new Insets(10, 20, 0, 20));
+                Label resultsTitle = new Label("124 Properties Found");
+                resultsTitle.setTextFill(Color.WHITE);
+                resultsTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+                Region rSpacer = new Region();
+                HBox.setHgrow(rSpacer, Priority.ALWAYS);
+                Label sortBy = new Label("Sort by: Popular \u2304");
+                sortBy.setTextFill(Color.web(TEXT_GRAY));
+                sortBy.setFont(Font.font(12));
+                resultsHeader.getChildren().addAll(resultsTitle, rSpacer, sortBy);
+
+                // Property Result Cards
+                VBox propertyList = new VBox(20);
+                propertyList.setPadding(new Insets(0, 20, 20, 20));
+
+                Property p1 = new Property("Luxury 2BR Apartment", "Westlands, Nairobi", "Ksh 45,000",
+                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCmoqdFqj4fbelhpGNW5sBxu67T2r_SRnonToK4HJsiSM9z2ZJksIe5EXFlaaXniAZEgEj2mjg0AnwKEZERleElDWTfSHmlJt4dsIlhhCjlN3cgsXXtSzlwwe2P9AsdMdTZIncuqQhww9IY1-cqUVpbxMT8IyH_Dlfsf19XEnRCQ51bwm6KzZsPX7P6Pzxi3z7JXlbvfo5EWOBTCAevGNmiRZ3TYUcYV-VXhjgAmqEmMJC6fTwRNxrqLUHOOIRRaREAbZnzOV_MO-g",
+                                true, "Featured");
+
+                Property p2 = new Property("Urban Studio Lofts", "Kilimani, Nairobi", "Ksh 32,000",
+                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCStI3MNHS8JJNCftkv1v3hpCqhtBT3R9njL1VwQ6BliWmhLM08_zaVM7zEj4hF_R0qPyoyipBL1PTXD53Ecc2_nCeFmcb1WpcOmI-BoaX-GyeRLW5M6M2jCEE5zZb23dZbGWt8WXQF5RFDanwTgFYwUk-GgouqXTslhxWZohr_39wvp52lvVxhNNWtl31ZVwfwTDPVJw_RKL3q-AJNRNpE1q2M9Fw6OQzmERDkYyQ5kizaOR4YihTkaT7xQqQ_tfbhjkHDepVBM1o",
+                                false, null, "1 Bed", "1 Bath", "850 sqft");
+
+                propertyList.getChildren().addAll(createPremiumCard(p1), createPremiumCard(p2));
+
+                scrollContent.getChildren().addAll(priceSection, typeSection, bedroomSection, amenitiesSection,
+                                resultsHeader,
+                                propertyList);
+
+                ScrollPane mainScroll = new ScrollPane(scrollContent);
+                mainScroll.setFitToWidth(true);
+                mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                mainScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+
+                VBox layout = new VBox(0);
+                layout.getChildren().addAll(headerArea, mainScroll);
+
+                StackPane.setAlignment(resultsFab, Pos.BOTTOM_CENTER);
+
+                // Add Map FAB as well
+                Button mapFab = new Button("\ud83d\uddfa");
+                mapFab.setStyle(
+                                "-fx-background-color: white; -fx-text-fill: #101622; -fx-font-size: 20; -fx-background-radius: 30; -fx-min-width: 55; -fx-min-height: 55; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);");
+                StackPane.setAlignment(mapFab, Pos.BOTTOM_RIGHT);
+                StackPane.setMargin(mapFab, new Insets(0, 20, 90, 0));
+
+                mainStack.getChildren().addAll(layout, resultsFab, mapFab);
+                getChildren().add(mainStack);
+        }
+
+        private Button createChip(String text, boolean active) {
+                Button btn = new Button(text);
+                btn.setPadding(new Insets(8, 20, 8, 20));
+                if (active) {
+                        btn.setStyle("-fx-background-color: " + PRIMARY
+                                        + "; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: "
+                                        + PRIMARY
+                                        + "; -fx-border-radius: 20;");
+                } else {
+                        btn.setStyle(
+                                        "-fx-background-color: white; -fx-text-fill: #4b5563; -fx-background-radius: 20; -fx-border-color: #e5e7eb; -fx-border-radius: 20;");
+                }
+                return btn;
+        }
+
+        private VBox createAmenity(String name, String icon, boolean active) {
+                VBox box = new VBox(5);
+                box.setAlignment(Pos.CENTER);
+                box.setPrefSize(110, 80);
+                box.setCursor(javafx.scene.Cursor.HAND);
+                if (active) {
+                        box.setStyle("-fx-background-color: rgba(19, 91, 236, 0.1); -fx-border-color: " + PRIMARY
+                                        + "; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-width: 2;");
+                } else {
+                        box.setStyle(
+                                        "-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-background-radius: 12; -fx-border-radius: 12;");
+                }
+
+                Label iconLbl = new Label(icon);
+                iconLbl.setStyle("-fx-font-size: 20;");
+                iconLbl.setTextFill(active ? Color.web(PRIMARY) : Color.web("#9ca3af"));
+
+                Label lbl = new Label(name);
+                lbl.setFont(Font.font("System", FontWeight.BOLD, 12));
+                lbl.setTextFill(active ? Color.web("#101622") : Color.web("#6b7280"));
+
+                box.getChildren().addAll(iconLbl, lbl);
+                return box;
+        }
+
+        private VBox createPremiumCard(Property p) {
+                VBox card = new VBox(0);
+                card.setStyle(
+                                "-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);");
+
+                Rectangle clip = new Rectangle();
+                clip.setArcWidth(40);
+                clip.setArcHeight(40);
+                card.setClip(clip);
+
+                card.layoutBoundsProperty().addListener((obs, oldVal, newVal) -> {
+                        clip.setWidth(newVal.getWidth());
+                        clip.setHeight(newVal.getHeight());
+                });
+
+                StackPane imgContainer = new StackPane();
+                imgContainer.setPrefHeight(200);
+
+                ImageView iv = new ImageView();
+                try {
+                        Image img = new Image(p.getImageUrl(), 400, 200, false, true);
+                        iv.setImage(img);
+                } catch (Exception e) {
+                }
+                iv.setFitWidth(400);
+                iv.setFitHeight(200);
+                iv.setPreserveRatio(false);
+
+                Label fav = new Label("\u2661");
+                fav.setStyle(
+                                "-fx-background-color: rgba(0,0,0,0.2); -fx-background-radius: 25; -fx-padding: 8; -fx-text-fill: white; -fx-font-size: 18;");
+                StackPane.setAlignment(fav, Pos.TOP_RIGHT);
+                StackPane.setMargin(fav, new Insets(15));
+
+                if (p.getTag() != null) {
+                        Label tag = new Label(p.getTag().toUpperCase());
+                        tag.setStyle("-fx-background-color: " + PRIMARY
+                                        + "; -fx-text-fill: white; -fx-font-size: 10; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 4;");
+                        StackPane.setAlignment(tag, Pos.BOTTOM_LEFT);
+                        StackPane.setMargin(tag, new Insets(15));
+                        imgContainer.getChildren().add(tag);
+                }
+
+                imgContainer.getChildren().addAll(iv, fav);
+
+                VBox content = new VBox(10);
+                content.setPadding(new Insets(15));
+
+                HBox topRow = new HBox();
+                VBox titleBox = new VBox(2);
+                Label name = new Label(p.getName());
+                name.setFont(Font.font("System", FontWeight.BOLD, 16));
+                name.setTextFill(Color.web("#101622"));
+
+                HBox locBox = new HBox(4);
+                locBox.setAlignment(Pos.CENTER_LEFT);
+                Label locIcon = new Label("\ud83d\udccd");
+                locIcon.setStyle("-fx-font-size: 12;");
                 Label loc = new Label(p.getLocation());
                 loc.setTextFill(Color.web("#6b7280"));
                 loc.setFont(Font.font(13));
