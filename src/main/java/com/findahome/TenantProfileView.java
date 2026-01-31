@@ -189,6 +189,8 @@ public class TenantProfileView extends StackPane {
 
                 settingsList.getChildren().addAll(
                                 createSettingRow("Personal Information", "\ud83d\udc64"),
+                                createSettingRow("Document Vault", "\ud83d\udcc1"),
+                                createSettingRow("Invite & Earn", "\ud83c\udf81"),
                                 createSettingRow("Notifications", "\ud83d\udd14"),
                                 createSettingRow("Privacy & Security", "\ud83d\udee1\ufe0f"),
                                 createSettingRow("Help Center", "\ud83d\udca1"));
@@ -299,6 +301,12 @@ public class TenantProfileView extends StackPane {
                                 "-fx-background-color: rgba(255,255,255,0.02); -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 1 0; -fx-cursor: hand;"));
                 row.setOnMouseExited(e -> row
                                 .setStyle("-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 1 0; -fx-cursor: hand;"));
+
+                if (text.contains("Invite")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new InviteRewardView()));
+                } else if (text.contains("Vault")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new DocumentVaultView()));
+                }
 
                 return row;
         }

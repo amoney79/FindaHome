@@ -295,8 +295,7 @@ public class MainApp extends Application {
                 createNavItem("Home", "\u2302", true, e -> showHome()),
                 createNavItem("Explore", "\ud83e\udded", false, e -> {
                 }),
-                createNavItem("Saved", "\u2661", false, e -> {
-                }),
+                createNavItem("Vault", "\ud83d\udcc1", false, e -> navigateTo(new DocumentVaultView())),
                 createNavItem("Messages", "\ud83d\udcac", false, e -> navigateTo(new ChatView())),
                 createNavItem("Profile", "\ud83d\udc64", false, e -> navigateTo(new TenantProfileView())));
         return bottomNav;
