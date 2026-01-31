@@ -190,6 +190,8 @@ public class TenantProfileView extends StackPane {
                 settingsList.getChildren().addAll(
                                 createSettingRow("Personal Information", "\ud83d\udc64"),
                                 createSettingRow("Document Vault", "\ud83d\udcc1"),
+                                createSettingRow("Maintenance Support", "\ud83d\udee0"),
+                                createSettingRow("Switch to Landlord View", "\ud83c\udfe2"),
                                 createSettingRow("Invite & Earn", "\ud83c\udf81"),
                                 createSettingRow("Notifications", "\ud83d\udd14"),
                                 createSettingRow("Privacy & Security", "\ud83d\udee1\ufe0f"),
@@ -306,6 +308,10 @@ public class TenantProfileView extends StackPane {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new InviteRewardView()));
                 } else if (text.contains("Vault")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new DocumentVaultView()));
+                } else if (text.contains("Maintenance")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new MaintenanceRequestsListView()));
+                } else if (text.contains("Landlord")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new AdminMaintenanceDashboardView()));
                 }
 
                 return row;
