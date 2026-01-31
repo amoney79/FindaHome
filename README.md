@@ -153,7 +153,7 @@ This project will be released under the **MIT License** (to be added).
 
 ## 👨‍💻 Author
 
-**Joseph Amani**
+**Joseph Makenzi**
 Software Developer | Java | JavaFX | UI/UX
 🇰🇪 Kenya
 
