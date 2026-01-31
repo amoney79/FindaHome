@@ -11,9 +11,9 @@ import javafx.scene.text.FontWeight;
 
 public class LandlordDashboardView extends VBox {
 
-    private static final String BACKGROUND_DARK = "#0d1117";
-    private static final String CARD_BG = "#161b22";
-    private static final String PRIMARY = "#135bec";
+    private static final String BACKGROUND_DARK = "#101922";
+    private static final String CARD_BG = "#1c2127";
+    private static final String PRIMARY = "#137fec";
 
     public LandlordDashboardView() {
         setSpacing(20);
@@ -57,6 +57,14 @@ public class LandlordDashboardView extends VBox {
         statsGrid.add(createStatCard("Active Bookings", "8", "+5%"), 1, 0);
         statsGrid.add(createStatCard("Total Listings", "15 Properties", null), 0, 1, 2, 1);
 
+        // Add Property Button
+        Button addPropBtn = new Button("+ Add New Property");
+        addPropBtn.setMaxWidth(Double.MAX_VALUE);
+        addPropBtn.setPrefHeight(50);
+        addPropBtn.setStyle("-fx-background-color: " + PRIMARY
+                + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-font-weight: bold;");
+        addPropBtn.setOnAction(e -> MainApp.navigateTo(new AddPropertyView()));
+
         // Notifications
         Label notifTitle = new Label("Notifications");
         notifTitle.setTextFill(Color.WHITE);
@@ -84,7 +92,7 @@ public class LandlordDashboardView extends VBox {
         actions.getChildren().addAll(accept, decline);
         viewRequest.getChildren().addAll(reqTitle, reqSub, actions);
 
-        getChildren().addAll(header, portfolioTitle, statsGrid, notifTitle, viewRequest);
+        getChildren().addAll(header, portfolioTitle, statsGrid, addPropBtn, notifTitle, viewRequest);
     }
 
     private VBox createStatCard(String title, String value, String trend) {
