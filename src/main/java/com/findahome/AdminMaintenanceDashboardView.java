@@ -132,8 +132,8 @@ public class AdminMaintenanceDashboardView extends StackPane {
                                 }),
                                 createAdminNavItem("Revenue", "\ud83d\udcb3", false,
                                                 e -> MainApp.navigateTo(new EarningsAnalyticsView())),
-                                createAdminNavItem("Stats", "\ud83d\udcc8", false, e -> {
-                                }),
+                                createAdminNavItem("Stats", "\ud83d\udcc8", false,
+                                                e -> MainApp.navigateTo(new PropertyPerformanceView())),
                                 createAdminNavItem("Profile", "\ud83d\udc64", false,
                                                 e -> MainApp.navigateTo(new TenantProfileView())));
 
