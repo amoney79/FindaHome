@@ -244,6 +244,8 @@ public class AdminMaintenanceDashboardView extends StackPane {
         HBox.setHgrow(assignBtn, Priority.ALWAYS);
         assignBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                 + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
+        assignBtn.setOnAction(e -> MainApp.navigateTo(
+                new AssignTechnicianView(title, "Major leak reported by tenant. Immediate repair needed.", imgUrl)));
         Button viewBtn = new Button("View Details");
         viewBtn.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(viewBtn, Priority.ALWAYS);
@@ -315,6 +317,8 @@ public class AdminMaintenanceDashboardView extends StackPane {
             HBox.setHgrow(assignBtn, Priority.ALWAYS);
             assignBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                     + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
+            assignBtn.setOnAction(e -> MainApp.navigateTo(new AssignTechnicianView(title,
+                    "General maintenance request regarding " + title.toLowerCase() + ".", null)));
             actions.getChildren().add(assignBtn);
         }
 
