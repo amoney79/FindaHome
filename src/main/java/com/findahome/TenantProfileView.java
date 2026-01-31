@@ -196,7 +196,8 @@ public class TenantProfileView extends StackPane {
                                 createSettingRow("Notifications", "\ud83d\udd14"),
                                 createSettingRow("Privacy & Security", "\ud83d\udee1\ufe0f"),
                                 createSettingRow("Legal & Terms", "\ud83d\udcdc"),
-                                createSettingRow("Help Center", "\ud83d\udca1"));
+                                createSettingRow("Help Center", "\ud83d\udca1"),
+                                createSettingRow("Deactivate Account", "\ud83d\udeab"));
 
                 Button logoutBtn = new Button("Log Out");
                 VBox.setMargin(logoutBtn, new Insets(20, 0, 0, 0));
@@ -319,6 +320,8 @@ public class TenantProfileView extends StackPane {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new NotificationView()));
                 } else if (text.contains("Legal") || text.contains("Privacy")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new LegalTermsView()));
+                } else if (text.contains("Deactivate")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
                 }
 
                 return row;
