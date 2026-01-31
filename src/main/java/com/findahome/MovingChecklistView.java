@@ -12,12 +12,7 @@ public class MovingChecklistView extends VBox {
 
     private static final String BACKGROUND_DARK = "#221610";
     private static final String PRIMARY = "#f46a25";
-    private static final String CARD_BG = "#2d1e17";
     private static final String TEXT_GRAY = "#8a6e60";
-    private static final String BORDER_COLOR = "#e6dfdb";
-
-    private int completedTasks = 12;
-    private int totalTasks = 34;
 
     public MovingChecklistView() {
         setSpacing(0);
@@ -65,7 +60,7 @@ public class MovingChecklistView extends VBox {
         progressHeader.setAlignment(Pos.CENTER_LEFT);
         Label progressLabel = new Label("Overall Progress");
         progressLabel.setTextFill(Color.WHITE);
-        progressLabel.setFont(Font.font("System", FontWeight.SEMIBOLD, 16));
+        progressLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
         Region pSpacer = new Region();
         HBox.setHgrow(pSpacer, Priority.ALWAYS);
         Label progressPercent = new Label("35%");
