@@ -19,10 +19,10 @@ import javafx.scene.shape.Circle;
 
 public class MainApp extends Application {
 
-    private static final String BACKGROUND_DARK = "#101622";
-    private static final String CARD_BG = "#1c2433";
-    private static final String PRIMARY = "#135bec";
-    private static final String TEXT_GRAY = "#9da6b9";
+    private static final String BACKGROUND_DARK = "#102216";
+    private static final String CARD_BG = "#1c271f";
+    private static final String PRIMARY = "#13ec5b";
+    private static final String TEXT_GRAY = "#9db9a6";
 
     private static StackPane contentArea;
     private static MainApp instance;
@@ -81,7 +81,7 @@ public class MainApp extends Application {
         instance.mainLayout = root;
         instance.fab = fab;
 
-        showDashboard();
+        navigateToFullScreen(new OnboardingView());
 
         Scene scene = new Scene(rootContainer, 400, 800);
         String css = getClass().getResource("/style.css").toExternalForm();
@@ -100,6 +100,13 @@ public class MainApp extends Application {
             instance.mainLayout.setBottom(instance.createBottomNav());
             instance.fab.setVisible(true);
         }
+        contentArea.getChildren().setAll(view);
+    }
+
+    public static void navigateToFullScreen(Node view) {
+        instance.mainLayout.setTop(null);
+        instance.mainLayout.setBottom(null);
+        instance.fab.setVisible(false);
         contentArea.getChildren().setAll(view);
     }
 
@@ -124,7 +131,7 @@ public class MainApp extends Application {
         carouselBox.setPadding(new Insets(0, 15, 0, 15));
         carouselBox.getChildren().addAll(
                 createBanner("10% Off Your First\nMonth's Rent", "Limited time offer in Kilimani", "Featured",
-                        "#135bec",
+                        PRIMARY,
                         "https://lh3.googleusercontent.com/aida-public/AB6AXuBPRDGJXyz0FGhKnwAEopQHuCE73ByJplEc8CkGObIKDa7WH-FEgr82AKWpmycA97S86qhrgYAjVgQXQ0kmSJmNfu5qhH_JfuaPQav8gtfVVw51i06Zi9wfZQkIVtyAC8joSe7u_hxCjzoU7ttfxdWviivlPgT7oHeWzRCosqjFpmlBaAlXYhiwJwwCObP0d2kBfSW00a-R3bplDsZh9OwserqkoHwA6sm4nn7mJiorNCpzgDdJ0kD2ma0vjVVV_Zxit32JSbJznqA"),
                 createBanner("Eco-friendly Villas\nReady for Viewing", "Starting from $1,200/mo", "New Listing",
                         "#16a34a",
@@ -137,7 +144,7 @@ public class MainApp extends Application {
         HBox categoryBox = new HBox(15);
         categoryBox.setPadding(new Insets(10, 15, 10, 15));
         categoryBox.getChildren().addAll(
-                createCategory("Apartment", "\ud83c\udfe2", "rgba(19, 91, 236, 0.1)", PRIMARY),
+                createCategory("Apartment", "\ud83c\udfe2", "rgba(19, 236, 91, 0.1)", PRIMARY),
                 createCategory("Villas", "\ud83c\udfe1", "rgba(249, 115, 22, 0.1)", "#f97316"),
                 createCategory("Bedsitters", "\ud83d\udcbe", "rgba(168, 85, 247, 0.1)", "#a855f7"),
                 createCategory("Offices", "\ud83d\udcbc", "rgba(6, 182, 212, 0.1)", "#06b6d4"),
