@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class MainApp extends Application {
 
@@ -21,19 +22,39 @@ public class MainApp extends Application {
 
     private static StackPane contentArea;
     private static MainApp instance;
+    private Stage stage;
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     @Override
     public void start(Stage primaryStage) {
+        this.stage = primaryStage;
         instance = this;
+        
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
         contentArea = new StackPane();
 
         // Navigation Areas
-        root.setTop(createTopNav());
+        VBox topNav = createTopNav();
+        root.setTop(topNav);
         root.setCenter(contentArea);
         root.setBottom(createBottomNav());
+
+        // Enable window dragging
+        topNav.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+        topNav.setOnMouseDragged(event -> {
+            if (!stage.isMaximized()) {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            }
+        });
 
         showDashboard();
 
@@ -121,7 +142,28 @@ public class MainApp extends Application {
 
     private VBox createTopNav() {
         VBox topContainer = new VBox(10);
-        topContainer.setPadding(new Insets(15, 15, 5, 15));
+        topContainer.setPadding(new Insets(10, 15, 5, 15));
+
+        // Window Controls
+        HBox windowControls = new HBox(15);
+        windowControls.setAlignment(Pos.CENTER_RIGHT);
+        
+        Label minBtn = new Label("\u2014");
+        minBtn.setTextFill(Color.WHITE);
+        minBtn.setStyle("-fx-cursor: hand; -fx-font-size: 14;");
+        minBtn.setOnMouseClicked(e -> stage.setIconified(true));
+        
+        Label maxBtn = new Label("\ud83d\uddd2");
+        maxBtn.setTextFill(Color.WHITE);
+        maxBtn.setStyle("-fx-cursor: hand; -fx-font-size: 14;");
+        maxBtn.setOnMouseClicked(e -> stage.setMaximized(!stage.isMaximized()));
+        
+        Label closeBtn = new Label("\u2715");
+        closeBtn.setTextFill(Color.web("#ff5f57"));
+        closeBtn.setStyle("-fx-cursor: hand; -fx-font-size: 14; -fx-font-weight: bold;");
+        closeBtn.setOnMouseClicked(e -> stage.close());
+        
+        windowControls.getChildren().addAll(minBtn, maxBtn, closeBtn);
 
         // Header
         HBox header = new HBox();
@@ -162,7 +204,7 @@ public class MainApp extends Application {
         adminBtn.setOnAction(e -> navigateTo(new AdminDashboardView()));
 
         searchContainer.getChildren().addAll(search, filterBtn, adminBtn);
-        topContainer.getChildren().addAll(header, searchContainer);
+        topContainer.getChildren().addAll(windowControls, header, searchContainer);
         return topContainer;
     }
 

@@ -54,3 +54,19 @@
 .category-icon {
     -fx-background-radius: 16;
 }
+
+.window-control {
+    -fx-cursor: hand;
+    -fx-padding: 5 8;
+    -fx-background-radius: 4;
+    -fx-transition: 0.2s;
+}
+
+.window-control:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.close-control:hover {
+    -fx-background-color: #ff5f57;
+    -fx-text-fill: white;
+}
