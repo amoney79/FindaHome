@@ -114,6 +114,7 @@ public class LocationFilterView extends StackPane {
         mapLink.setTextFill(Color.web(PRIMARY));
         mapLink.setFont(Font.font("System", FontWeight.MEDIUM, 12));
         mapLink.setCursor(javafx.scene.Cursor.HAND);
+        mapLink.setOnMouseClicked(e -> MainApp.navigateTo(new WardMapView()));
         sectionHeader.getChildren().addAll(countiesLbl, sp, mapLink);
 
         // Location List
@@ -129,7 +130,9 @@ public class LocationFilterView extends StackPane {
         subCounties.setStyle("-fx-background-color: rgba(255,255,255,0.02);");
 
         // Westlands (Expanded)
-        subCounties.getChildren().add(createSubCountyRow("Westlands", "5 Wards", true));
+        HBox westlandsRow = createSubCountyRow("Westlands", "5 Wards", true);
+        westlandsRow.setOnMouseClicked(e -> MainApp.navigateTo(new WardLocationView()));
+        subCounties.getChildren().add(westlandsRow);
 
         // Wards
         VBox wards = new VBox(0);
