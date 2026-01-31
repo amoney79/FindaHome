@@ -87,6 +87,7 @@ public class FilterView extends VBox {
                 StackPane.setAlignment(tuneIcon, Pos.CENTER_RIGHT);
 
                 searchFieldStack.getChildren().addAll(search, searchIcon, tuneIcon);
+                searchFieldStack.setOnMouseClicked(e -> MainApp.navigateTo(new LocationFilterView()));
                 searchContainer.getChildren().add(searchFieldStack);
 
                 headerArea.getChildren().addAll(header, searchContainer);
