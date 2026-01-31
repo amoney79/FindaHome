@@ -7,6 +7,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class PropertyDetailView extends VBox {
 
@@ -17,27 +19,34 @@ public class PropertyDetailView extends VBox {
                 setSpacing(0);
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                // Top Banner Image placeholder
+                // Top Banner Image
                 StackPane banner = new StackPane();
-                banner.setPrefHeight(400);
-                banner.setStyle("-fx-background-color: #333;");
-                Label placeholder = new Label("Property Image Carousel");
-                placeholder.setTextFill(Color.GRAY);
+                banner.setPrefHeight(350);
+
+                ImageView iv = new ImageView();
+                try {
+                        Image img = new Image(property.getImageUrl(), 400, 350, false, true);
+                        iv.setImage(img);
+                } catch (Exception e) {
+                }
+                iv.setFitWidth(400);
+                iv.setFitHeight(350);
+                iv.setPreserveRatio(false);
 
                 HBox topActions = new HBox(10);
                 topActions.setPadding(new Insets(15));
                 topActions.setAlignment(Pos.CENTER_LEFT);
-                Label back = new Label("<");
-                back.setStyle("-fx-background-color: rgba(0,0,0,0.5); -fx-text-fill: white; -fx-padding: 8; -fx-background-radius: 20;");
+                Label back = new Label("\u2190"); // Back arrow
+                back.setStyle("-fx-background-color: rgba(0,0,0,0.5); -fx-text-fill: white; -fx-padding: 8 12; -fx-background-radius: 20; -fx-font-size: 18; -fx-cursor: hand;");
                 back.setOnMouseClicked(e -> MainApp.showHome());
                 Region spacer = new Region();
                 HBox.setHgrow(spacer, Priority.ALWAYS);
                 Label fav = new Label("\u2661");
                 fav.setStyle(
-                                "-fx-background-color: rgba(0,0,0,0.5); -fx-text-fill: white; -fx-padding: 8; -fx-background-radius: 20;");
+                                "-fx-background-color: rgba(0,0,0,0.5); -fx-text-fill: white; -fx-padding: 8; -fx-background-radius: 20; -fx-font-size: 18; -fx-cursor: hand;");
                 topActions.getChildren().addAll(back, spacer, fav);
 
-                banner.getChildren().addAll(placeholder, topActions);
+                banner.getChildren().addAll(iv, topActions);
                 StackPane.setAlignment(topActions, Pos.TOP_CENTER);
 
                 // Content Area
@@ -71,7 +80,10 @@ public class PropertyDetailView extends VBox {
                 amTitle.setTextFill(Color.WHITE);
                 amTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
                 HBox amIcons = new HBox(20);
-                amIcons.getChildren().addAll(createAmIcon("WiFi"), createAmIcon("Pool"), createAmIcon("Gym"));
+                amIcons.getChildren().addAll(
+                                createAmIcon("WiFi", "\ud83d\udcf6"),
+                                createAmIcon("Pool", "\ud83c\udfca"),
+                                createAmIcon("Gym", "\ud83c\udfcb\ufe0f"));
                 amenities.getChildren().addAll(amTitle, amIcons);
 
                 content.getChildren().addAll(name, priceBox, desc, amenities);
@@ -110,13 +122,14 @@ public class PropertyDetailView extends VBox {
                 getChildren().addAll(banner, scroll, footer);
         }
 
-        private VBox createAmIcon(String name) {
-                VBox box = new VBox(5);
+        private VBox createAmIcon(String name, String icon) {
+                VBox box = new VBox(8);
                 box.setAlignment(Pos.CENTER);
                 StackPane iconBg = new StackPane();
-                iconBg.setPrefSize(45, 45);
+                iconBg.setPrefSize(50, 50);
                 iconBg.setStyle("-fx-background-color: #1a1f2e; -fx-background-radius: 12;");
-                Label lbl = new Label(name.substring(0, 1)); // Placeholder icon
+                Label lbl = new Label(icon);
+                lbl.setStyle("-fx-font-size: 20;");
                 lbl.setTextFill(Color.web(PRIMARY));
                 iconBg.getChildren().add(lbl);
                 Label n = new Label(name);
