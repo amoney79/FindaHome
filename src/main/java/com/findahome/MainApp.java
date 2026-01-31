@@ -73,10 +73,13 @@ public class MainApp extends Application {
         fab.setGraphic(fabContent);
         fab.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 30; -fx-padding: 10 20;");
         fab.getStyleClass().add("fab");
+        fab.setOnAction(e -> navigateToMap());
         StackPane.setAlignment(fab, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(fab, new Insets(0, 20, 100, 0)); // Above bottom nav
 
         StackPane rootContainer = new StackPane(root, fab);
+        instance.mainLayout = root;
+        instance.fab = fab;
 
         showDashboard();
 
@@ -88,11 +91,27 @@ public class MainApp extends Application {
         primaryStage.show();
     }
 
+    private BorderPane mainLayout;
+    private Button fab;
+
     public static void navigateTo(Node view) {
+        if (instance.mainLayout.getTop() == null) {
+            instance.mainLayout.setTop(instance.createTopNav());
+            instance.mainLayout.setBottom(instance.createBottomNav());
+            instance.fab.setVisible(true);
+        }
         contentArea.getChildren().setAll(view);
     }
 
+    public static void navigateToMap() {
+        instance.mainLayout.setTop(null);
+        instance.mainLayout.setBottom(null);
+        instance.fab.setVisible(false);
+        contentArea.getChildren().setAll(new PropertyMapView());
+    }
+
     public static void showHome() {
+        navigateTo(new VBox()); // This will reset layout via navigateTo check
         instance.showDashboard();
     }
 
