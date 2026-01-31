@@ -1,12 +1,6 @@
 package com.findahome;
 
 public class Property {
-    private String name;
-    private String location;
-    private String price;
-    private String imageUrl;
-    private boolean verified;
-    private String tag;
     private String beds;
     private String baths;
     private String sqft;
