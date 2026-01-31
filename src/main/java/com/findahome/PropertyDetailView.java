@@ -286,6 +286,11 @@ public class PropertyDetailView extends StackPane {
                 HBox navActions = new HBox(8);
                 Button favBtn = createNavBtn("\u2661");
                 Button shareBtn = createNavBtn("\ud83d\udce4");
+                shareBtn.setOnAction(e -> {
+                        SharePropertyView shareSheet = new SharePropertyView(property,
+                                        () -> getChildren().removeIf(node -> node instanceof SharePropertyView));
+                        getChildren().add(shareSheet);
+                });
                 navActions.getChildren().addAll(favBtn, shareBtn);
 
                 topNav.getChildren().addAll(backBtn, navSpacer, navActions);
