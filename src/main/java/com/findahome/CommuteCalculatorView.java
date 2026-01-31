@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -20,7 +19,6 @@ public class CommuteCalculatorView extends VBox {
     private static final String PRIMARY = "#f46a25";
     private static final String CARD_BG = "#2d1e17";
     private static final String TEXT_GRAY = "#8a6e60";
-    private static final String BORDER_COLOR = "#e6dfdb";
 
     public CommuteCalculatorView() {
         setSpacing(0);
