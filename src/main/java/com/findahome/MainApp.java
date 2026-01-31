@@ -298,7 +298,7 @@ public class MainApp extends Application {
                 createNavItem("Saved", "\u2661", false, e -> {
                 }),
                 createNavItem("Messages", "\ud83d\udcac", false, e -> navigateTo(new ChatView())),
-                createNavItem("Profile", "\ud83d\udc64", false, e -> navigateTo(new LandlordDashboardView())));
+                createNavItem("Profile", "\ud83d\udc64", false, e -> navigateTo(new TenantProfileView())));
         return bottomNav;
     }
 

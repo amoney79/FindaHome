@@ -192,6 +192,8 @@ public class PropertyDetailView extends StackPane {
                 agentInfo.setAlignment(Pos.CENTER_LEFT);
 
                 StackPane avatarBox = new StackPane();
+                avatarBox.setCursor(javafx.scene.Cursor.HAND);
+                avatarBox.setOnMouseClicked(e -> MainApp.navigateTo(new AgentRatingProfileView()));
                 Circle avatarClip = new Circle(24, 24, 24);
                 ImageView avatar = new ImageView();
                 try {
@@ -207,6 +209,8 @@ public class PropertyDetailView extends StackPane {
                 Label agentName = new Label("Kelvin Mwangi");
                 agentName.setTextFill(Color.WHITE);
                 agentName.setFont(Font.font("System", FontWeight.BOLD, 14));
+                agentName.setCursor(javafx.scene.Cursor.HAND);
+                agentName.setOnMouseClicked(e -> MainApp.navigateTo(new AgentRatingProfileView()));
                 HBox ratingBox = new HBox(4);
                 ratingBox.setAlignment(Pos.CENTER_LEFT);
                 ratingBox.setCursor(javafx.scene.Cursor.HAND);
