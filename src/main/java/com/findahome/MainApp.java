@@ -271,7 +271,7 @@ public class MainApp extends Application {
         Button filterBtn = new Button("\u2312"); // Settings/Filter icon
         filterBtn.setStyle("-fx-background-color: rgba(19, 91, 236, 0.1); -fx-text-fill: " + PRIMARY
                 + "; -fx-background-radius: 12; -fx-min-width: 44; -fx-min-height: 44; -fx-font-size: 18;");
-        filterBtn.setOnAction(e -> navigateTo(new FilterView()));
+        filterBtn.setOnAction(e -> navigateToMap());
 
         searchContainer.getChildren().addAll(searchFieldStack, filterBtn);
         topContainer.getChildren().addAll(windowControls, header, searchContainer);
