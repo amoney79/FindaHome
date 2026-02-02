@@ -174,20 +174,4 @@ public class LegalTermsView extends StackPane {
                 card.getChildren().addAll(t, c);
                 return card;
         }
-
-        private VBox createLegalSection(String title, String body) {
-                VBox sect = new VBox(8);
-                Label t = new Label(title);
-                t.setTextFill(Color.WHITE);
-                t.setFont(Font.font("System", FontWeight.BOLD, 18));
-
-                Label b = new Label(body);
-                b.setTextFill(Color.web("#d1d5db"));
-                b.setFont(Font.font(15));
-                b.setWrapText(true);
-                b.setLineSpacing(5);
-
-                sect.getChildren().addAll(t, b);
-                return sect;
-        }
 }
