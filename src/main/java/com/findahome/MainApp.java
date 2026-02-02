@@ -130,13 +130,21 @@ public class MainApp extends Application {
         // Carousel (Banners)
         HBox carouselBox = new HBox(15);
         carouselBox.setPadding(new Insets(0, 15, 0, 15));
-        carouselBox.getChildren().addAll(
-                createBanner("10% Off Your First\nMonth's Rent", "Limited time offer in Kilimani", "Featured",
-                        PRIMARY,
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuBPRDGJXyz0FGhKnwAEopQHuCE73ByJplEc8CkGObIKDa7WH-FEgr82AKWpmycA97S86qhrgYAjVgQXQ0kmSJmNfu5qhH_JfuaPQav8gtfVVw51i06Zi9wfZQkIVtyAC8joSe7u_hxCjzoU7ttfxdWviivlPgT7oHeWzRCosqjFpmlBaAlXYhiwJwwCObP0d2kBfSW00a-R3bplDsZh9OwserqkoHwA6sm4nn7mJiorNCpzgDdJ0kD2ma0vjVVV_Zxit32JSbJznqA"),
-                createBanner("Eco-friendly Villas\nReady for Viewing", "Starting from $1,200/mo", "New Listing",
-                        "#16a34a",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCgxj92Y7Fw6BU7V0tKPzcdTbWN6mOyxQe9VoXbMIfzykZ0TNJnP-p9_owLU2rzzQUO46m11mNIJM6xoDAdnc9GKlKjqxYEDWf0kH_fbs7lgeMaF9oFpBy2NTwuE5GQD78rK-1TcPGsq09DU_8S5dEHfyquG48BUaZByghm9oiM3xl2KkeEakmEkT7XHpHjM3xl2KkeEakmEkT7XHpHjMmaEQdeTo-HFamh40L8S1BA1JvTlXCqAathTVzvuSGH2XM-jvi-qgRAlOHV8vLgcxboECwuVXTVZm8"));
+
+        StackPane banner1 = createBanner("10% Off Your First\nMonth's Rent", "Limited time offer in Kilimani",
+                "Featured", PRIMARY,
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuBPRDGJXyz0FGhKnwAEopQHuCE73ByJplEc8CkGObIKDa7WH-FEgr82AKWpmycA97S86qhrgYAjVgQXQ0kmSJmNfu5qhH_JfuaPQav8gtfVVw51i06Zi9wfZQkIVtyAC8joSe7u_hxCjzoU7ttfxdWviivlPgT7oHeWzRCosqjFpmlBaAlXYhiwJwwCObP0d2kBfSW00a-R3bplDsZh9OwserqkoHwA6sm4nn7mJiorNCpzgDdJ0kD2ma0vjVVV_Zxit32JSbJznqA");
+        StackPane banner2 = createBanner("Neighborhood Guides", "Safety & Lifestyle Insights", "Guides", "#3b82f6",
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuB0HULlfInpu8RXSl3WrY0lOui3drjyipY7A0xgLsHPqDHZ-qj6PeDIRifJlSdQUCr85V0S-Ip1N7HZwByBqb5SSzFgCWXlr_yKJ9cIUm-4SbLkDOzGdmwlRIV9pCuEitLj8Tp8857z-CZDpcrEfx9dx2Y1ovb6Vzwy6FDdXtL1vfYyDdY2tVGXPd8KN4wssNshZpwINYIw9tf0b1xQdW2ZJv33wClmp_dzf39qrKZiFxu9HWpuU0PNoxH1oLknN5EqAFJKCKXR_mI");
+        StackPane banner3 = createBanner("Moving Made Easy", "Organize your relocation", "Tools", "#f97316",
+                "https://lh3.googleusercontent.com/aida-public/AB6AXuB7aVUx18rjxzcsXZcZ7ohoAoLnOwRzZp0fyHFLN75BFx968Wk5JBeJrEGmg-aXFTDz5BsQK_Hl80q2ym93mUvqWk57KxEayDkgsIVKuH6IXoCm7IWelg8hfuu58FkRXNMNYjN7d5W9MX2UxmmdZCuZO5lrgDe07cc-nL8_TZr31__SOZubHuNglIkU2KQJsjdxlYV1zg5jDcRvu7onde-9nhv2p_UQQFuNgo-wLqkZLy6SAtHZQUf6lesl8GZ2sz7fTUJ2gRN8p8U");
+
+        banner2.setCursor(javafx.scene.Cursor.HAND);
+        banner2.setOnMouseClicked(e -> navigateToFullScreen(new GuideView()));
+        banner3.setCursor(javafx.scene.Cursor.HAND);
+        banner3.setOnMouseClicked(e -> navigateToFullScreen(new MovingChecklistView()));
+
+        carouselBox.getChildren().addAll(banner1, banner2, banner3);
         ScrollPane carouselScroll = new ScrollPane(carouselBox);
         carouselScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         carouselScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
@@ -149,8 +157,7 @@ public class MainApp extends Application {
                 createCategory("Villas", "\ud83c\udfe1", "rgba(249, 115, 22, 0.1)", "#f97316"),
                 createCategory("Bedsitters", "\ud83d\udcbe", "rgba(168, 85, 247, 0.1)", "#a855f7"),
                 createCategory("Offices", "\ud83d\udcbc", "rgba(6, 182, 212, 0.1)", "#06b6d4"),
-                createCategory("Land", "\ud83c\udfde", "rgba(16, 185, 129, 0.1)", "#10b981"),
-                createCategory("Warehouse", "\ud83c\udfed", "rgba(244, 63, 94, 0.1)", "#f43f5e"));
+                createCategory("More", "\u22ee", "rgba(255, 255, 255, 0.1)", "white"));
         ScrollPane categoryScroll = new ScrollPane(categoryBox);
         categoryScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         categoryScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -302,7 +309,7 @@ public class MainApp extends Application {
         bottomNav.getChildren().addAll(
                 createNavItem("Home", "\u2302", true, e -> showHome()),
                 createNavItem("Explore", "\ud83e\udded", false, e -> navigateToMap()),
-                createNavItem("Service", "\ud83d\udee0", false, e -> navigateTo(new MaintenanceRequestsListView())),
+                createNavItem("Service", "\ud83d\udee0", false, e -> navigateTo(new ServiceHubView())),
                 createNavItem("Messages", "\ud83d\udcac", false, e -> navigateTo(new ChatView())),
                 createNavItem("Profile", "\ud83d\udc64", false, e -> navigateTo(new TenantProfileView())));
         return bottomNav;
