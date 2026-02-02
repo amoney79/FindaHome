@@ -217,6 +217,11 @@ public class MovingChecklistView extends VBox {
         notesSection.getChildren().addAll(notesLabel, notesField);
         card.getChildren().addAll(taskRow, notesSection);
 
+        if (item.getTaskName().contains("Book movers")) {
+            card.setCursor(javafx.scene.Cursor.HAND);
+            card.setOnMouseClicked(e -> MainApp.navigateTo(new MoversQuoteRequestView()));
+        }
+
         return card;
     }
 
