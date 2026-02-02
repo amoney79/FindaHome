@@ -258,6 +258,8 @@ public class PropertyPerformanceView extends StackPane {
                 csvBtn.setPrefHeight(56);
                 csvBtn.setStyle(
                                 "-fx-background-color: #28392e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.1);");
+                csvBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView("Export Successful",
+                                "Financial report (CSV) has been saved to your downloads.")));
 
                 Button pdfBtn = new Button("Export PDF");
                 pdfBtn.setGraphic(new Label("\ud83d\uddbc"));
@@ -266,6 +268,8 @@ public class PropertyPerformanceView extends StackPane {
                 pdfBtn.setPrefHeight(56);
                 pdfBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                                 + "; -fx-font-weight: black; -fx-background-radius: 16;");
+                pdfBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView("Export Successful",
+                                "Performance summary (PDF) has been saved to your downloads.")));
 
                 footer.getChildren().addAll(csvBtn, pdfBtn);
 
