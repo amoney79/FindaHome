@@ -30,27 +30,26 @@ public class GuideView extends StackPane {
 
                 // Header (Sticky-like)
                 VBox header = new VBox();
-                header.setStyle(
-                                "-fx-background-color: rgba(16, 22, 34, 0.9); -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 0, 5, 0, 0);");
+                header.setStyle("-fx-background-color: rgba(16, 22, 34, 0.95);");
                 header.setPadding(new Insets(15, 20, 15, 20));
 
                 HBox navBar = new HBox(15);
                 navBar.setAlignment(Pos.CENTER_LEFT);
 
                 Label backBtn = new Label("\u2039"); // Arrow back
-                backBtn.setFont(Font.font("System", FontWeight.BOLD, 24));
+                backBtn.setFont(Font.font("System", FontWeight.BOLD, 28));
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setCursor(javafx.scene.Cursor.HAND);
                 backBtn.setOnMouseClicked(e -> MainApp.showHome());
 
-                Label title = new Label("Kileleshwa Insight");
+                Label title = new Label("Neighborhood Insight");
                 title.setTextFill(Color.WHITE);
                 title.setFont(Font.font("System", FontWeight.BOLD, 18));
                 title.setMaxWidth(Double.MAX_VALUE);
                 title.setAlignment(Pos.CENTER);
                 HBox.setHgrow(title, Priority.ALWAYS);
 
-                Label shareBtn = new Label("\u21E8"); // Share arrow (simulated)
+                Label shareBtn = new Label("\u21E8"); // Share arrow
                 shareBtn.setFont(Font.font("System", FontWeight.BOLD, 18));
                 shareBtn.setTextFill(Color.WHITE);
 
@@ -66,60 +65,57 @@ public class GuideView extends StackPane {
                 scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
                 VBox content = new VBox(20);
-                content.setPadding(new Insets(0, 0, 100, 0)); // Bottom padding for footer
                 content.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
                 // Hero Section
                 StackPane hero = new StackPane();
-                hero.setPrefHeight(320);
+                hero.setPrefHeight(300);
                 try {
                         ImageView heroImg = new ImageView(new Image(
-                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuB0HULlfInpu8RXSl3WrY0lOui3drjyipY7A0xgLsHPqDHZ-qj6PeDIRifJlSdQUCr85V0S-Ip1N7HZwByBqb5SSzFgCWXlr_yKJ9cIUm-4SbLkDOzGdmwlRIV9pCuEitLj8Tp8857z-CZDpcrEfx9dx2Y1ovb6Vzwy6FDdXtL1vfYyDdY2tVGXPd8KN4wssNshZpwINYIw9tf0b1xQdW2ZJv33wClmp_dzf39qrKZiFxu9HWpuU0PNoxH1oLknN5EqAFJKCKXR_mI",
-                                        500, 320, false, true));
-                        Rectangle clip = new Rectangle(500, 320); // Basic clip
-                        heroImg.setClip(clip);
-                        hero.getChildren().add(heroImg);
+                                        "https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1000&auto=format&fit=crop",
+                                        800, 300, true, true));
+                        heroImg.setPreserveRatio(true);
+                        heroImg.setFitWidth(800);
+
+                        // Darker Overlay for better text readability
+                        Rectangle overlay = new Rectangle();
+                        overlay.widthProperty().bind(hero.widthProperty());
+                        overlay.heightProperty().bind(hero.heightProperty());
+                        overlay.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
+                                        new Stop(0, Color.rgb(16, 22, 34, 0.4)),
+                                        new Stop(0.7, Color.rgb(16, 22, 34, 0.7)),
+                                        new Stop(1, Color.rgb(16, 22, 34, 1.0))));
+
+                        VBox heroText = new VBox(5);
+                        heroText.setAlignment(Pos.BOTTOM_LEFT);
+                        heroText.setPadding(new Insets(30));
+                        Label ht1 = new Label("NEIGHBORHOOD GUIDE");
+                        ht1.setTextFill(Color.web(PRIMARY));
+                        ht1.setFont(Font.font("System", FontWeight.BOLD, 14));
+                        Label ht2 = new Label("Kileleshwa, Nairobi");
+                        ht2.setTextFill(Color.WHITE);
+                        ht2.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 36));
+                        heroText.getChildren().addAll(ht1, ht2);
+
+                        hero.getChildren().addAll(heroImg, overlay, heroText);
                 } catch (Exception e) {
                 }
-
-                // Gradient Overlay
-                Rectangle gradient = new Rectangle();
-                gradient.widthProperty().bind(hero.widthProperty());
-                gradient.heightProperty().bind(hero.heightProperty());
-                gradient.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                                new Stop(0, Color.rgb(0, 0, 0, 0.1)),
-                                new Stop(1, Color.rgb(16, 22, 34, 1.0)))); // Blend to background
-                hero.getChildren().add(gradient);
-
-                VBox heroText = new VBox(5);
-                heroText.setAlignment(Pos.BOTTOM_LEFT);
-                heroText.setPadding(new Insets(24));
-                Label ht1 = new Label("NEIGHBORHOOD GUIDE");
-                ht1.setTextFill(Color.web("rgba(255,255,255,0.8)"));
-                ht1.setFont(Font.font("System", FontWeight.BOLD, 12));
-                Label ht2 = new Label("Kileleshwa, Nairobi");
-                ht2.setTextFill(Color.WHITE);
-                ht2.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 32));
-                ht2.setWrapText(true);
-                heroText.getChildren().addAll(ht1, ht2);
-                hero.getChildren().add(heroText);
 
                 content.getChildren().add(hero);
 
                 // Community Scores
-                VBox scoresSec = new VBox(15);
+                VBox scoresSec = new VBox(20);
                 scoresSec.setPadding(new Insets(0, 20, 0, 20));
-                scoresSec.getChildren().add(createSectionTitle("\ud83d\udcca", "Community Scores")); // Analytics icon
+                scoresSec.getChildren().add(createSectionTitle("\ud83d\udcca", "Community Scores"));
 
                 HBox scoreCards = new HBox(15);
                 scoreCards.getChildren().addAll(
-                                createScoreCard("Safety Score", "8.5", "+5% vs last month", "#0bda5e", "\ud83d\udee1"),
-                                createScoreCard("Quietness Score", "7.2", "-2% vs last month", "#fa6238",
-                                                "\ud83d\udd07"));
+                                createScoreCard("Safety Score", "8.5", "Increasing", "#0bda5e", "\ud83d\udee1"),
+                                createScoreCard("Quietness", "7.2", "Stable", "#fa6238", "\ud83d\udd07"));
                 scoresSec.getChildren().add(scoreCards);
                 content.getChildren().add(scoresSec);
 
-                // Amenities Section (Organized)
+                // Amenities Section
                 VBox amenitiesSect = new VBox(25);
                 amenitiesSect.setPadding(new Insets(10, 20, 30, 20));
 
@@ -127,20 +123,22 @@ public class GuideView extends StackPane {
                 amTitle.setTextFill(Color.WHITE);
                 amTitle.setFont(Font.font("System", FontWeight.BOLD, 22));
 
-                VBox amGrid = new VBox(15);
+                VBox amGrid = new VBox(20);
                 amGrid.getChildren().addAll(
                                 createAmenityCategory("Education", "\ud83c\udf93",
-                                                createAmenityItem("Kileleshwa Primary", "Public", "0.4 KM",
+                                                createAmenityItem("Kileleshwa Primary", "Public \u2022 0.4 KM",
                                                                 "\ud83d\udcd6"),
-                                                createAmenityItem("Lavington School", "Intl", "1.2 KM",
+                                                createAmenityItem("Lavington School", "Intl \u2022 1.2 KM",
                                                                 "\ud83d\udcdc")),
                                 createAmenityCategory("Healthcare", "\ud83c\udfe5",
-                                                createAmenityItem("Medical Plaza", "Clinic", "0.2 KM", "\ud83c\udfe5"),
-                                                createAmenityItem("Nairobi Hospital", "Branch", "1.5 KM",
+                                                createAmenityItem("Medical Plaza", "Clinic \u2022 0.2 KM",
+                                                                "\ud83c\udfe5"),
+                                                createAmenityItem("Nairobi Hospital", "Branch \u2022 1.5 KM",
                                                                 "\ud83d\ude91")),
                                 createAmenityCategory("Transport", "\ud83d\ude8c",
-                                                createAmenityItem("Ring Road", "Major", "0.1 KM", "\u26f5"),
-                                                createAmenityItem("Matatu Stage", "Stage", "0.3 KM", "\ud83d\ude8f")));
+                                                createAmenityItem("Ring Road", "Major \u2022 0.1 KM", "\u26f5"),
+                                                createAmenityItem("Matatu Stage", "Stage \u2022 0.3 KM",
+                                                                "\ud83d\ude8f")));
 
                 amenitiesSect.getChildren().addAll(amTitle, amGrid);
                 content.getChildren().add(amenitiesSect);
@@ -148,25 +146,23 @@ public class GuideView extends StackPane {
                 scrollPane.setContent(content);
                 mainLayout.setCenter(scrollPane);
 
-                getChildren().add(mainLayout);
-
-                // Sticky Footer
+                // Footer
                 VBox footer = new VBox();
-                footer.setPadding(new Insets(16));
-                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.9); -fx-border-color: " + DIVIDER_COLOR
+                footer.setPadding(new Insets(20));
+                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.95); -fx-border-color: " + DIVIDER_COLOR
                                 + "; -fx-border-width: 1 0 0 0;");
 
                 Button browseBtn = new Button("Browse Listings in Kileleshwa  \u2794");
                 browseBtn.setMaxWidth(Double.MAX_VALUE);
                 browseBtn.setPrefHeight(56);
-                browseBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
-                browseBtn.setOnAction(e -> MainApp.navigateTo(new AmenitiesMapView())); // Connect to map view
+                browseBtn.setStyle("-fx-background-color: " + PRIMARY
+                                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
+                browseBtn.setOnAction(e -> MainApp.navigateTo(new AmenitiesMapView()));
 
                 footer.getChildren().add(browseBtn);
+                mainLayout.setBottom(footer);
 
-                getChildren().add(footer);
-                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+                getChildren().add(mainLayout);
         }
 
         private HBox createSectionTitle(String icon, String text) {
@@ -174,23 +170,24 @@ public class GuideView extends StackPane {
                 box.setAlignment(Pos.CENTER_LEFT);
                 Label ic = new Label(icon);
                 ic.setTextFill(Color.web(PRIMARY));
-                ic.setFont(Font.font(20));
+                ic.setFont(Font.font(22));
                 Label tx = new Label(text);
                 tx.setTextFill(Color.WHITE);
-                tx.setFont(Font.font("System", FontWeight.BOLD, 20));
+                tx.setFont(Font.font("System", FontWeight.BOLD, 22));
                 box.getChildren().addAll(ic, tx);
                 return box;
         }
 
         private VBox createAmenityCategory(String title, String icon, HBox... items) {
-                VBox cat = new VBox(10);
+                VBox cat = new VBox(12);
                 HBox head = new HBox(10);
                 head.setAlignment(Pos.CENTER_LEFT);
                 Label ic = new Label(icon);
                 ic.setTextFill(Color.web(PRIMARY));
+                ic.setFont(Font.font(16));
                 Label t = new Label(title);
                 t.setTextFill(Color.WHITE);
-                t.setFont(Font.font("System", FontWeight.BOLD, 14));
+                t.setFont(Font.font("System", FontWeight.BOLD, 16));
                 head.getChildren().addAll(ic, t);
 
                 VBox list = new VBox(10);
@@ -199,72 +196,61 @@ public class GuideView extends StackPane {
                 return cat;
         }
 
-        private VBox createScoreCard(String title, String score, String trend, String colorHex, String iconStr) {
-                VBox card = new VBox(10);
-                card.setPadding(new Insets(20));
-                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12; -fx-border-color: "
-                                + DIVIDER_COLOR + "; -fx-border-radius: 12;");
+        private VBox createScoreCard(String title, String score, String detail, String colorHex, String iconStr) {
+                VBox card = new VBox(8);
+                card.setPadding(new Insets(15));
+                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16; -fx-border-color: "
+                                + DIVIDER_COLOR + "; -fx-border-radius: 16;");
                 HBox.setHgrow(card, Priority.ALWAYS);
 
-                HBox head = new HBox();
-                head.setAlignment(Pos.CENTER_LEFT);
                 Label t = new Label(title);
                 t.setTextFill(Color.web(TEXT_GRAY));
-                t.setFont(Font.font(14));
-                Region sp = new Region();
-                HBox.setHgrow(sp, Priority.ALWAYS);
-                Label ic = new Label(iconStr);
-                ic.setTextFill(Color.web(colorHex));
-                head.getChildren().addAll(t, sp, ic);
+                t.setFont(Font.font(13));
 
-                HBox scoreBox = new HBox(2);
+                HBox scoreRow = new HBox(5);
+                scoreRow.setAlignment(Pos.BASELINE_LEFT);
                 Label sc = new Label(score);
                 sc.setTextFill(Color.WHITE);
-                sc.setFont(Font.font("System", FontWeight.BOLD, 32));
+                sc.setFont(Font.font("System", FontWeight.BOLD, 28));
                 Label max = new Label("/10");
                 max.setTextFill(Color.web(TEXT_GRAY));
                 max.setFont(Font.font(14));
-                max.setPadding(new Insets(12, 0, 0, 0));
-                scoreBox.getChildren().addAll(sc, max);
+                scoreRow.getChildren().addAll(sc, max);
 
-                Label tr = new Label(trend);
-                tr.setTextFill(Color.web(colorHex));
-                tr.setFont(Font.font("System", FontWeight.BOLD, 12));
+                Label det = new Label(iconStr + " " + detail);
+                det.setTextFill(Color.web(colorHex));
+                det.setFont(Font.font("System", FontWeight.MEDIUM, 12));
 
-                card.getChildren().addAll(head, scoreBox, tr);
+                card.getChildren().addAll(t, scoreRow, det);
                 return card;
         }
 
-        private HBox createAmenityItem(String name, String sub, String dist, String iconStr) {
+        private HBox createAmenityItem(String name, String sub, String iconStr) {
                 HBox item = new HBox(12);
-                item.setPadding(new Insets(16));
+                item.setPadding(new Insets(12));
                 item.setAlignment(Pos.CENTER_LEFT);
-                item.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12; -fx-border-color: "
-                                + DIVIDER_COLOR + "; -fx-border-radius: 12;");
+                item.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 14; -fx-border-color: "
+                                + DIVIDER_COLOR + "; -fx-border-radius: 14;");
 
                 StackPane iconBox = new StackPane();
-                iconBox.setPrefSize(40, 40);
+                iconBox.setPrefSize(44, 44);
                 iconBox.setStyle("-fx-background-color: rgba(19, 236, 91, 0.1); -fx-background-radius: 10;");
                 Label ic = new Label(iconStr);
                 ic.setTextFill(Color.web(PRIMARY));
+                ic.setFont(Font.font(18));
                 iconBox.getChildren().add(ic);
 
                 VBox text = new VBox(2);
                 Label n = new Label(name);
                 n.setTextFill(Color.WHITE);
-                n.setFont(Font.font("System", FontWeight.BOLD, 14));
+                n.setFont(Font.font("System", FontWeight.BOLD, 15));
                 Label s = new Label(sub);
                 s.setTextFill(Color.web(TEXT_GRAY));
-                s.setFont(Font.font(12));
+                s.setFont(Font.font(13));
                 text.getChildren().addAll(n, s);
                 HBox.setHgrow(text, Priority.ALWAYS);
 
-                Label dst = new Label(dist);
-                dst.setTextFill(Color.web(TEXT_GRAY));
-                dst.setFont(Font.font("System", FontWeight.BOLD, 10));
-                dst.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-padding: 4 8; -fx-background-radius: 4;");
-
-                item.getChildren().addAll(iconBox, text, dst);
+                item.getChildren().addAll(iconBox, text);
                 return item;
         }
 }
