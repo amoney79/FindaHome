@@ -2,117 +2,178 @@ package com.findahome;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class LandlordDashboardView extends VBox {
+public class LandlordDashboardView extends StackPane {
 
-    private static final String BACKGROUND_DARK = "#101922";
-    private static final String CARD_BG = "#1c2127";
-    private static final String PRIMARY = "#137fec";
+    private static final String BACKGROUND_DARK = "#0f172a"; // Matching screenshot dark theme
+    private static final String PRIMARY = "#13ec5b"; // Using green from screenshot
+    private static final String TEXT_GRAY = "#94a3b8";
+    private static final String BORDER_COLOR = "#334155";
+
+    private VBox contentArea;
 
     public LandlordDashboardView() {
-        setSpacing(20);
-        setPadding(new Insets(15));
         setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-        // Header
-        HBox header = new HBox(15);
-        header.setAlignment(Pos.CENTER_LEFT);
+        VBox mainLayout = new VBox();
 
-        Circle profilePic = new Circle(20, Color.web(PRIMARY));
-        VBox welcomeBox = new VBox(2);
-        Label welcome = new Label("Welcome back,");
-        welcome.setTextFill(Color.GRAY);
-        welcome.setFont(Font.font(12));
-        Label name = new Label("James Mwangi");
-        name.setTextFill(Color.WHITE);
-        name.setFont(Font.font("System", FontWeight.BOLD, 16));
-        welcomeBox.getChildren().addAll(welcome, name);
+        // Content Area
+        contentArea = new VBox();
+        contentArea.setAlignment(Pos.CENTER);
+        VBox.setVgrow(contentArea, Priority.ALWAYS);
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-        Label back = new Label("<");
-        back.setTextFill(Color.WHITE);
-        back.setOnMouseClicked(e -> MainApp.showHome());
-        Label bell = new Label("\ud83d\udd14");
-        bell.setStyle("-fx-font-size: 20;");
-        bell.setOnMouseClicked(e -> MainApp.navigateTo(new NotificationView()));
+        // Initial View (Properties)
+        showPropertiesView();
 
-        header.getChildren().addAll(profilePic, welcomeBox, spacer, back, bell);
+        // Window Controls
+        HBox windowControls = new HBox(15);
+        windowControls.setAlignment(Pos.CENTER_RIGHT);
+        windowControls.setPadding(new Insets(10, 15, 0, 0));
 
-        // Stats
-        Label portfolioTitle = new Label("PORTFOLIO OVERVIEW");
-        portfolioTitle.setTextFill(Color.GRAY);
-        portfolioTitle.setFont(Font.font("System", FontWeight.BOLD, 10));
+        Label minBtn = new Label("\u2014");
+        minBtn.setTextFill(Color.WHITE);
+        minBtn.setStyle("-fx-cursor: hand; -fx-font-size: 14;");
+        minBtn.setOnMouseClicked(e -> ((javafx.stage.Stage) getScene().getWindow()).setIconified(true));
 
-        GridPane statsGrid = new GridPane();
-        statsGrid.setHgap(10);
-        statsGrid.setVgap(10);
-        statsGrid.add(createStatCard("Total Views", "12.4K", "+12%"), 0, 0);
-        statsGrid.add(createStatCard("Active Bookings", "8", "+5%"), 1, 0);
-        statsGrid.add(createStatCard("Total Listings", "15 Properties", null), 0, 1, 2, 1);
+        Label maxBtn = new Label("\ud83d\uddd2");
+        maxBtn.setTextFill(Color.WHITE);
+        maxBtn.setStyle("-fx-cursor: hand; -fx-font-size: 14;");
+        maxBtn.setOnMouseClicked(e -> {
+            javafx.stage.Stage stage = (javafx.stage.Stage) getScene().getWindow();
+            stage.setMaximized(!stage.isMaximized());
+        });
 
-        // Add Property Button
-        Button addPropBtn = new Button("+ Add New Property");
-        addPropBtn.setMaxWidth(Double.MAX_VALUE);
-        addPropBtn.setPrefHeight(50);
-        addPropBtn.setStyle("-fx-background-color: " + PRIMARY
-                + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-font-weight: bold;");
-        addPropBtn.setOnAction(e -> MainApp.navigateTo(new AddPropertyView()));
+        Label closeBtn = new Label("\u2715");
+        closeBtn.setTextFill(Color.web("#ff5f57"));
+        closeBtn.setStyle("-fx-cursor: hand; -fx-font-size: 14; -fx-font-weight: bold;");
+        closeBtn.setOnMouseClicked(e -> ((javafx.stage.Stage) getScene().getWindow()).close());
 
-        // Notifications
-        Label notifTitle = new Label("Notifications");
-        notifTitle.setTextFill(Color.WHITE);
-        notifTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
+        windowControls.getChildren().addAll(minBtn, maxBtn, closeBtn);
 
-        VBox viewRequest = new VBox(10);
-        viewRequest.setPadding(new Insets(15));
-        viewRequest.setStyle("-fx-background-color: " + CARD_BG
-                + "; -fx-background-radius: 12; -fx-border-color: #30363d; -fx-border-radius: 12;");
-        Label reqTitle = new Label("Viewing Request: Sunset Apartments");
-        reqTitle.setTextFill(Color.WHITE);
-        reqTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
-        Label reqSub = new Label("Someone wants to see Unit 4B tomorrow at 2:00 PM");
-        reqSub.setTextFill(Color.GRAY);
-        reqSub.setWrapText(true);
-        HBox actions = new HBox(10);
-        Button accept = new Button("Accept");
-        accept.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: white; -fx-background-radius: 8;");
-        accept.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(accept, Priority.ALWAYS);
-        Button decline = new Button("Decline");
-        decline.setStyle("-fx-background-color: #30363d; -fx-text-fill: white; -fx-background-radius: 8;");
-        decline.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(decline, Priority.ALWAYS);
-        actions.getChildren().addAll(accept, decline);
-        viewRequest.getChildren().addAll(reqTitle, reqSub, actions);
+        mainLayout.getChildren().add(0, windowControls); // Add at top
 
-        getChildren().addAll(header, portfolioTitle, statsGrid, addPropBtn, notifTitle, viewRequest);
+        // Bottom Navigation (Fixed)
+        HBox bottomNav = createBottomNav();
+
+        mainLayout.getChildren().addAll(contentArea, bottomNav);
+        getChildren().add(mainLayout);
     }
 
-    private VBox createStatCard(String title, String value, String trend) {
-        VBox card = new VBox(5);
-        card.setPadding(new Insets(15));
-        card.setStyle("-fx-background-color: " + CARD_BG
-                + "; -fx-background-radius: 12; -fx-border-color: #30363d; -fx-border-radius: 12;");
-        Label tLbl = new Label(title);
-        tLbl.setTextFill(Color.GRAY);
-        tLbl.setFont(Font.font(12));
-        Label vLbl = new Label(value);
-        vLbl.setTextFill(Color.WHITE);
-        vLbl.setFont(Font.font("System", FontWeight.BOLD, 20));
-        card.getChildren().addAll(tLbl, vLbl);
-        if (trend != null) {
-            Label trendLbl = new Label(trend);
-            trendLbl.setTextFill(Color.web("#10b981"));
-            trendLbl.setFont(Font.font(10));
-            card.getChildren().add(trendLbl);
-        }
-        return card;
+    private void showPropertiesView() {
+        VBox view = new VBox(20);
+        view.setPadding(new Insets(20));
+        view.setAlignment(Pos.TOP_LEFT);
+
+        Label title = new Label("Properties");
+        title.setTextFill(Color.WHITE);
+        title.setFont(Font.font("System", FontWeight.BOLD, 24));
+
+        Button addBtn = new Button("Add Property");
+        addBtn.setStyle("-fx-background-color: " + PRIMARY
+                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 8;");
+        addBtn.setOnAction(e -> MainApp.navigateToFullScreen(new AddPropertyView())); // Assuming AddPropertyView
+                                                                                      // exists/works
+
+        Label empty = new Label("No properties listed yet.");
+        empty.setTextFill(Color.web(TEXT_GRAY));
+
+        view.getChildren().addAll(title, addBtn, empty);
+
+        // Wrap in scrollpane if content is long
+        ScrollPane scroll = new ScrollPane(view);
+        scroll.setFitToWidth(true);
+        scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+
+        contentArea.getChildren().setAll(scroll);
+    }
+
+    // Placeholder views for other tabs
+    private void showPlaceholderView(String titleStr) {
+        VBox view = new VBox(10);
+        view.setAlignment(Pos.CENTER);
+        Label title = new Label(titleStr);
+        title.setTextFill(Color.WHITE);
+        title.setFont(Font.font("System", FontWeight.BOLD, 20));
+        view.getChildren().add(title);
+        contentArea.getChildren().setAll(view);
+    }
+
+    private void showProfileView() {
+        // Re-using functionality or creating specific landlord profile logic
+        // For now, let's create a simple landlord profile view or navigation back to
+        // tenant mode
+        VBox view = new VBox(20);
+        view.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Landlord Profile");
+        title.setTextFill(Color.WHITE);
+        title.setFont(Font.font(20));
+
+        Button switchBtn = new Button("Switch to Tenant View");
+        switchBtn.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold;");
+        switchBtn.setOnAction(e -> MainApp.showHome()); // Navigate back to main app
+
+        view.getChildren().addAll(title, switchBtn);
+        contentArea.getChildren().setAll(view);
+    }
+
+    private HBox createBottomNav() {
+        HBox nav = new HBox(0);
+        nav.setAlignment(Pos.CENTER);
+        nav.setPrefHeight(70);
+        nav.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: " + BORDER_COLOR
+                + "; -fx-border-width: 1 0 0 0;");
+
+        // Items: Properties, Requests, Revenue, Stats, Profile
+        nav.getChildren().addAll(
+                createNavItem("Properties", "\ud83c\udfe2", true, e -> showPropertiesView()),
+                createNavItem("Requests", "\ud83d\udee0", false, e -> showPlaceholderView("Maintenance Requests")),
+                createNavItem("Revenue", "\ud83d\udcb3", false, e -> showPlaceholderView("Revenue & Finance")),
+                createNavItem("Stats", "\ud83d\udcc8", false, e -> showPlaceholderView("Statistics")),
+                createNavItem("Profile", "\ud83d\udc64", false, e -> showProfileView()));
+
+        return nav;
+    }
+
+    private VBox createNavItem(String label, String icon, boolean active,
+            javafx.event.EventHandler<javafx.scene.input.MouseEvent> handler) {
+        VBox item = new VBox(5);
+        item.setAlignment(Pos.CENTER);
+        item.setPrefWidth(80);
+        item.setCursor(javafx.scene.Cursor.HAND);
+        item.setOnMouseClicked(handler); // Add handler for tab switching visual logic if needed
+
+        // Simple visual toggle logic would require state management,
+        // for this iteration we'll just bind the action.
+        // To make it look "active", we'd need to redraw or update styles.
+        // For simplicity:
+        item.setOnMouseClicked(e -> {
+            handler.handle(e);
+            // Reset all styles (quick hack, ideally use ToggleGroup or separate class)
+            ((HBox) item.getParent()).getChildren().forEach(n -> {
+                VBox v = (VBox) n;
+                ((Label) v.getChildren().get(0)).setTextFill(Color.web(TEXT_GRAY));
+                ((Label) v.getChildren().get(1)).setTextFill(Color.web(TEXT_GRAY));
+            });
+            ((Label) item.getChildren().get(0)).setTextFill(Color.web(PRIMARY));
+            ((Label) item.getChildren().get(1)).setTextFill(Color.web(PRIMARY));
+        });
+
+        Label i = new Label(icon);
+        i.setStyle("-fx-font-size: 20;");
+        i.setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
+
+        Label l = new Label(label);
+        l.setFont(Font.font("System", FontWeight.MEDIUM, 10));
+        l.setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
+
+        item.getChildren().addAll(i, l);
+        return item;
     }
 }

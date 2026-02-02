@@ -318,7 +318,7 @@ public class TenantProfileView extends StackPane {
                 } else if (text.contains("Maintenance")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new MaintenanceRequestsListView()));
                 } else if (text.contains("Landlord")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new AdminMaintenanceDashboardView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new LandlordDashboardView()));
                 } else if (text.contains("Help")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new HelpSupportView()));
                 } else if (text.contains("Notifications")) {
