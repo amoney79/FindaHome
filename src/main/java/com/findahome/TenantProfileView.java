@@ -46,6 +46,7 @@ public class TenantProfileView extends StackPane {
                 Label settingsBtn = new Label("\u2699");
                 settingsBtn.setTextFill(Color.WHITE);
                 settingsBtn.setStyle("-fx-font-size: 22; -fx-cursor: hand;");
+                settingsBtn.setOnMouseClicked(e -> MainApp.navigateTo(new NotificationPrefsView()));
 
                 topNav.getChildren().addAll(backBtn, navTitle, settingsBtn);
 
@@ -147,6 +148,7 @@ public class TenantProfileView extends StackPane {
                 completeBtn.setPrefHeight(40);
                 completeBtn.setStyle("-fx-background-color: rgba(19, 127, 236, 0.1); -fx-text-fill: " + PRIMARY
                                 + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
+                completeBtn.setOnAction(e -> MainApp.navigateTo(new EditProfileView()));
 
                 strengthCard.getChildren().addAll(meterHead, pb, meterDesc, completeBtn);
                 strengthSec.getChildren().add(strengthCard);
@@ -205,6 +207,7 @@ public class TenantProfileView extends StackPane {
                 logoutBtn.setPrefHeight(56);
                 logoutBtn.setStyle(
                                 "-fx-background-color: rgba(239, 68, 68, 0.05); -fx-text-fill: #ef4444; -fx-font-weight: bold; -fx-background-radius: 12; -fx-border-color: rgba(239, 68, 68, 0.2); -fx-cursor: hand;");
+                logoutBtn.setOnAction(e -> MainApp.navigateToFullScreen(new OnboardingView()));
 
                 settingsSec.getChildren().addAll(settingsTitleLabel, settingsList, logoutBtn);
 
@@ -243,6 +246,10 @@ public class TenantProfileView extends StackPane {
                         card.setOnMouseClicked(e -> MainApp.navigateTo(new ScheduleView()));
                 } else if (title.contains("Applications")) {
                         card.setOnMouseClicked(e -> MainApp.navigateTo(new ApplicationTrackerView()));
+                } else if (title.contains("Saved")) {
+                        card.setOnMouseClicked(e -> MainApp.navigateTo(new SavedPropertiesView()));
+                } else if (title.contains("Payment")) {
+                        card.setOnMouseClicked(e -> MainApp.navigateTo(new PaymentHistoryView()));
                 }
 
                 StackPane iconStack = new StackPane();
@@ -322,6 +329,8 @@ public class TenantProfileView extends StackPane {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new LegalTermsView()));
                 } else if (text.contains("Deactivate")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
+                } else if (text.contains("Personal")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateTo(new EditProfileView()));
                 }
 
                 return row;
