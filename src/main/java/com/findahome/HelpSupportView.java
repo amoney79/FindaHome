@@ -85,11 +85,26 @@ public class HelpSupportView extends StackPane {
 
                 HBox chips = new HBox(12);
                 chips.setPadding(new Insets(0, 20, 10, 20));
-                chips.getChildren().addAll(
-                                createChip("\ud83d\udcc5", "Booking Issues"),
-                                createChip("\ud83d\udc5b", "Payment Help"),
-                                createChip("\u2699\ufe0f", "Account Settings"),
-                                createChip("\ud83d\udee1\ufe0f", "Agent Verification"));
+
+                String[][] chipData = {
+                                { "\ud83d\udcc5", "Booking Issues" },
+                                { "\ud83d\udc5b", "Payment Help" },
+                                { "\u2699\ufe0f", "Account Settings" },
+                                { "\ud83d\udee1\ufe0f", "Agent Verification" }
+                };
+
+                for (String[] data : chipData) {
+                        HBox chip = createChip(data[0], data[1]);
+                        chip.setOnMouseClicked(e -> {
+                                chips.getChildren().forEach(node -> {
+                                        node.setStyle("-fx-background-color: #28392e; -fx-background-radius: 8; -fx-cursor: hand;");
+                                });
+                                chip.setStyle("-fx-background-color: " + PRIMARY
+                                                + "44; -fx-background-radius: 8; -fx-cursor: hand; -fx-border-color: "
+                                                + PRIMARY + "; -fx-border-radius: 8;");
+                        });
+                        chips.getChildren().add(chip);
+                }
                 ScrollPane chipsPane = new ScrollPane(chips);
                 chipsPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 chipsPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);

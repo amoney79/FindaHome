@@ -60,10 +60,30 @@ public class PaymentView extends VBox {
                 mTitle.setFont(Font.font("System", FontWeight.BOLD, 16));
 
                 ToggleGroup group = new ToggleGroup();
-                methods.getChildren().addAll(mTitle,
-                                createMethod("M-Pesa", "Pay via STK Push", true, group),
-                                createMethod("Credit / Debit Card", "Visa, Mastercard", false, group),
-                                createMethod("Mobile Wallet", "Airtel Money", false, group));
+                HBox mpesa = createMethod("M-Pesa", "Pay via STK Push", true, group);
+                HBox card = createMethod("Credit / Debit Card", "Visa, Mastercard", false, group);
+                HBox wallet = createMethod("Mobile Wallet", "Airtel Money", false, group);
+
+                methods.getChildren().addAll(mTitle, mpesa, card, wallet);
+
+                for (javafx.scene.Node node : methods.getChildren()) {
+                        if (node instanceof HBox && node != mTitle) {
+                                HBox row = (HBox) node;
+                                row.setCursor(javafx.scene.Cursor.HAND);
+                                row.setOnMouseClicked(e -> {
+                                        methods.getChildren().forEach(n -> {
+                                                if (n instanceof HBox && n != mTitle) {
+                                                        n.setStyle("-fx-background-color: " + CARD_BG
+                                                                        + "; -fx-background-radius: 12; -fx-border-color: transparent;");
+                                                }
+                                        });
+                                        row.setStyle("-fx-background-color: " + CARD_BG
+                                                        + "; -fx-background-radius: 12; -fx-border-color: " + PRIMARY
+                                                        + ";");
+                                        ((RadioButton) row.getChildren().get(0)).setSelected(true);
+                                });
+                        }
+                }
 
                 // Pay Button
                 Button pay = new Button("\ud83d\udd12 Pay KSh 1,500.00 Now");

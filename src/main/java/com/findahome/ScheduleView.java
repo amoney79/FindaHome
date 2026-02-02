@@ -48,10 +48,22 @@ public class ScheduleView extends VBox {
         for (int i = 1; i <= 31; i++) {
             Button btn = new Button(String.valueOf(i));
             btn.setPrefSize(40, 40);
+            btn.setCursor(javafx.scene.Cursor.HAND);
+            final int day = i;
             if (i == 5)
                 btn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: white; -fx-background-radius: 8;");
             else
                 btn.setStyle("-fx-background-color: " + CARD_BG + "; -fx-text-fill: white; -fx-background-radius: 8;");
+
+            btn.setOnAction(e -> {
+                grid.getChildren().forEach(node -> {
+                    if (node instanceof Button) {
+                        node.setStyle("-fx-background-color: " + CARD_BG
+                                + "; -fx-text-fill: white; -fx-background-radius: 8;");
+                    }
+                });
+                btn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: white; -fx-background-radius: 8;");
+            });
             grid.add(btn, (i + 5) % 7, (i + 5) / 7 + 1);
         }
         calendar.getChildren().addAll(calTitle, grid);
@@ -61,11 +73,22 @@ public class ScheduleView extends VBox {
         Label timeTitle = new Label("Select Time Slot");
         timeTitle.setTextFill(Color.WHITE);
         FlowPane slots = new FlowPane(10, 10);
-        slots.getChildren().addAll(
-                createTimeSlot("09:00 AM", false),
-                createTimeSlot("10:30 AM", true),
-                createTimeSlot("01:00 PM", false),
-                createTimeSlot("03:30 PM", false));
+
+        String[] times = { "09:00 AM", "10:30 AM", "01:00 PM", "03:30 PM" };
+        for (String t : times) {
+            Button tBtn = createTimeSlot(t, t.equals("10:30 AM"));
+            tBtn.setOnAction(e -> {
+                slots.getChildren().forEach(node -> {
+                    if (node instanceof Button) {
+                        node.setStyle("-fx-background-color: " + CARD_BG
+                                + "; -fx-text-fill: white; -fx-background-radius: 10;");
+                    }
+                });
+                tBtn.setStyle("-fx-background-color: rgba(19, 91, 236, 0.1); -fx-border-color: " + PRIMARY
+                        + "; -fx-text-fill: white; -fx-background-radius: 10; -fx-border-radius: 10;");
+            });
+            slots.getChildren().add(tBtn);
+        }
         timeSection.getChildren().addAll(timeTitle, slots);
 
         // Footer

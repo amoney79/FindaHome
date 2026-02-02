@@ -197,6 +197,8 @@ public class DocumentVaultView extends StackPane {
                 text.getChildren().addAll(t, c);
 
                 card.getChildren().addAll(iconBox, text);
+                card.setCursor(javafx.scene.Cursor.HAND);
+                card.setOnMouseClicked(e -> MainApp.navigateTo(new DocumentCategoryListView(title)));
                 return card;
         }
 

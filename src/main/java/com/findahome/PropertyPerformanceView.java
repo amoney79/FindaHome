@@ -56,10 +56,24 @@ public class PropertyPerformanceView extends StackPane {
                 // Tabs
                 HBox tabs = new HBox(30);
                 tabs.setPadding(new Insets(15, 20, 0, 20));
-                tabs.getChildren().addAll(
-                                createTab("Monthly", true),
-                                createTab("Quarterly", false),
-                                createTab("Yearly", false));
+
+                String[] tabNames = { "Monthly", "Quarterly", "Yearly" };
+                for (String name : tabNames) {
+                        VBox tab = createTab(name, name.equals("Monthly"));
+                        tab.setCursor(javafx.scene.Cursor.HAND);
+                        tab.setOnMouseClicked(e -> {
+                                tabs.getChildren().forEach(node -> {
+                                        if (node instanceof VBox) {
+                                                ((VBox) node).getChildren().get(1).setVisible(false);
+                                                ((Label) ((VBox) node).getChildren().get(0))
+                                                                .setTextFill(Color.web(TEXT_GRAY));
+                                        }
+                                });
+                                tab.getChildren().get(1).setVisible(true);
+                                ((Label) tab.getChildren().get(0)).setTextFill(Color.WHITE);
+                        });
+                        tabs.getChildren().add(tab);
+                }
                 tabs.setStyle("-fx-border-color: #1a3a24; -fx-border-width: 0 0 1 0;");
 
                 // Occupancy Chart Section

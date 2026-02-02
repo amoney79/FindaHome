@@ -324,34 +324,35 @@ public class AddPropertyView extends VBox {
                 content.setPadding(new Insets(20, 20, 120, 20));
 
                 VBox headlineBox = new VBox(5);
-                Label headline = new Label("Location & Pricing");
+                Label headline = new Label("Location Details");
                 headline.setTextFill(Color.WHITE);
                 headline.setFont(Font.font("System", FontWeight.BOLD, 24));
                 Label subTxt = new Label(
-                                "Drag the map to pinpoint property location or enter the address manually below.");
+                                "Pinpoint your property's precise location for accurate search results.");
                 subTxt.setTextFill(Color.web(TEXT_MUTED));
                 subTxt.setFont(Font.font(13));
                 subTxt.setWrapText(true);
                 headlineBox.getChildren().addAll(headline, subTxt);
 
-                // Map simulation
+                // Map simulation with better organization
+                VBox mapContainer = new VBox(10);
                 StackPane mapRoot = new StackPane();
-                mapRoot.setPrefHeight(200);
+                mapRoot.setPrefHeight(180);
                 mapRoot.setStyle("-fx-background-color: " + CARD_BG
-                                + "; -fx-background-radius: 16; -fx-overflow: hidden; -fx-border-color: " + BORDER_COLOR
-                                + "; -fx-border-radius: 16;");
+                                + "; -fx-background-radius: 12; -fx-overflow: hidden; -fx-border-color: " + BORDER_COLOR
+                                + "; -fx-border-radius: 12;");
 
                 ImageView mapImg = new ImageView();
                 try {
                         mapImg.setImage(new Image(
                                         "https://lh3.googleusercontent.com/aida-public/AB6AXuCyasgGRNx5tRGMuc_AEZIJ22unAv5veHNgrniiBfnvdptdDscv2G8VMkuL3A-Umg33tapqmv68vQ2cfNgCiS308MNxsf1FkGtVBnRVqs9zNakB1pP5KsNw7AAmsDPLxFcAQjFR7JmMwYbz7znRGFqjEoV_ngOEHnxh1VyaX9k85Sv6y_YiIj2Lne8j7LaVUrKEg5fLuE4tdnZH1sBhCWyGGtPgZn9DMTYhCUwFuuGI-AnH7mfgOg0mx545jxs3_heSaYnMW5NtSFc",
                                         400, 200, false, true));
-                        mapImg.setFitWidth(400);
-                        mapImg.setFitHeight(200);
-                        mapImg.setOpacity(0.6);
-                        Rectangle clip = new Rectangle(400, 200);
-                        clip.setArcWidth(32);
-                        clip.setArcHeight(32);
+                        mapImg.setFitWidth(360);
+                        mapImg.setFitHeight(180);
+                        mapImg.setOpacity(0.7);
+                        Rectangle clip = new Rectangle(360, 180);
+                        clip.setArcWidth(24);
+                        clip.setArcHeight(24);
                         mapImg.setClip(clip);
                 } catch (Exception e) {
                 }
@@ -360,53 +361,44 @@ public class AddPropertyView extends VBox {
                 marker.setStyle("-fx-font-size: 32;");
                 marker.setTextFill(Color.web(PRIMARY));
 
-                Button recenter = new Button("\ud83c\udfaf");
-                recenter.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-text-fill: " + PRIMARY
-                                + "; -fx-background-radius: 8; -fx-padding: 8;");
-                StackPane.setAlignment(recenter, Pos.BOTTOM_RIGHT);
-                StackPane.setMargin(recenter, new Insets(10));
+                mapRoot.getChildren().addAll(mapImg, marker);
+                mapContainer.getChildren().add(mapRoot);
 
-                mapRoot.getChildren().addAll(mapImg, marker, recenter);
+                VBox locationForm = new VBox(15);
+                locationForm.getChildren().addAll(
+                                createChoiceField("County", "Select County", "Nairobi", "Mombasa", "Kiambu", "Nakuru",
+                                                "Uasin Gishu"),
+                                createChoiceField("Sub-County / Ward", "Select Ward", "Kilimani", "Kileleshwa",
+                                                "Westlands", "Parklands", "Lavington"),
+                                createIconField("Estate / Building", "e.g. Ocean View Apts, Wing A", "\ud83c\udfe2"),
+                                createIconField("Specific Address", "e.g. House 4, 3rd Floor, Ngong Rd",
+                                                "\ud83d\udccd"),
+                                createIconField("Nearest Landmark", "e.g. Near Junction Mall", "\ud83c\udfaf"));
 
-                VBox addressFields = new VBox(20);
-                addressFields.getChildren().addAll(
-                                createIconField("Physical Address", "e.g. Ngong Road, Nairobi", "\ud83c\udfec"),
-                                createIconField("Nearest Landmark", "e.g. Opposite Junction Mall",
-                                                "\ud83d\udef0\ufe0f"));
+                // Privacy Toggle
+                HBox privacyBox = new HBox(12);
+                privacyBox.setPadding(new Insets(15));
+                privacyBox.setAlignment(Pos.CENTER_LEFT);
+                privacyBox.setStyle("-fx-background-color: " + CARD_BG
+                                + "; -fx-background-radius: 12; -fx-border-color: " + BORDER_COLOR + ";");
 
-                // Toggle exact address
-                HBox toggleBox = new HBox(15);
-                toggleBox.setPadding(new Insets(15));
-                toggleBox.setAlignment(Pos.CENTER_LEFT);
-                toggleBox.setStyle(
-                                "-fx-background-color: rgba(19, 127, 236, 0.05); -fx-background-radius: 12; -fx-border-color: rgba(19, 127, 236, 0.1); -fx-border-radius: 12;");
+                VBox privTxt = new VBox(2);
+                Label privLbl = new Label("Protect Location Privacy");
+                privLbl.setTextFill(Color.WHITE);
+                privLbl.setFont(Font.font("System", FontWeight.BOLD, 14));
+                Label privSub = new Label("Show general neighborhood instead of exact pin.");
+                privSub.setTextFill(Color.web(TEXT_MUTED));
+                privSub.setFont(Font.font(11));
+                privTxt.getChildren().addAll(privLbl, privSub);
 
-                VBox toggleTxt = new VBox(2);
-                Label toggleLbl = new Label("Show Exact Address");
-                toggleLbl.setTextFill(Color.WHITE);
-                toggleLbl.setFont(Font.font("System", FontWeight.BOLD, 14));
-                Label toggleSub = new Label("If disabled, only the general neighborhood will be visible.");
-                toggleSub.setTextFill(Color.web(TEXT_MUTED));
-                toggleSub.setFont(Font.font(11));
-                toggleSub.setWrapText(true);
-                toggleSub.setMaxWidth(260);
-                toggleTxt.getChildren().addAll(toggleLbl, toggleSub);
+                Region pSpacer = new Region();
+                HBox.setHgrow(pSpacer, Priority.ALWAYS);
+                CheckBox pCheck = new CheckBox();
+                pCheck.setStyle("-fx-mark-color: white; -fx-box-color: " + PRIMARY + ";");
 
-                Region tSpacer = new Region();
-                HBox.setHgrow(tSpacer, Priority.ALWAYS);
+                privacyBox.getChildren().addAll(privTxt, pSpacer, pCheck);
 
-                // Switch
-                StackPane sw = new StackPane();
-                sw.setPrefSize(44, 24);
-                sw.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 12;");
-                Circle thumb = new Circle(10, Color.WHITE);
-                sw.getChildren().add(thumb);
-                StackPane.setAlignment(thumb, Pos.CENTER_RIGHT);
-                StackPane.setMargin(thumb, new Insets(2));
-
-                toggleBox.getChildren().addAll(toggleTxt, tSpacer, sw);
-
-                content.getChildren().addAll(headlineBox, mapRoot, addressFields, toggleBox);
+                content.getChildren().addAll(headlineBox, mapContainer, locationForm, privacyBox);
                 scrollContent.getChildren().add(content);
 
                 // Footer
