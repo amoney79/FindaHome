@@ -94,15 +94,6 @@ public class LandlordDashboardView extends StackPane {
     }
 
     // Placeholder views for other tabs
-    private void showPlaceholderView(String titleStr) {
-        VBox view = new VBox(10);
-        view.setAlignment(Pos.CENTER);
-        Label title = new Label(titleStr);
-        title.setTextFill(Color.WHITE);
-        title.setFont(Font.font("System", FontWeight.BOLD, 20));
-        view.getChildren().add(title);
-        contentArea.getChildren().setAll(view);
-    }
 
     private void showProfileView() {
         // Re-using functionality or creating specific landlord profile logic
@@ -133,9 +124,12 @@ public class LandlordDashboardView extends StackPane {
         // Items: Properties, Requests, Revenue, Stats, Profile
         nav.getChildren().addAll(
                 createNavItem("Properties", "\ud83c\udfe2", true, e -> showPropertiesView()),
-                createNavItem("Requests", "\ud83d\udee0", false, e -> showPlaceholderView("Maintenance Requests")),
-                createNavItem("Revenue", "\ud83d\udcb3", false, e -> showPlaceholderView("Revenue & Finance")),
-                createNavItem("Stats", "\ud83d\udcc8", false, e -> showPlaceholderView("Statistics")),
+                createNavItem("Requests", "\ud83d\udee0", false,
+                        e -> contentArea.getChildren().setAll(new AdminMaintenanceDashboardView())),
+                createNavItem("Revenue", "\ud83d\udcb3", false,
+                        e -> contentArea.getChildren().setAll(new EarningsAnalyticsView())),
+                createNavItem("Stats", "\ud83d\udcc8", false,
+                        e -> contentArea.getChildren().setAll(new PropertyPerformanceView())),
                 createNavItem("Profile", "\ud83d\udc64", false, e -> showProfileView()));
 
         return nav;

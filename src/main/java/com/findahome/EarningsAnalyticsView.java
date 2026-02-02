@@ -184,28 +184,8 @@ public class EarningsAnalyticsView extends StackPane {
 
                 content.getChildren().addAll(headline, chartSection, statsPane, transSection);
 
-                // Admin Bottom Nav
-                HBox bottomNav = new HBox(0);
-                bottomNav.setAlignment(Pos.CENTER);
-                bottomNav.setPrefHeight(80);
-                bottomNav.setStyle(
-                                "-fx-background-color: #111813; -fx-border-color: " + BORDER_COLOR
-                                                + "; -fx-border-width: 1 0 0 0;");
-                bottomNav.getChildren().addAll(
-                                createAdminNavItem("Properties", "\ud83c\udfe2", false, e -> {
-                                }),
-                                createAdminNavItem("Requests", "\ud83d\udee0", false,
-                                                e -> MainApp.navigateTo(new AdminMaintenanceDashboardView())),
-                                createAdminNavItem("Earnings", "\ud83d\udcb3", true, e -> {
-                                }),
-                                createAdminNavItem("Stats", "\ud83d\udcc8", false,
-                                                e -> MainApp.navigateTo(new PropertyPerformanceView())),
-                                createAdminNavItem("Profile", "\ud83d\udc64", false,
-                                                e -> MainApp.navigateTo(new TenantProfileView())));
-
                 layout.getChildren().addAll(header, scroll);
-                getChildren().addAll(layout, bottomNav);
-                StackPane.setAlignment(bottomNav, Pos.BOTTOM_CENTER);
+                getChildren().add(layout);
         }
 
         private VBox createStatCard(String label, String val, String change, String color) {
@@ -279,23 +259,4 @@ public class EarningsAnalyticsView extends StackPane {
                 return row;
         }
 
-        private VBox createAdminNavItem(String label, String icon, boolean active,
-                        javafx.event.EventHandler<javafx.scene.input.MouseEvent> handler) {
-                VBox item = new VBox(5);
-                item.setAlignment(Pos.CENTER);
-                item.setPrefWidth(85);
-                item.setCursor(javafx.scene.Cursor.HAND);
-                item.setOnMouseClicked(handler);
-
-                Label i = new Label(icon);
-                i.setStyle("-fx-font-size: 22;");
-                i.setTextFill(active ? Color.web(PRIMARY) : Color.web("#64748b"));
-
-                Label l = new Label(label);
-                l.setFont(Font.font("System", active ? FontWeight.BOLD : FontWeight.MEDIUM, 10));
-                l.setTextFill(active ? Color.web(PRIMARY) : Color.web("#64748b"));
-
-                item.getChildren().addAll(i, l);
-                return item;
-        }
 }

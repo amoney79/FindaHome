@@ -30,11 +30,6 @@ public class PropertyPerformanceView extends StackPane {
                 header.setPadding(new Insets(15, 20, 15, 20));
                 header.setStyle("-fx-border-color: #1a3a24; -fx-border-width: 0 0 1 0;");
 
-                Label backBtn = new Label("\u2039");
-                backBtn.setTextFill(Color.WHITE);
-                backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new AdminMaintenanceDashboardView()));
-
                 Label title = new Label("Performance");
                 title.setTextFill(Color.WHITE);
                 title.setFont(Font.font("System", FontWeight.BOLD, 18));
@@ -46,7 +41,7 @@ public class PropertyPerformanceView extends StackPane {
                 tuneBtn.setTextFill(Color.WHITE);
                 tuneBtn.setStyle("-fx-font-size: 20; -fx-cursor: hand;");
 
-                header.getChildren().addAll(backBtn, title, tuneBtn);
+                header.getChildren().addAll(title, tuneBtn);
 
                 // Scroll Content
                 VBox content = new VBox(0);

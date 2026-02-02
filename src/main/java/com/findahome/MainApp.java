@@ -274,7 +274,7 @@ public class MainApp extends Application {
         search.setStyle("-fx-background-color: " + CARD_BG
                 + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 10 10 10 35; -fx-font-size: 13;");
         search.setPrefHeight(44);
-        search.setOnAction(e -> navigateTo(new ChatView()));
+        search.setOnAction(e -> navigateToMap());
 
         Label searchIcon = new Label("\ud83d\udd0d");
         searchIcon.setTextFill(Color.web("#9ca3af"));
@@ -301,8 +301,7 @@ public class MainApp extends Application {
                 "-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: #333; -fx-border-width: 0.5 0 0 0;");
         bottomNav.getChildren().addAll(
                 createNavItem("Home", "\u2302", true, e -> showHome()),
-                createNavItem("Explore", "\ud83e\udded", false, e -> {
-                }),
+                createNavItem("Explore", "\ud83e\udded", false, e -> navigateToMap()),
                 createNavItem("Service", "\ud83d\udee0", false, e -> navigateTo(new MaintenanceRequestsListView())),
                 createNavItem("Messages", "\ud83d\udcac", false, e -> navigateTo(new ChatView())),
                 createNavItem("Profile", "\ud83d\udc64", false, e -> navigateTo(new TenantProfileView())));

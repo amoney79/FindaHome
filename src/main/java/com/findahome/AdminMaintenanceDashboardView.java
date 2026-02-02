@@ -119,27 +119,8 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 StackPane.setAlignment(fab, Pos.BOTTOM_RIGHT);
                 StackPane.setMargin(fab, new Insets(0, 20, 100, 0));
 
-                // Admin Bottom Nav
-                HBox bottomNav = new HBox(0);
-                bottomNav.setAlignment(Pos.CENTER);
-                bottomNav.setPrefHeight(80);
-                bottomNav.setStyle(
-                                "-fx-background-color: #111813; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
-                bottomNav.getChildren().addAll(
-                                createAdminNavItem("Properties", "\ud83c\udfe2", false, e -> {
-                                }),
-                                createAdminNavItem("Requests", hammerIcon.getText(), true, e -> {
-                                }),
-                                createAdminNavItem("Revenue", "\ud83d\udcb3", false,
-                                                e -> MainApp.navigateTo(new EarningsAnalyticsView())),
-                                createAdminNavItem("Stats", "\ud83d\udcc8", false,
-                                                e -> MainApp.navigateTo(new PropertyPerformanceView())),
-                                createAdminNavItem("Profile", "\ud83d\udc64", false,
-                                                e -> MainApp.navigateTo(new TenantProfileView())));
-
                 layout.getChildren().addAll(header, scroll);
-                getChildren().addAll(layout, fab, bottomNav);
-                StackPane.setAlignment(bottomNav, Pos.BOTTOM_CENTER);
+                getChildren().addAll(layout, fab);
         }
 
         private Label createCircleAction(String icon) {
@@ -351,21 +332,4 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 return row;
         }
 
-        private VBox createAdminNavItem(String label, String icon, boolean active,
-                        javafx.event.EventHandler<javafx.scene.input.MouseEvent> handler) {
-                VBox item = new VBox(5);
-                item.setAlignment(Pos.CENTER);
-                item.setPrefWidth(80);
-                item.setCursor(javafx.scene.Cursor.HAND);
-                item.setOnMouseClicked(handler);
-
-                Label i = new Label(icon);
-                i.setStyle("-fx-font-size: 22;");
-                i.setTextFill(active ? Color.web(PRIMARY) : Color.web("#64748b"));
-                Label l = new Label(label);
-                l.setFont(Font.font("System", FontWeight.BOLD, 10));
-                l.setTextFill(active ? Color.web(PRIMARY) : Color.web("#64748b"));
-                item.getChildren().addAll(i, l);
-                return item;
-        }
 }
