@@ -15,28 +15,26 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class GuideView extends StackPane {
+public class GuideView extends VBox {
 
         private static final String BACKGROUND_DARK = "#101622";
-        private static final String PRIMARY = "#13ec5b"; // Green theme
+        private static final String PRIMARY = "#13ec5b";
         private static final String TEXT_GRAY = "#9da6b9";
         private static final String CARD_BG = "#1c222c";
         private static final String DIVIDER_COLOR = "#2a3544";
 
         public GuideView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+                setSpacing(0);
 
-                BorderPane mainLayout = new BorderPane();
-
-                // Header (Sticky-like)
-                VBox header = new VBox();
-                header.setStyle("-fx-background-color: rgba(16, 22, 34, 0.95);");
+                // Header
+                HBox header = new HBox(15);
+                header.setAlignment(Pos.CENTER_LEFT);
                 header.setPadding(new Insets(15, 20, 15, 20));
+                header.setStyle("-fx-background-color: rgba(16, 22, 34, 0.95); -fx-border-color: " + DIVIDER_COLOR
+                                + "; -fx-border-width: 0 0 1 0;");
 
-                HBox navBar = new HBox(15);
-                navBar.setAlignment(Pos.CENTER_LEFT);
-
-                Label backBtn = new Label("\u2039"); // Arrow back
+                Label backBtn = new Label("\u2039");
                 backBtn.setFont(Font.font("System", FontWeight.BOLD, 28));
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setCursor(javafx.scene.Cursor.HAND);
@@ -45,17 +43,14 @@ public class GuideView extends StackPane {
                 Label title = new Label("Neighborhood Insight");
                 title.setTextFill(Color.WHITE);
                 title.setFont(Font.font("System", FontWeight.BOLD, 18));
-                title.setMaxWidth(Double.MAX_VALUE);
-                title.setAlignment(Pos.CENTER);
                 HBox.setHgrow(title, Priority.ALWAYS);
+                title.setAlignment(Pos.CENTER);
 
-                Label shareBtn = new Label("\u21E8"); // Share arrow
+                Label shareBtn = new Label("\u21E8");
                 shareBtn.setFont(Font.font("System", FontWeight.BOLD, 18));
                 shareBtn.setTextFill(Color.WHITE);
 
-                navBar.getChildren().addAll(backBtn, title, shareBtn);
-                header.getChildren().add(navBar);
-                mainLayout.setTop(header);
+                header.getChildren().addAll(backBtn, title, shareBtn);
 
                 // Scroll Content
                 ScrollPane scrollPane = new ScrollPane();
@@ -63,8 +58,9 @@ public class GuideView extends StackPane {
                 scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
                 scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
                 scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+                VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
-                VBox content = new VBox(20);
+                VBox content = new VBox(25);
                 content.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
                 // Hero Section
@@ -73,26 +69,23 @@ public class GuideView extends StackPane {
                 try {
                         ImageView heroImg = new ImageView(new Image(
                                         "https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1000&auto=format&fit=crop",
-                                        800, 300, true, true));
-                        heroImg.setPreserveRatio(true);
-                        heroImg.setFitWidth(800);
+                                        600, 300, true, true));
+                        heroImg.setFitWidth(600);
 
-                        // Darker Overlay for better text readability
                         Rectangle overlay = new Rectangle();
                         overlay.widthProperty().bind(hero.widthProperty());
                         overlay.heightProperty().bind(hero.heightProperty());
                         overlay.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                                        new Stop(0, Color.rgb(16, 22, 34, 0.4)),
-                                        new Stop(0.7, Color.rgb(16, 22, 34, 0.7)),
-                                        new Stop(1, Color.rgb(16, 22, 34, 1.0))));
+                                        new Stop(0, Color.rgb(16, 22, 34, 0.2)),
+                                        new Stop(1, Color.rgb(16, 22, 34, 0.8))));
 
                         VBox heroText = new VBox(5);
                         heroText.setAlignment(Pos.BOTTOM_LEFT);
                         heroText.setPadding(new Insets(30));
-                        Label ht1 = new Label("NEIGHBORHOOD GUIDE");
+                        Label ht1 = new Label("KILELESHWA");
                         ht1.setTextFill(Color.web(PRIMARY));
                         ht1.setFont(Font.font("System", FontWeight.BOLD, 14));
-                        Label ht2 = new Label("Kileleshwa, Nairobi");
+                        Label ht2 = new Label("Heart of Nairobi");
                         ht2.setTextFill(Color.WHITE);
                         ht2.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 36));
                         heroText.getChildren().addAll(ht1, ht2);
@@ -103,154 +96,93 @@ public class GuideView extends StackPane {
 
                 content.getChildren().add(hero);
 
-                // Community Scores
-                VBox scoresSec = new VBox(20);
-                scoresSec.setPadding(new Insets(0, 20, 0, 20));
-                scoresSec.getChildren().add(createSectionTitle("\ud83d\udcca", "Community Scores"));
+                // Stats Row
+                HBox statsRow = new HBox(15);
+                statsRow.setPadding(new Insets(0, 20, 0, 20));
+                statsRow.getChildren().addAll(
+                                createScoreCard("Safety", "8.5", "High", "#0bda5e"),
+                                createScoreCard("Noise", "7.2", "Quiet", "#fa6238"));
+                content.getChildren().add(statsRow);
 
-                HBox scoreCards = new HBox(15);
-                scoreCards.getChildren().addAll(
-                                createScoreCard("Safety Score", "8.5", "Increasing", "#0bda5e", "\ud83d\udee1"),
-                                createScoreCard("Quietness", "7.2", "Stable", "#fa6238", "\ud83d\udd07"));
-                scoresSec.getChildren().add(scoreCards);
-                content.getChildren().add(scoresSec);
+                // Amenities
+                VBox amenities = new VBox(20);
+                amenities.setPadding(new Insets(0, 20, 40, 20));
+                amenities.getChildren().add(createSectionHeader("Local Amenities"));
 
-                // Amenities Section
-                VBox amenitiesSect = new VBox(25);
-                amenitiesSect.setPadding(new Insets(10, 20, 30, 20));
-
-                Label amTitle = new Label("Neighborhood Amenities");
-                amTitle.setTextFill(Color.WHITE);
-                amTitle.setFont(Font.font("System", FontWeight.BOLD, 22));
-
-                VBox amGrid = new VBox(20);
-                amGrid.getChildren().addAll(
-                                createAmenityCategory("Education", "\ud83c\udf93",
-                                                createAmenityItem("Kileleshwa Primary", "Public \u2022 0.4 KM",
-                                                                "\ud83d\udcd6"),
-                                                createAmenityItem("Lavington School", "Intl \u2022 1.2 KM",
-                                                                "\ud83d\udcdc")),
-                                createAmenityCategory("Healthcare", "\ud83c\udfe5",
-                                                createAmenityItem("Medical Plaza", "Clinic \u2022 0.2 KM",
-                                                                "\ud83c\udfe5"),
-                                                createAmenityItem("Nairobi Hospital", "Branch \u2022 1.5 KM",
-                                                                "\ud83d\ude91")),
-                                createAmenityCategory("Transport", "\ud83d\ude8c",
-                                                createAmenityItem("Ring Road", "Major \u2022 0.1 KM", "\u26f5"),
-                                                createAmenityItem("Matatu Stage", "Stage \u2022 0.3 KM",
-                                                                "\ud83d\ude8f")));
-
-                amenitiesSect.getChildren().addAll(amTitle, amGrid);
-                content.getChildren().add(amenitiesSect);
+                amenities.getChildren().addAll(
+                                createAmenityItem("Kileleshwa Primary", "Education \u2022 0.4 KM", "\ud83d\udcd6"),
+                                createAmenityItem("Medical Plaza", "Health \u2022 0.2 KM", "\ud83c\udfe5"),
+                                createAmenityItem("Ring Road", "Transport \u2022 0.1 KM", "\ud83d\ude8c"));
+                content.getChildren().add(amenities);
 
                 scrollPane.setContent(content);
-                mainLayout.setCenter(scrollPane);
 
                 // Footer
-                VBox footer = new VBox();
-                footer.setPadding(new Insets(20));
-                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.95); -fx-border-color: " + DIVIDER_COLOR
+                HBox footer = new HBox();
+                footer.setPadding(new Insets(15, 20, 15, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: " + DIVIDER_COLOR
                                 + "; -fx-border-width: 1 0 0 0;");
-
-                Button browseBtn = new Button("Browse Listings in Kileleshwa  \u2794");
+                Button browseBtn = new Button("Browse Nearby Properties \u2192");
                 browseBtn.setMaxWidth(Double.MAX_VALUE);
-                browseBtn.setPrefHeight(56);
+                browseBtn.setPrefHeight(50);
                 browseBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
-                browseBtn.setOnAction(e -> MainApp.navigateTo(new AmenitiesMapView()));
-
+                                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 12;");
+                browseBtn.setOnAction(e -> MainApp.navigateToMap());
+                HBox.setHgrow(browseBtn, Priority.ALWAYS);
                 footer.getChildren().add(browseBtn);
-                mainLayout.setBottom(footer);
 
-                getChildren().add(mainLayout);
+                getChildren().addAll(header, scrollPane, footer);
         }
 
-        private HBox createSectionTitle(String icon, String text) {
-                HBox box = new HBox(10);
-                box.setAlignment(Pos.CENTER_LEFT);
-                Label ic = new Label(icon);
-                ic.setTextFill(Color.web(PRIMARY));
-                ic.setFont(Font.font(22));
-                Label tx = new Label(text);
-                tx.setTextFill(Color.WHITE);
-                tx.setFont(Font.font("System", FontWeight.BOLD, 22));
-                box.getChildren().addAll(ic, tx);
-                return box;
+        private Label createSectionHeader(String text) {
+                Label l = new Label(text);
+                l.setTextFill(Color.WHITE);
+                l.setFont(Font.font("System", FontWeight.BOLD, 20));
+                return l;
         }
 
-        private VBox createAmenityCategory(String title, String icon, HBox... items) {
-                VBox cat = new VBox(12);
-                HBox head = new HBox(10);
-                head.setAlignment(Pos.CENTER_LEFT);
-                Label ic = new Label(icon);
-                ic.setTextFill(Color.web(PRIMARY));
-                ic.setFont(Font.font(16));
-                Label t = new Label(title);
-                t.setTextFill(Color.WHITE);
-                t.setFont(Font.font("System", FontWeight.BOLD, 16));
-                head.getChildren().addAll(ic, t);
-
-                VBox list = new VBox(10);
-                list.getChildren().addAll(items);
-                cat.getChildren().addAll(head, list);
-                return cat;
-        }
-
-        private VBox createScoreCard(String title, String score, String detail, String colorHex, String iconStr) {
-                VBox card = new VBox(8);
+        private VBox createScoreCard(String title, String val, String status, String color) {
+                VBox card = new VBox(5);
                 card.setPadding(new Insets(15));
-                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16; -fx-border-color: "
-                                + DIVIDER_COLOR + "; -fx-border-radius: 16;");
+                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16;");
                 HBox.setHgrow(card, Priority.ALWAYS);
 
                 Label t = new Label(title);
-                t.setTextFill(Color.web(TEXT_GRAY));
-                t.setFont(Font.font(13));
+                t.setTextFill(TEXT_GRAY.equals("") ? Color.GRAY : Color.web(TEXT_GRAY));
+                t.setFont(Font.font(12));
 
-                HBox scoreRow = new HBox(5);
-                scoreRow.setAlignment(Pos.BASELINE_LEFT);
-                Label sc = new Label(score);
-                sc.setTextFill(Color.WHITE);
-                sc.setFont(Font.font("System", FontWeight.BOLD, 28));
-                Label max = new Label("/10");
-                max.setTextFill(Color.web(TEXT_GRAY));
-                max.setFont(Font.font(14));
-                scoreRow.getChildren().addAll(sc, max);
+                Label v = new Label(val);
+                v.setTextFill(Color.WHITE);
+                v.setFont(Font.font("System", FontWeight.BOLD, 24));
 
-                Label det = new Label(iconStr + " " + detail);
-                det.setTextFill(Color.web(colorHex));
-                det.setFont(Font.font("System", FontWeight.MEDIUM, 12));
+                Label s = new Label(status);
+                s.setTextFill(Color.web(color));
+                s.setFont(Font.font("System", FontWeight.BOLD, 10));
 
-                card.getChildren().addAll(t, scoreRow, det);
+                card.getChildren().addAll(t, v, s);
                 return card;
         }
 
-        private HBox createAmenityItem(String name, String sub, String iconStr) {
+        private HBox createAmenityItem(String name, String sub, String icon) {
                 HBox item = new HBox(12);
-                item.setPadding(new Insets(12));
                 item.setAlignment(Pos.CENTER_LEFT);
-                item.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 14; -fx-border-color: "
-                                + DIVIDER_COLOR + "; -fx-border-radius: 14;");
+                item.setPadding(new Insets(12));
+                item.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12;");
 
-                StackPane iconBox = new StackPane();
-                iconBox.setPrefSize(44, 44);
-                iconBox.setStyle("-fx-background-color: rgba(19, 236, 91, 0.1); -fx-background-radius: 10;");
-                Label ic = new Label(iconStr);
-                ic.setTextFill(Color.web(PRIMARY));
-                ic.setFont(Font.font(18));
-                iconBox.getChildren().add(ic);
+                Label i = new Label(icon);
+                i.setTextFill(Color.web(PRIMARY));
+                i.setFont(Font.font(20));
 
-                VBox text = new VBox(2);
+                VBox tx = new VBox(2);
                 Label n = new Label(name);
                 n.setTextFill(Color.WHITE);
-                n.setFont(Font.font("System", FontWeight.BOLD, 15));
+                n.setFont(Font.font("System", FontWeight.BOLD, 14));
                 Label s = new Label(sub);
                 s.setTextFill(Color.web(TEXT_GRAY));
-                s.setFont(Font.font(13));
-                text.getChildren().addAll(n, s);
-                HBox.setHgrow(text, Priority.ALWAYS);
+                s.setFont(Font.font(12));
+                tx.getChildren().addAll(n, s);
 
-                item.getChildren().addAll(iconBox, text);
+                item.getChildren().addAll(i, tx);
                 return item;
         }
 }

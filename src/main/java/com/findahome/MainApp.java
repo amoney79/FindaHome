@@ -175,10 +175,17 @@ public class MainApp extends Application {
         viewAll.setTextFill(Color.web(PRIMARY));
         recHeader.getChildren().addAll(recTitle, spacer, viewAll);
 
-        // Property Feed (Recommended)
+        // Recommended Items Section
         PropertyFeedView feed = new PropertyFeedView();
+        mainContent.getChildren().add(feed);
 
+        mainContent.getChildren().addAll(carouselScroll, categoryScroll);
+
+        // Note: PropertyFeedView already handles its own Recommended header and list.
+        // We just need to make sure the main content is laid out well.
+        mainContent.getChildren().clear();
         mainContent.getChildren().addAll(carouselScroll, categoryScroll, feed);
+
         ScrollPane mainScroll = new ScrollPane(mainContent);
         mainScroll.setFitToWidth(true);
         mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);

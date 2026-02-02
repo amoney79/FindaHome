@@ -13,8 +13,9 @@ import javafx.scene.text.FontWeight;
 
 public class PropertyMapView extends StackPane {
 
-        private static final String BACKGROUND_DARK = "#101922";
-        private static final String PRIMARY = "#137fec";
+        private static final String BACKGROUND_DARK = "#0d1117";
+        private static final String PRIMARY = "#135bec";
+        private static final String CARD_BG = "#161b22";
 
         public PropertyMapView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
@@ -43,24 +44,30 @@ public class PropertyMapView extends StackPane {
                 topOverlay.setPadding(new Insets(50, 20, 0, 20));
                 topOverlay.setPickOnBounds(false);
 
-                HBox searchContainer = new HBox(10);
+                HBox searchContainer = new HBox(5);
                 searchContainer.setAlignment(Pos.CENTER_LEFT);
-                searchContainer.setPadding(new Insets(8));
+                searchContainer.setPadding(new Insets(8, 12, 8, 12));
                 searchContainer.setStyle(
-                                "-fx-background-color: rgba(16, 25, 34, 0.9); -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 16;");
+                                "-fx-background-color: " + CARD_BG
+                                                + "; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 15, 0, 0, 5);");
+
+                Label backBtn = new Label("\u2039");
+                backBtn.setTextFill(Color.WHITE);
+                backBtn.setStyle("-fx-font-size: 26; -fx-cursor: hand; -fx-padding: 0 10 0 0;");
+                backBtn.setOnMouseClicked(e -> MainApp.showHome());
 
                 Label searchIcon = new Label("\ud83d\udd0d");
                 searchIcon.setTextFill(Color.web("#ffffff", 0.6));
-                searchIcon.setPadding(new Insets(0, 0, 0, 10));
+                searchIcon.setStyle("-fx-font-size: 16;");
 
                 TextField tf = new TextField("Westlands, Nairobi");
-                tf.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 0;");
+                tf.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-padding: 0 10; -fx-font-size: 14;");
                 HBox.setHgrow(tf, Priority.ALWAYS);
 
                 Button tuneBtn = new Button("\u2312");
                 tuneBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: " + PRIMARY
-                                + "; -fx-font-size: 18; -fx-cursor: hand;");
-                searchContainer.getChildren().addAll(searchIcon, tf, tuneBtn);
+                                + "; -fx-font-size: 20; -fx-cursor: hand;");
+                searchContainer.getChildren().addAll(backBtn, searchIcon, tf, tuneBtn);
 
                 HBox chips = new HBox(8);
                 chips.getChildren().addAll(
@@ -78,13 +85,15 @@ public class PropertyMapView extends StackPane {
 
                 VBox zoomGrp = new VBox(0);
                 zoomGrp.setStyle(
-                                "-fx-background-color: rgba(16, 25, 34, 0.9); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12;");
+                                "-fx-background-color: " + CARD_BG
+                                                + "; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12;");
                 Button p = createSquareBtn("+", true);
                 Button m = createSquareBtn("-", false);
                 zoomGrp.getChildren().addAll(p, m);
 
                 Button loc = createSquareBtn("\ud83c\udfaf", false);
-                loc.setStyle("-fx-background-color: rgba(16, 25, 34, 0.9); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12; -fx-text-fill: white;");
+                loc.setStyle("-fx-background-color: " + CARD_BG
+                                + "; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 12; -fx-text-fill: white;");
 
                 controls.getChildren().addAll(zoomGrp, loc);
 
@@ -163,6 +172,7 @@ public class PropertyMapView extends StackPane {
                 l.setTextFill(Color.WHITE);
                 l.setFont(Font.font("System", FontWeight.BOLD, 14));
                 c.getChildren().add(l);
+                c.setCursor(javafx.scene.Cursor.HAND);
                 return c;
         }
 
@@ -259,6 +269,10 @@ public class PropertyMapView extends StackPane {
 
                 details.getChildren().addAll(t, sub, specs, spacer, bottom);
                 card.getChildren().addAll(imgBox, details);
+                card.setCursor(javafx.scene.Cursor.HAND);
+                card.setOnMouseClicked(e -> MainApp.navigateTo(
+                                new PropertyDetailView(
+                                                new Property(title, "Nairobi", price, imgUrl, true, "Apartment"))));
                 return card;
         }
 

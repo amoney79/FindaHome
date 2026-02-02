@@ -246,7 +246,7 @@ public class EarningsAnalyticsView extends StackPane {
                 if (date.equals("Pending")) {
                         Label badge = new Label("PENDING");
                         badge.setStyle(
-                                        "-fx-background-color: rgba(249, 115, 22, 0.1); -fx-text-fill: #f97316; -fx-font-size: 8; -fx-padding: 2 6; -fx-background-radius: 10; -fx-font-weight: black;");
+                                        "-fx-background-color: rgba(249, 115, 22, 0.1); -fx-text-fill: #f97316; -fx-font-size: 8; -fx-padding: 2 6; -fx-background-radius: 10; -fx-font-weight: bold;");
                         amtBox.getChildren().addAll(a, badge);
                 } else {
                         Label d = new Label(date);

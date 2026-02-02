@@ -198,7 +198,7 @@ public class AdminMaintenanceDashboardView extends StackPane {
 
                 Label urgentBadge = new Label("URGENT ACTION");
                 urgentBadge.setStyle(
-                                "-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: black; -fx-font-size: 10; -fx-padding: 4 8; -fx-background-radius: 4;");
+                                "-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10; -fx-padding: 4 8; -fx-background-radius: 4;");
                 StackPane.setAlignment(urgentBadge, Pos.TOP_LEFT);
                 StackPane.setMargin(urgentBadge, new Insets(12));
 

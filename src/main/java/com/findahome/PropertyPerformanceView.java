@@ -267,7 +267,7 @@ public class PropertyPerformanceView extends StackPane {
                 pdfBtn.setMaxWidth(Double.MAX_VALUE);
                 pdfBtn.setPrefHeight(56);
                 pdfBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: black; -fx-background-radius: 16;");
+                                + "; -fx-font-weight: bold; -fx-background-radius: 16;");
                 pdfBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView("Export Successful",
                                 "Performance summary (PDF) has been saved to your downloads.")));
 

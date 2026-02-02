@@ -211,22 +211,6 @@ public class TenantProfileView extends StackPane {
 
                 scrollContent.getChildren().addAll(profileHeader, strengthSec, overviewSec, settingsSec);
 
-                // Bottom Navigation Bar
-                HBox bottomNav = new HBox();
-                bottomNav.setAlignment(Pos.CENTER);
-                bottomNav.setPadding(new Insets(10, 20, 25, 20));
-                bottomNav.setStyle("-fx-background-color: rgba(16, 25, 34, 0.9); -fx-border-color: " + BORDER_COLOR
-                                + "; -fx-border-width: 1 0 0 0;");
-
-                bottomNav.getChildren().addAll(
-                                createNavItem("Home", "\ud83c\udfe0", false, e -> MainApp.showHome()),
-                                createNavItem("Search", "\ud83d\udd0d", false, e -> MainApp.navigateToMap()),
-                                createNavItem("Messages", "\ud83d\udcac", false,
-                                                e -> MainApp.navigateTo(new ChatView())),
-                                createNavItem("Profile", "\ud83d\udc64", true, e -> {
-                                }));
-                HBox.setHgrow(bottomNav, Priority.ALWAYS);
-
                 VBox root = new VBox();
                 VBox.setVgrow(scroll, Priority.ALWAYS);
                 root.getChildren().addAll(topNav, scroll);
@@ -332,26 +316,5 @@ public class TenantProfileView extends StackPane {
                 }
 
                 return row;
-        }
-
-        private VBox createNavItem(String label, String iconCode, boolean active,
-                        javafx.event.EventHandler<javafx.scene.input.MouseEvent> handler) {
-                VBox item = new VBox(5);
-                item.setAlignment(Pos.CENTER);
-                item.setPadding(new Insets(0, 20, 0, 20));
-                HBox.setHgrow(item, Priority.ALWAYS);
-                item.setCursor(javafx.scene.Cursor.HAND);
-                item.setOnMouseClicked(handler);
-
-                Label icon = new Label(iconCode);
-                icon.setTextFill(active ? Color.web(PRIMARY) : Color.web("#94a3b8"));
-                icon.setStyle("-fx-font-size: 20;");
-
-                Label lbl = new Label(label);
-                lbl.setTextFill(active ? Color.web(PRIMARY) : Color.web("#94a3b8"));
-                lbl.setFont(Font.font("System", active ? FontWeight.BOLD : FontWeight.MEDIUM, 10));
-
-                item.getChildren().addAll(icon, lbl);
-                return item;
         }
 }

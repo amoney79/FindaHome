@@ -68,9 +68,7 @@ public class DeactivationSurveyView extends StackPane {
                 sub.setWrapText(true);
                 headline.getChildren().addAll(h1, sub);
 
-                // Survey Content
-                VBox surveySection = new VBox(25);
-                surveySection.setPadding(new Insets(10, 20, 20, 20));
+                // (Sections are added directly to scrollContent below)
 
                 // Group 1: Primary Reason
                 VBox primaryReasonSect = new VBox(12);

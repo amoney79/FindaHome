@@ -42,32 +42,6 @@ public class PropertyFeedView extends VBox {
                 breadcrumb.setCursor(javafx.scene.Cursor.HAND);
                 breadcrumb.setOnMouseClicked(e -> MainApp.navigateTo(new WardBoundarySelectionView()));
 
-                // Search Bar (Organized)
-                HBox searchContainer = new HBox(10);
-                searchContainer.setPadding(new Insets(0, 20, 0, 20));
-
-                StackPane searchField = new StackPane();
-                HBox.setHgrow(searchField, Priority.ALWAYS);
-
-                TextField input = new TextField();
-                input.setPromptText("Search by area, property type...");
-                input.setStyle("-fx-background-color: " + CARD_BG
-                                + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 0 10 0 35; -fx-pref-height: 44;");
-
-                Label searchIcon = new Label("\ud83d\udd0d");
-                searchIcon.setTextFill(Color.GRAY);
-                StackPane.setAlignment(searchIcon, Pos.CENTER_LEFT);
-                StackPane.setMargin(searchIcon, new Insets(0, 0, 0, 12));
-
-                searchField.getChildren().addAll(input, searchIcon);
-
-                Button filterBtn = new Button("\u2312"); // Settings icon
-                filterBtn.setStyle("-fx-background-color: " + CARD_BG + "; -fx-text-fill: " + PRIMARY
-                                + "; -fx-background-radius: 12; -fx-min-width: 44; -fx-min-height: 44; -fx-font-size: 18;");
-                filterBtn.setOnAction(e -> MainApp.navigateTo(new FilterView()));
-
-                searchContainer.getChildren().addAll(searchField, filterBtn);
-
                 // Feed Title
                 Label feedTitle = new Label("Recommended for You");
                 feedTitle.setTextFill(Color.WHITE);
@@ -80,7 +54,7 @@ public class PropertyFeedView extends VBox {
                 // Load Initial Data
                 loadMoreProperties();
 
-                getChildren().addAll(breadcrumb, searchContainer, feedTitle, propertyList);
+                getChildren().addAll(breadcrumb, feedTitle, propertyList);
         }
 
         private void loadMoreProperties() {
