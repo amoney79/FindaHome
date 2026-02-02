@@ -49,7 +49,6 @@ public class ScheduleView extends VBox {
             Button btn = new Button(String.valueOf(i));
             btn.setPrefSize(40, 40);
             btn.setCursor(javafx.scene.Cursor.HAND);
-            final int day = i;
             if (i == 5)
                 btn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: white; -fx-background-radius: 8;");
             else
