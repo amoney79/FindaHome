@@ -70,22 +70,19 @@ public class ApplicationTrackerView extends StackPane {
                 VBox.setVgrow(scroll, Priority.ALWAYS);
 
                 // Timeline Holder
-                AnchorPane timelineContainer = new AnchorPane();
+                StackPane timelineContainer = new StackPane();
                 timelineContainer.setPadding(new Insets(25, 20, 150, 20));
 
                 // Vertical Line
                 Region line = new Region();
                 line.setStyle("-fx-background-color: #3b4754; -fx-background-radius: 2;");
                 line.setPrefWidth(2);
-                AnchorPane.setLeftAnchor(line, 14.0);
-                AnchorPane.setTopAnchor(line, 40.0);
-                AnchorPane.setBottomAnchor(line, 40.0);
+                line.setMaxWidth(2);
+                line.setMaxHeight(Double.MAX_VALUE); // Fill height
+                StackPane.setAlignment(line, Pos.TOP_LEFT);
+                StackPane.setMargin(line, new Insets(15, 0, 15, 14)); // Align with bullet centers
 
                 VBox entryList = new VBox(25);
-                AnchorPane.setLeftAnchor(entryList, 0.0);
-                AnchorPane.setRightAnchor(entryList, 0.0);
-                AnchorPane.setTopAnchor(entryList, 0.0);
-
                 entryList.getChildren().addAll(
                                 createApplicationEntry("Modern 2BR Apartment", "Nairobi West \u2022 $1,200/mo",
                                                 "SUBMITTED", 1,

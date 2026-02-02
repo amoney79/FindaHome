@@ -146,7 +146,7 @@ public class TenantProfileView extends StackPane {
                 completeBtn.setPrefHeight(40);
                 completeBtn.setStyle("-fx-background-color: rgba(19, 127, 236, 0.1); -fx-text-fill: " + PRIMARY
                                 + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
-                completeBtn.setOnAction(e -> MainApp.navigateTo(new EditProfileView()));
+                completeBtn.setOnAction(e -> MainApp.navigateToFullScreen(new EditProfileView()));
 
                 strengthCard.getChildren().addAll(meterHead, pb, meterDesc, completeBtn);
                 strengthSec.getChildren().add(strengthCard);
@@ -243,11 +243,11 @@ public class TenantProfileView extends StackPane {
                 if (title.contains("Viewing")) {
                         card.setOnMouseClicked(e -> MainApp.navigateTo(new ScheduleView()));
                 } else if (title.contains("Applications")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateTo(new ApplicationTrackerView()));
+                        card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new ApplicationTrackerView()));
                 } else if (title.contains("Saved")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateTo(new SavedPropertiesView()));
+                        card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new SavedPropertiesView()));
                 } else if (title.contains("Payment")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateTo(new PaymentHistoryView()));
+                        card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new PaymentHistoryView()));
                 }
 
                 StackPane iconStack = new StackPane();
@@ -328,7 +328,7 @@ public class TenantProfileView extends StackPane {
                 } else if (text.contains("Deactivate")) {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
                 } else if (text.contains("Personal")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new EditProfileView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new EditProfileView()));
                 }
 
                 return row;
