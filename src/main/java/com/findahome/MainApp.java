@@ -88,6 +88,7 @@ public class MainApp extends Application {
         scene.getStylesheets().add(css);
         primaryStage.setTitle("FindaHome Marketplace");
         primaryStage.setScene(scene);
+        ResizeHelper.addResizeListener(primaryStage);
         primaryStage.show();
     }
 

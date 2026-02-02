@@ -22,8 +22,6 @@ public class TenantProfileView extends StackPane {
         public TenantProfileView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                VBox layout = new VBox(0);
-
                 // Top Navigation Bar
                 HBox topNav = new HBox();
                 topNav.setAlignment(Pos.CENTER_LEFT);
@@ -31,10 +29,10 @@ public class TenantProfileView extends StackPane {
                 topNav.setStyle("-fx-background-color: rgba(16, 25, 34, 0.8); -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-width: 0 0 1 0;");
 
-                Label backBtn = new Label("\u2039");
-                backBtn.setTextFill(Color.WHITE);
-                backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.showHome());
+                // Label backBtn = new Label("\u2039");
+                // backBtn.setTextFill(Color.WHITE);
+                // backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
+                // backBtn.setOnMouseClicked(e -> MainApp.showHome());
 
                 Label navTitle = new Label("Profile");
                 navTitle.setTextFill(Color.WHITE);
@@ -48,7 +46,7 @@ public class TenantProfileView extends StackPane {
                 settingsBtn.setStyle("-fx-font-size: 22; -fx-cursor: hand;");
                 settingsBtn.setOnMouseClicked(e -> MainApp.navigateTo(new NotificationPrefsView()));
 
-                topNav.getChildren().addAll(backBtn, navTitle, settingsBtn);
+                topNav.getChildren().addAll(navTitle, settingsBtn);
 
                 // Scroll Content
                 VBox scrollContent = new VBox(0);
@@ -229,10 +227,10 @@ public class TenantProfileView extends StackPane {
                                 }));
                 HBox.setHgrow(bottomNav, Priority.ALWAYS);
 
-                layout.getChildren().addAll(topNav, scroll);
-
-                getChildren().addAll(layout, bottomNav);
-                StackPane.setAlignment(bottomNav, Pos.BOTTOM_CENTER);
+                VBox root = new VBox();
+                VBox.setVgrow(scroll, Priority.ALWAYS);
+                root.getChildren().addAll(topNav, scroll);
+                getChildren().add(root);
         }
 
         private VBox createQuickCard(String title, String val, String iconCode, boolean hasNotification) {
