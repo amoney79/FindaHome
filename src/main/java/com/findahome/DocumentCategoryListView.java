@@ -11,7 +11,6 @@ import javafx.scene.text.FontWeight;
 public class DocumentCategoryListView extends StackPane {
 
     private static final String BACKGROUND_DARK = "#102216";
-    private static final String PRIMARY = "#13ec5b";
     private static final String BORDER_COLOR = "rgba(255,255,255,0.1)";
     private static final String CARD_BG = "rgba(255,255,255,0.05)";
     private static final String TEXT_GRAY = "#94a3b8";

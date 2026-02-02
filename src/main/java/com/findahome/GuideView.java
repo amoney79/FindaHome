@@ -235,17 +235,6 @@ public class GuideView extends StackPane {
                 return card;
         }
 
-        private VBox createAmenitySection(String icon, String title, HBox... items) {
-                VBox section = new VBox(15);
-                section.setPadding(new Insets(0, 20, 0, 20));
-                section.getChildren().add(createSectionTitle(icon, title));
-
-                VBox list = new VBox(10);
-                list.getChildren().addAll(items);
-                section.getChildren().add(list);
-                return section;
-        }
-
         private HBox createAmenityItem(String name, String sub, String dist, String iconStr) {
                 HBox item = new HBox(12);
                 item.setPadding(new Insets(16));
