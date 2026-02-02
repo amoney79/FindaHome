@@ -19,6 +19,10 @@ public class SuccessView extends VBox {
                                 "Back to Explore");
         }
 
+        public SuccessView(String titleText, String descText) {
+                this(titleText, descText, "Back to Home");
+        }
+
         public SuccessView(String titleText, String descText, String btnText) {
                 setAlignment(Pos.CENTER);
                 setSpacing(30);
@@ -44,7 +48,7 @@ public class SuccessView extends VBox {
                 desc.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
                 textBox.getChildren().addAll(title, desc);
 
-                // Info Card
+                // Info Card (Optional)
                 VBox card = new VBox(15);
                 card.setPadding(new Insets(20));
                 card.setStyle("-fx-background-color: #1c271f; -fx-background-radius: 16;");
@@ -72,9 +76,13 @@ public class SuccessView extends VBox {
                                 + "; -fx-font-weight: bold;");
                 actionBtn.setOnAction(e -> MainApp.showHome());
 
-                buttons.getChildren().addAll(chat, cal, actionBtn);
-
-                getChildren().addAll(iconBox, textBox, card, buttons);
+                if (titleText.toLowerCase().contains("booking") || titleText.toLowerCase().contains("assignment")) {
+                        buttons.getChildren().addAll(chat, cal, actionBtn);
+                        getChildren().addAll(iconBox, textBox, card, buttons);
+                } else {
+                        buttons.getChildren().addAll(actionBtn);
+                        getChildren().addAll(iconBox, textBox, buttons);
+                }
         }
 
         private HBox createRow(String icon, String title, String sub) {
