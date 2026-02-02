@@ -10,174 +10,173 @@ import javafx.scene.text.FontWeight;
 
 public class DeactivationSurveyView extends StackPane {
 
-    private static final String BACKGROUND_DARK = "#121212";
-    private static final String CARD_BG = "#1e1e1e";
-    private static final String PRIMARY_RED = "#ec1313";
-    private static final String TEXT_GRAY = "#94a3b8";
-    private static final String BORDER_DARK = "#333333";
+        private static final String BACKGROUND_DARK = "#121212";
+        private static final String CARD_BG = "#1e1e1e";
+        private static final String PRIMARY_RED = "#ec1313";
+        private static final String TEXT_GRAY = "#94a3b8";
+        private static final String BORDER_DARK = "#333333";
 
-    public DeactivationSurveyView() {
-        setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+        public DeactivationSurveyView() {
+                setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-        VBox layout = new VBox(0);
-        layout.setAlignment(Pos.TOP_CENTER);
+                VBox layout = new VBox(0);
+                layout.setAlignment(Pos.TOP_CENTER);
 
-        // Header
-        HBox header = new HBox(15);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.setPadding(new Insets(15, 20, 15, 20));
-        header.setStyle("-fx-background-color: " + BACKGROUND_DARK + "cc; -fx-border-color: " + BORDER_DARK
-                + "; -fx-border-width: 0 0 1 0;");
+                // Header
+                HBox header = new HBox(15);
+                header.setAlignment(Pos.CENTER_LEFT);
+                header.setPadding(new Insets(15, 20, 15, 20));
+                header.setStyle("-fx-background-color: " + BACKGROUND_DARK + "cc; -fx-border-color: " + BORDER_DARK
+                                + "; -fx-border-width: 0 0 1 0;");
 
-        Label backBtn = new Label("\u2039"); // arrow_back_ios
-        backBtn.setTextFill(Color.WHITE);
-        backBtn.setStyle("-fx-font-size: 24; -fx-cursor: hand;");
-        backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
+                Label backBtn = new Label("\u2039"); // arrow_back_ios
+                backBtn.setTextFill(Color.WHITE);
+                backBtn.setStyle("-fx-font-size: 24; -fx-cursor: hand;");
+                backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
 
-        Label title = new Label("Deactivate Account");
-        title.setTextFill(Color.WHITE);
-        title.setFont(Font.font("System", FontWeight.BOLD, 16));
-        title.setAlignment(Pos.CENTER);
-        title.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(title, Priority.ALWAYS);
-        HBox.setMargin(title, new Insets(0, 40, 0, 0)); // Center offset
+                Label title = new Label("Deactivate Account");
+                title.setTextFill(Color.WHITE);
+                title.setFont(Font.font("System", FontWeight.BOLD, 16));
+                title.setAlignment(Pos.CENTER);
+                title.setMaxWidth(Double.MAX_VALUE);
+                HBox.setHgrow(title, Priority.ALWAYS);
+                HBox.setMargin(title, new Insets(0, 40, 0, 0)); // Center offset
 
-        header.getChildren().addAll(backBtn, title);
+                header.getChildren().addAll(backBtn, title);
 
-        // Scroll Content
-        VBox scrollContent = new VBox(0);
-        scrollContent.setAlignment(Pos.TOP_CENTER);
-        scrollContent.setPadding(new Insets(0, 0, 150, 0)); // Space for footer
+                // Scroll Content
+                VBox scrollContent = new VBox(0);
+                scrollContent.setAlignment(Pos.TOP_CENTER);
+                scrollContent.setPadding(new Insets(0, 0, 150, 0)); // Space for footer
 
-        ScrollPane scroll = new ScrollPane(scrollContent);
-        scroll.setFitToWidth(true);
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        VBox.setVgrow(scroll, Priority.ALWAYS);
+                ScrollPane scroll = new ScrollPane(scrollContent);
+                scroll.setFitToWidth(true);
+                scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+                VBox.setVgrow(scroll, Priority.ALWAYS);
 
-        // Headline
-        VBox headline = new VBox(8);
-        headline.setPadding(new Insets(32, 20, 20, 20));
-        Label h1 = new Label("Why are you leaving?");
-        h1.setTextFill(Color.WHITE);
-        h1.setFont(Font.font("System", FontWeight.BOLD, 28));
-        Label sub = new Label("We're sorry to see you go. Help us improve FindaHome by telling us why.");
-        sub.setTextFill(Color.web(TEXT_GRAY));
-        sub.setFont(Font.font(14));
-        sub.setWrapText(true);
-        headline.getChildren().addAll(h1, sub);
+                // Headline
+                VBox headline = new VBox(8);
+                headline.setPadding(new Insets(32, 20, 20, 20));
+                Label h1 = new Label("Why are you leaving?");
+                h1.setTextFill(Color.WHITE);
+                h1.setFont(Font.font("System", FontWeight.BOLD, 28));
+                Label sub = new Label("We're sorry to see you go. Help us improve FindaHome by telling us why.");
+                sub.setTextFill(Color.web(TEXT_GRAY));
+                sub.setFont(Font.font(14));
+                sub.setWrapText(true);
+                headline.getChildren().addAll(h1, sub);
 
-        // Radio List
-        VBox radioList = new VBox(12);
-        radioList.setPadding(new Insets(10, 20, 20, 20));
+                // Survey Content
+                VBox surveySection = new VBox(25);
+                surveySection.setPadding(new Insets(10, 20, 20, 20));
 
-        ToggleGroup group = new ToggleGroup();
+                // Group 1: Primary Reason
+                VBox primaryReasonSect = new VBox(12);
+                Label primaryTitle = new Label("What's the main reason?");
+                primaryTitle.setTextFill(Color.WHITE);
+                primaryTitle.setFont(Font.font("System", FontWeight.BOLD, 16));
 
-        radioList.getChildren().addAll(
-                createReasonOption("Found a home elsewhere", group, true),
-                createReasonOption("App is hard to use", group, false),
-                createReasonOption("Privacy concerns", group, false),
-                createReasonOption("Too many notifications", group, false),
-                createReasonOption("Other", group, false));
+                ToggleGroup group = new ToggleGroup();
+                VBox reasons = new VBox(10);
+                reasons.getChildren().addAll(
+                                createReasonOption("Found a home elsewhere", group, true),
+                                createReasonOption("App is hard to use", group, false),
+                                createReasonOption("Privacy concerns", group, false),
+                                createReasonOption("Too many notifications", group, false));
+                primaryReasonSect.getChildren().addAll(primaryTitle, reasons);
 
-        // Additional Comments
-        VBox commentsSect = new VBox(10);
-        commentsSect.setPadding(new Insets(10, 20, 20, 20));
+                // Group 2: Feedback
+                VBox feedbackSect = new VBox(10);
+                Label feedbackTitle = new Label("How can we improve?");
+                feedbackTitle.setTextFill(Color.WHITE);
+                feedbackTitle.setFont(Font.font("System", FontWeight.BOLD, 16));
 
-        Label commentsTitle = new Label("Additional comments");
-        commentsTitle.setTextFill(Color.WHITE);
-        commentsTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
+                TextArea commentsArea = new TextArea();
+                commentsArea.setPromptText("Share your experience or suggestions...");
+                commentsArea.setPrefHeight(120);
+                commentsArea.setWrapText(true);
+                commentsArea.setStyle("-fx-control-inner-background: " + CARD_BG
+                                + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-border-color: " + BORDER_DARK
+                                + "; -fx-border-radius: 12;");
 
-        TextArea commentsArea = new TextArea();
-        commentsArea.setPromptText("Tell us more about your experience... (optional)");
-        commentsArea.setPrefHeight(140);
-        commentsArea.setWrapText(true);
-        commentsArea.setStyle("-fx-control-inner-background: " + CARD_BG + "; -fx-background-color: " + CARD_BG +
-                "; -fx-text-fill: white; -fx-prompt-text-fill: #666; -fx-background-radius: 12; " +
-                "-fx-border-color: " + BORDER_DARK + "; -fx-border-radius: 12; -fx-padding: 10;");
+                feedbackSect.getChildren().addAll(feedbackTitle, commentsArea);
 
-        Label charCount = new Label("MAX 500 CHARACTERS");
-        charCount.setTextFill(Color.web("#666"));
-        charCount.setFont(Font.font("System", FontWeight.NORMAL, 9));
-        charCount.setAlignment(Pos.CENTER_RIGHT);
-        charCount.setMaxWidth(Double.MAX_VALUE);
+                scrollContent.getChildren().addAll(headline, primaryReasonSect, feedbackSect);
 
-        commentsSect.getChildren().addAll(commentsTitle, commentsArea, charCount);
+                // Footer
+                VBox footer = new VBox(20);
+                footer.setPadding(new Insets(20, 20, 40, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "f0; -fx-border-color: " + BORDER_DARK
+                                + "; -fx-border-width: 1 0 0 0;");
 
-        scrollContent.getChildren().addAll(headline, radioList, commentsSect);
+                HBox warningBox = new HBox(10);
+                warningBox.setAlignment(Pos.TOP_LEFT);
+                Label warnIcon = new Label("\u26a0\ufe0f"); // Warning icon
+                warnIcon.setTextFill(Color.web(PRIMARY_RED));
+                Label warnText = new Label(
+                                "This action is permanent and cannot be undone. All your saved listings and message history will be deleted.");
+                warnText.setTextFill(Color.web(TEXT_GRAY));
+                warnText.setFont(Font.font(12));
+                warnText.setWrapText(true);
+                HBox.setHgrow(warnText, Priority.ALWAYS);
+                warningBox.getChildren().addAll(warnIcon, warnText);
 
-        // Footer
-        VBox footer = new VBox(20);
-        footer.setPadding(new Insets(20, 20, 40, 20));
-        footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "f0; -fx-border-color: " + BORDER_DARK
-                + "; -fx-border-width: 1 0 0 0;");
+                Button finalBtn = new Button("Deactivate Account");
+                finalBtn.setMaxWidth(Double.MAX_VALUE);
+                finalBtn.setPrefHeight(56);
+                finalBtn.setStyle("-fx-background-color: " + PRIMARY_RED
+                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
+                finalBtn.setOnAction(e -> MainApp.showHome());
 
-        HBox warningBox = new HBox(10);
-        warningBox.setAlignment(Pos.TOP_LEFT);
-        Label warnIcon = new Label("\u26a0\ufe0f"); // Warning icon
-        warnIcon.setTextFill(Color.web(PRIMARY_RED));
-        Label warnText = new Label(
-                "This action is permanent and cannot be undone. All your saved listings and message history will be deleted.");
-        warnText.setTextFill(Color.web(TEXT_GRAY));
-        warnText.setFont(Font.font(12));
-        warnText.setWrapText(true);
-        HBox.setHgrow(warnText, Priority.ALWAYS);
-        warningBox.getChildren().addAll(warnIcon, warnText);
+                footer.getChildren().addAll(warningBox, finalBtn);
 
-        Button finalBtn = new Button("Deactivate Account");
-        finalBtn.setMaxWidth(Double.MAX_VALUE);
-        finalBtn.setPrefHeight(56);
-        finalBtn.setStyle("-fx-background-color: " + PRIMARY_RED
-                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
-        finalBtn.setOnAction(e -> MainApp.showHome());
-
-        footer.getChildren().addAll(warningBox, finalBtn);
-
-        layout.getChildren().addAll(header, scroll);
-        getChildren().addAll(layout, footer);
-        StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
-    }
-
-    private HBox createReasonOption(String text, ToggleGroup group, boolean selected) {
-        HBox row = new HBox(15);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(15));
-        row.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12; -fx-border-color: "
-                + BORDER_DARK + "; -fx-border-radius: 12; -fx-cursor: hand;");
-
-        Label lbl = new Label(text);
-        lbl.setTextFill(Color.WHITE);
-        lbl.setFont(Font.font("System", FontWeight.MEDIUM, 14));
-        HBox.setHgrow(lbl, Priority.ALWAYS);
-
-        RadioButton rb = new RadioButton();
-        rb.setToggleGroup(group);
-        rb.setSelected(selected);
-        // Custom styling for radio buttons in JavaFX is more complex, but we'll use the
-        // default for integration
-
-        row.getChildren().addAll(lbl, rb);
-
-        row.setOnMouseClicked(e -> rb.setSelected(true));
-
-        // Visual feedback for selection
-        rb.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                row.setStyle(
-                        "-fx-background-color: rgba(236, 19, 19, 0.05); -fx-background-radius: 12; -fx-border-color: "
-                                + PRIMARY_RED + "; -fx-border-radius: 12;");
-            } else {
-                row.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12; -fx-border-color: "
-                        + BORDER_DARK + "; -fx-border-radius: 12;");
-            }
-        });
-
-        if (selected) {
-            row.setStyle("-fx-background-color: rgba(236, 19, 19, 0.05); -fx-background-radius: 12; -fx-border-color: "
-                    + PRIMARY_RED + "; -fx-border-radius: 12;");
+                layout.getChildren().addAll(header, scroll);
+                getChildren().addAll(layout, footer);
+                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
         }
 
-        return row;
-    }
+        private HBox createReasonOption(String text, ToggleGroup group, boolean selected) {
+                HBox row = new HBox(15);
+                row.setAlignment(Pos.CENTER_LEFT);
+                row.setPadding(new Insets(15));
+                row.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12; -fx-border-color: "
+                                + BORDER_DARK + "; -fx-border-radius: 12; -fx-cursor: hand;");
+
+                Label lbl = new Label(text);
+                lbl.setTextFill(Color.WHITE);
+                lbl.setFont(Font.font("System", FontWeight.MEDIUM, 14));
+                HBox.setHgrow(lbl, Priority.ALWAYS);
+
+                RadioButton rb = new RadioButton();
+                rb.setToggleGroup(group);
+                rb.setSelected(selected);
+                // Custom styling for radio buttons in JavaFX is more complex, but we'll use the
+                // default for integration
+
+                row.getChildren().addAll(lbl, rb);
+
+                row.setOnMouseClicked(e -> rb.setSelected(true));
+
+                // Visual feedback for selection
+                rb.selectedProperty().addListener((obs, oldVal, newVal) -> {
+                        if (newVal) {
+                                row.setStyle(
+                                                "-fx-background-color: rgba(236, 19, 19, 0.05); -fx-background-radius: 12; -fx-border-color: "
+                                                                + PRIMARY_RED + "; -fx-border-radius: 12;");
+                        } else {
+                                row.setStyle("-fx-background-color: " + CARD_BG
+                                                + "; -fx-background-radius: 12; -fx-border-color: "
+                                                + BORDER_DARK + "; -fx-border-radius: 12;");
+                        }
+                });
+
+                if (selected) {
+                        row.setStyle("-fx-background-color: rgba(236, 19, 19, 0.05); -fx-background-radius: 12; -fx-border-color: "
+                                        + PRIMARY_RED + "; -fx-border-radius: 12;");
+                }
+
+                return row;
+        }
 }

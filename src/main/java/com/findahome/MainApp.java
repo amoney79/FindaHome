@@ -175,36 +175,14 @@ public class MainApp extends Application {
         viewAll.setTextFill(Color.web(PRIMARY));
         recHeader.getChildren().addAll(recTitle, spacer, viewAll);
 
-        // Property Grid
-        GridPane propertyGrid = new GridPane();
-        propertyGrid.setHgap(12);
-        propertyGrid.setVgap(12);
-        propertyGrid.setPadding(new Insets(12, 15, 12, 15));
+        // Property Feed (Recommended)
+        PropertyFeedView feed = new PropertyFeedView();
 
-        java.util.List<Property> properties = java.util.Arrays.asList(
-                new Property("Luxury Studio Unit", "Westlands, Nairobi", "$450",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDislB9eDStdQfVeUXT-SyVYIktdYj4dn1rLs71l6k9U2PyNGYNNFrTSNc9vpmx-1nxZvV3C7xTOHKuL_z-JzyJlV_T9zSmkLpWqQELXWnwdeBWTC_gAwAsO4XuJ9XTTKaNGxd6KvkFkqfHdtlaykJTFfvzJjU7r5Dz5nFelagyTDehv6EwDvE3Dmm0Pv4IBvdDn6HaikyLJuu5BGtc6TRELsBd5pTZoYhKM13gtdCCDe07Kg4J7KzTaxaSxrK6staX7TwHfOMKMTQ",
-                        true, null),
-                new Property("2BR Modern Suite", "Lavington, NRB", "$800",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDG00XTZfB-0RJWAH5ntfeIWEm-D7rXH3ooNudSORqshuVmuRIan4DJ6jPvc3pF2YAPsG6AEonNw-voJD_x8cZNkhrpxWPKo1ERyiAfLBDCnYbaiIe5D5M8lwdZni-UGSzbpcW-J2fmZXtnHUsalrE0JeUXttj10aKkzqhBVU0hebAqF3XLpT9-7YiX8CrqB_Cpd5QxgSn5SAmO0CeYfHRdZzEAu3g-SDwTzSFCLpGgyAfazl9BvQDZt4hBfxOxSrfNiLXNgHPtBm0",
-                        false, null),
-                new Property("Executive 4BR Villa", "Karen, Nairobi", "$1,500",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDblUsX1Myvx0JUaD3Z9wugmUqDxFndrVcWjFJgiYU4vIiQ5oWLZhZpbuySB8TLHvOJDx7qkEAgmRcrFKxsxQenWHL4acGft7TQpKUzP_zElU92BlOzWRYEXdg-E6GUwA1UoSFfuJIHlEYkS1LFZRPiN6oJbKdploWq2a39H1TN_tFa6pesI3Jif03gH6nGku8sJ_HmeTChoO-yhS5bMfp8fZ-Ko4FPntOio9Xk9soN_u5ciSo_xBlSdoAkLRGyKgcQ4AJ58qgRHl0",
-                        false, "Hot Deal"),
-                new Property("Standard Bedsitter", "Ruiru, Bypass", "$180",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuAe5msutXOEb9y9l09DYhDJqPMIKapWT6Ih_RTOyAIEBM6BhE0MceARFLMOYifKcjgmedN0ZWC3LS6XTCNhvi3flJI1SDcu6b_nEPnitzWIBckUrKrFe_QJgyeeuw8YAao2ixslWTFgRuiH7JQFpQxoR2cUiaHhEBLNy_K-42jS11uRVBsuTZygpX23GrwoGhaeVmS1wacUsvEEKew9nNypSSIp2xr7RZoFzXDTmn0tt9T-LlgWZ0QMm2Nslrv503mJU6A689WZYdo",
-                        false, null));
-
-        for (int i = 0; i < properties.size(); i++) {
-            Property p = properties.get(i);
-            VBox card = createPropertyCard(p);
-            card.setOnMouseClicked(e -> navigateTo(new PropertyDetailView(p)));
-            propertyGrid.add(card, i % 2, i / 2);
-        }
-
-        mainContent.getChildren().addAll(carouselScroll, categoryScroll, recHeader, propertyGrid);
+        mainContent.getChildren().addAll(carouselScroll, categoryScroll, feed);
         ScrollPane mainScroll = new ScrollPane(mainContent);
         mainScroll.setFitToWidth(true);
+        mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         mainScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
         contentArea.getChildren().setAll(mainScroll);
