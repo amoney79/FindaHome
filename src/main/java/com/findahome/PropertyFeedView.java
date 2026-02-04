@@ -11,13 +11,22 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import javafx.beans.property.*;
+
 public class PropertyFeedView extends VBox {
 
         private static final String PRIMARY = "#13ec5b";
         private static final String CARD_BG = "#1c271f";
         private static final String TEXT_GRAY = "#9db9a6";
 
-        private VBox propertyList;
+        private FlowPane propertyList;
+        private boolean isLoading = false;
+        private Label loadingLabel;
+
+        private DoubleProperty cardWidth = new SimpleDoubleProperty(360);
+        private IntegerProperty columns = new SimpleIntegerProperty(1);
 
         public PropertyFeedView() {
                 setSpacing(20);
@@ -48,22 +57,63 @@ public class PropertyFeedView extends VBox {
                 feedTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
                 feedTitle.setPadding(new Insets(10, 20, 0, 20));
 
-                propertyList = new VBox(20);
+                propertyList = new FlowPane();
+                propertyList.setHgap(15);
+                propertyList.setVgap(20);
                 propertyList.setPadding(new Insets(0, 20, 0, 20));
+                propertyList.setAlignment(Pos.TOP_CENTER);
+
+                // Responsive Listener
+                widthProperty().addListener((obs, oldVal, newVal) -> {
+                        double w = newVal.doubleValue();
+                        if (w > 1000)
+                                columns.set(3);
+                        else if (w > 600)
+                                columns.set(2);
+                        else
+                                columns.set(1);
+
+                        double availableWidth = w - 40 - (columns.get() - 1) * propertyList.getHgap();
+                        cardWidth.set(Math.max(100, availableWidth / columns.get()));
+                });
+
+                loadingLabel = new Label("Loading more properties...");
+                loadingLabel.setTextFill(Color.web(TEXT_GRAY));
+                loadingLabel.setFont(Font.font(12));
+                loadingLabel.setPadding(new Insets(10));
+                loadingLabel.setVisible(false);
+                loadingLabel.setAlignment(Pos.CENTER);
+                loadingLabel.setMaxWidth(Double.MAX_VALUE);
 
                 // Load Initial Data
                 loadMoreProperties();
 
-                getChildren().addAll(breadcrumb, feedTitle, propertyList);
+                getChildren().addAll(breadcrumb, feedTitle, propertyList, loadingLabel);
         }
 
-        private void loadMoreProperties() {
-                // Simulate infinite scroll logic or just add items
-                propertyList.getChildren().addAll(
-                                createLargePropertyCard("Skyline Luxury Penthouse", "Kilimani, Nairobi", "KSh 250,000",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuDislB9eDStdQfVeUXT-SyVYIktdYj4dn1rLs71l6k9U2PyNGYNNFrTSNc9vpmx-1nxZvV3C7xTOHKuL_z-JzyJlV_T9zSmkLpWqQELXWnwdeBWTC_gAwAsO4XuJ9XTTKaNGxd6KvkFkqfHdtlaykJTFfvzJjU7r5Dz5nFelagyTDehv6EwDvE3Dmm0Pv4IBvdDn6HaikyLJuu5BGtc6TRELsBd5pTZoYhKM13gtdCCDe07Kg4J7KzTaxaSxrK6staX7TwHfOMKMTQ"),
-                                createLargePropertyCard("Garden Oasis Villa", "Karen, Nairobi", "KSh 180,000",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuDislB9eDStdQfVeUXT-SyVYIktdYj4dn1rLs71l6k9U2PyNGYNNFrTSNc9vpmx-1nxZvV3C7xTOHKuL_z-JzyJlV_T9zSmkLpWqQELXWnwdeBWTC_gAwAsO4XuJ9XTTKaNGxd6KvkFkqfHdtlaykJTFfvzJjU7r5Dz5nFelagyTDehv6EwDvE3Dmm0Pv4IBvdDn6HaikyLJuu5BGtc6TRELsBd5pTZoYhKM13gtdCCDe07Kg4J7KzTaxaSxrK6staX7TwHfOMKMTQ"));
+        public void loadMoreProperties() {
+                if (isLoading)
+                        return;
+
+                isLoading = true;
+                loadingLabel.setVisible(true);
+
+                // Simulate network delay
+                PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+                pause.setOnFinished(e -> {
+                        propertyList.getChildren().addAll(
+                                        createLargePropertyCard("Skyline Luxury Penthouse", "Kilimani, Nairobi",
+                                                        "KSh 250,000",
+                                                        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80"),
+                                        createLargePropertyCard("Garden Oasis Villa", "Karen, Nairobi", "KSh 180,000",
+                                                        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80"),
+                                        createLargePropertyCard("Modern Urban Studio", "Westlands, Nairobi",
+                                                        "KSh 85,000",
+                                                        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80"));
+                        isLoading = false;
+                        loadingLabel.setVisible(false);
+                });
+                pause.play();
         }
 
         private VBox createLargePropertyCard(String title, String loc, String price, String imgUrl) {
@@ -71,16 +121,21 @@ public class PropertyFeedView extends VBox {
                 card.setStyle("-fx-background-color: " + CARD_BG
                                 + "; -fx-background-radius: 24; -fx-overflow: hidden;");
                 card.setCursor(javafx.scene.Cursor.HAND);
+                card.prefWidthProperty().bind(cardWidth);
+                card.maxWidthProperty().bind(cardWidth);
 
                 StackPane imgStack = new StackPane();
                 ImageView iv = new ImageView();
                 try {
-                        iv.setImage(new Image(imgUrl, 360, 240, false, true));
+                        iv.setImage(new Image(imgUrl, 600, 0, true, true));
                 } catch (Exception e) {
                 }
-                iv.setFitWidth(360);
-                iv.setFitHeight(240);
-                Rectangle clip = new Rectangle(360, 240);
+                iv.fitWidthProperty().bind(cardWidth);
+                iv.fitHeightProperty().bind(cardWidth.multiply(0.66)); // 3:2 Aspect Ratio
+
+                Rectangle clip = new Rectangle();
+                clip.widthProperty().bind(cardWidth);
+                clip.heightProperty().bind(cardWidth.multiply(0.66));
                 clip.setArcWidth(48);
                 clip.setArcHeight(48);
                 iv.setClip(clip);

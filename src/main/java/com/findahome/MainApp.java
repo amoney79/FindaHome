@@ -192,6 +192,13 @@ public class MainApp extends Application {
         mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         mainScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
+        // Infinite Scroll Listener
+        mainScroll.vvalueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal.doubleValue() > 0.95) {
+                feed.loadMoreProperties();
+            }
+        });
+
         contentArea.getChildren().setAll(mainScroll);
     }
 
