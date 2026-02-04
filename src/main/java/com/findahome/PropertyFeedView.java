@@ -173,6 +173,11 @@ public class PropertyFeedView extends VBox {
                 details.getChildren().addAll(priceRow, t, l);
                 card.getChildren().addAll(imgStack, details);
 
+                card.setOnMouseClicked(e -> {
+                        Property pObj = new Property(title, loc, price, imgUrl, true, "STORY");
+                        MainApp.navigateToFullScreen(new PropertyDetailView(pObj));
+                });
+
                 return card;
         }
 }

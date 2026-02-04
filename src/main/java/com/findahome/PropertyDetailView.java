@@ -17,7 +17,7 @@ public class PropertyDetailView extends StackPane {
 
         private static final String BACKGROUND_DARK = "#101622";
         private static final String PRIMARY = "#135bec";
-        private static final String TEXT_GRAY = "#a1a1aa";
+        private static final String TEXT_GRAY = "#9ca3af";
 
         public PropertyDetailView(Property property) {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
@@ -28,9 +28,9 @@ public class PropertyDetailView extends StackPane {
                 VBox scrollContent = new VBox(0);
                 scrollContent.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                // Top Banner Area (Image)
+                // Top Banner Area (Carousel Simulation)
                 StackPane bannerArea = new StackPane();
-                bannerArea.setPrefHeight(400);
+                bannerArea.setPrefHeight(500);
 
                 ImageView mainImg = new ImageView();
                 try {
@@ -39,13 +39,19 @@ public class PropertyDetailView extends StackPane {
                 } catch (Exception e) {
                 }
                 mainImg.setFitWidth(430);
-                mainImg.setFitHeight(400);
+                mainImg.setFitHeight(500);
                 mainImg.setPreserveRatio(false);
+
+                // Gradient Overlay for Image
+                Region overlay = new Region();
+                overlay.setStyle(
+                                "-fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 20%, transparent 80%, "
+                                                + BACKGROUND_DARK + " 100%);");
 
                 // Pagination Dots
                 HBox pagination = new HBox(6);
                 pagination.setAlignment(Pos.CENTER);
-                pagination.setPadding(new Insets(0, 0, 20, 0));
+                pagination.setPadding(new Insets(0, 0, 40, 0));
                 Region dot1 = new Region();
                 dot1.setPrefSize(24, 6);
                 dot1.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 3;");
@@ -58,7 +64,7 @@ public class PropertyDetailView extends StackPane {
                 pagination.getChildren().addAll(dot1, dot2, dot3);
                 StackPane.setAlignment(pagination, Pos.BOTTOM_CENTER);
 
-                bannerArea.getChildren().addAll(mainImg, pagination);
+                bannerArea.getChildren().addAll(mainImg, overlay, pagination);
 
                 // Details Content
                 VBox detailsContent = new VBox(25);
@@ -71,10 +77,11 @@ public class PropertyDetailView extends StackPane {
                 VBox header = new VBox(8);
                 HBox badge = new HBox(4);
                 badge.setAlignment(Pos.CENTER_LEFT);
-                badge.setPadding(new Insets(2, 8, 2, 8));
+                badge.setPadding(new Insets(4, 8, 4, 8));
                 badge.setMaxWidth(Region.USE_PREF_SIZE);
-                badge.setStyle("-fx-background-color: rgba(19, 91, 236, 0.2); -fx-background-radius: 4;");
-                Label vIcon = new Label("\u2705");
+                badge.setStyle("-fx-background-color: rgba(19, 91, 236, 0.1); -fx-background-radius: 4;");
+                Label vIcon = new Label("\u2705"); // Verified icon
+                vIcon.setTextFill(Color.web(PRIMARY));
                 vIcon.setStyle("-fx-font-size: 10;");
                 Label vText = new Label("VERIFIED LISTING");
                 vText.setStyle("-fx-text-fill: " + PRIMARY + "; -fx-font-size: 10; -fx-font-weight: bold;");
@@ -247,24 +254,24 @@ public class PropertyDetailView extends StackPane {
                 // Bottom Bar
                 HBox footer = new HBox(20);
                 footer.setAlignment(Pos.CENTER_LEFT);
-                footer.setPadding(new Insets(15, 20, 25, 20));
-                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.8); -fx-background-radius: 0; -fx-border-color: #333; -fx-border-width: 1 0 0 0;");
+                footer.setPadding(new Insets(15, 20, 30, 20));
+                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.9); -fx-background-radius: 0; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1 0 0 0;");
 
-                VBox footerPrice = new VBox(0);
-                Label totalLbl = new Label("TOTAL");
+                VBox footerPrice = new VBox(2);
+                Label totalLbl = new Label("TOTAL/MO");
                 totalLbl.setTextFill(Color.web(TEXT_GRAY));
                 totalLbl.setFont(Font.font("System", FontWeight.BOLD, 10));
                 Label finalPriceLbl = new Label(property.getPrice());
                 finalPriceLbl.setTextFill(Color.WHITE);
-                finalPriceLbl.setFont(Font.font("System", FontWeight.BOLD, 20));
+                finalPriceLbl.setFont(Font.font("System", FontWeight.BOLD, 22));
                 footerPrice.getChildren().addAll(totalLbl, finalPriceLbl);
 
                 Button bookBtn = new Button("Book Viewing \ud83d\udcc5");
                 HBox.setHgrow(bookBtn, Priority.ALWAYS);
                 bookBtn.setMaxWidth(Double.MAX_VALUE);
-                bookBtn.setPrefHeight(56);
+                bookBtn.setPrefHeight(60);
                 bookBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
+                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 16;");
                 bookBtn.setOnAction(e -> MainApp.navigateTo(new ScheduleView()));
 
                 footer.getChildren().addAll(footerPrice, bookBtn);
