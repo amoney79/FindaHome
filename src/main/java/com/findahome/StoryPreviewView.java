@@ -103,7 +103,7 @@ public class StoryPreviewView extends StackPane {
                 // Status Badge
                 Label statusBadge = new Label("FOR RENT");
                 statusBadge.setStyle("-fx-background-color: " + ACTION_ORANGE
-                                + "; -fx-text-fill: white; -fx-font-weight: 900; -fx-padding: 6 16; -fx-background-radius: 8; -fx-font-size: 12;");
+                                + "; -fx-text-fill: white; -fx-font-weight: black; -fx-padding: 6 16; -fx-background-radius: 8; -fx-font-size: 12;");
                 StackPane.setAlignment(statusBadge, Pos.TOP_RIGHT);
                 StackPane.setMargin(statusBadge, new Insets(30, 24, 0, 0));
 

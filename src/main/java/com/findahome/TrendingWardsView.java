@@ -184,7 +184,7 @@ public class TrendingWardsView extends StackPane {
                         btn.setContentDisplay(javafx.scene.control.ContentDisplay.RIGHT);
                 } else {
                         btn.setStyle(
-                                        "-fx-background-color: #1f2937; -fx-text-fill: #d1d5db; -fx-background-radius: 20; -fx-padding: 8 16; -fx-font-weight: medium; -fx-border-color: #374151; -fx-border-radius: 20;");
+                                        "-fx-background-color: #1f2937; -fx-text-fill: #d1d5db; -fx-background-radius: 20; -fx-padding: 8 16; -fx-font-weight: bold; -fx-border-color: #374151; -fx-border-radius: 20;");
                 }
                 return btn;
         }

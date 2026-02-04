@@ -201,7 +201,7 @@ public class PropertyMapView extends StackPane {
         private Button createFilterChip(String text, boolean active) {
                 Button b = new Button(text + (active ? "" : " \u2304"));
                 b.setStyle("-fx-background-color: " + (active ? PRIMARY : "rgba(16, 25, 34, 0.9)")
-                                + "; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-size: 13; -fx-font-weight: medium; -fx-border-color: "
+                                + "; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-size: 13; -fx-font-weight: bold; -fx-border-color: "
                                 + (active ? "transparent" : "rgba(255,255,255,0.05)") + "; -fx-border-radius: 8;");
                 return b;
         }
