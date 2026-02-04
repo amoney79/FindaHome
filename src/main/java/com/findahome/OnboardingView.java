@@ -15,8 +15,8 @@ import javafx.scene.text.TextFlow;
 
 public class OnboardingView extends StackPane {
 
-    private static final String BACKGROUND_DARK = "#102216";
-    private static final String PRIMARY = "#13ec5b";
+    private static final String BACKGROUND_DARK = "#101622";
+    private static final String PRIMARY = "#135bec";
 
     public OnboardingView() {
         setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");

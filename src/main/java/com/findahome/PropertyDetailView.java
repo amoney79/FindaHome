@@ -38,9 +38,10 @@ public class PropertyDetailView extends StackPane {
                         mainImg.setImage(img);
                 } catch (Exception e) {
                 }
-                mainImg.setFitWidth(430);
+                mainImg.setFitWidth(400); // Match app width
                 mainImg.setFitHeight(500);
-                mainImg.setPreserveRatio(false);
+                mainImg.setPreserveRatio(true); // Maintain ratio, use fit to Fill
+                mainImg.setSmooth(true);
 
                 // Gradient Overlay for Image
                 Region overlay = new Region();
@@ -52,15 +53,23 @@ public class PropertyDetailView extends StackPane {
                 HBox pagination = new HBox(6);
                 pagination.setAlignment(Pos.CENTER);
                 pagination.setPadding(new Insets(0, 0, 40, 0));
+                pagination.setMaxHeight(Region.USE_PREF_SIZE); // Crucial: prevent vertical stretching
+
                 Region dot1 = new Region();
-                dot1.setPrefSize(24, 6);
-                dot1.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 3;");
+                dot1.setPrefSize(24, 4);
+                dot1.setMaxSize(24, 4);
+                dot1.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 2;");
+
                 Region dot2 = new Region();
-                dot2.setPrefSize(6, 6);
-                dot2.setStyle("-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 3;");
+                dot2.setPrefSize(6, 4);
+                dot2.setMaxSize(6, 4);
+                dot2.setStyle("-fx-background-color: rgba(255,255,255,0.6); -fx-background-radius: 2;");
+
                 Region dot3 = new Region();
-                dot3.setPrefSize(6, 6);
-                dot3.setStyle("-fx-background-color: rgba(255,255,255,0.5); -fx-background-radius: 3;");
+                dot3.setPrefSize(6, 4);
+                dot3.setMaxSize(6, 4);
+                dot3.setStyle("-fx-background-color: rgba(255,255,255,0.4); -fx-background-radius: 2;");
+
                 pagination.getChildren().addAll(dot1, dot2, dot3);
                 StackPane.setAlignment(pagination, Pos.BOTTOM_CENTER);
 
@@ -252,29 +261,37 @@ public class PropertyDetailView extends StackPane {
                 scrollScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
                 // Bottom Bar
-                HBox footer = new HBox(20);
-                footer.setAlignment(Pos.CENTER_LEFT);
-                footer.setPadding(new Insets(15, 20, 30, 20));
-                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.9); -fx-background-radius: 0; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1 0 0 0;");
+                HBox footer = new HBox(0);
+                footer.setAlignment(Pos.CENTER);
+                footer.setPadding(new Insets(12, 12, 30, 12));
+                footer.setMaxHeight(Region.USE_PREF_SIZE);
+                footer.setStyle("-fx-background-color: rgba(16, 22, 34, 0.98); -fx-border-color: rgba(255,255,255,0.08); -fx-border-width: 1 0 0 0;");
+
+                HBox footerContent = new HBox(20);
+                footerContent.setAlignment(Pos.CENTER_LEFT);
+                footerContent.setPrefWidth(380);
+                footerContent.setMaxWidth(380);
 
                 VBox footerPrice = new VBox(2);
                 Label totalLbl = new Label("TOTAL/MO");
-                totalLbl.setTextFill(Color.web(TEXT_GRAY));
+                totalLbl.setTextFill(Color.web("#a1a1aa"));
                 totalLbl.setFont(Font.font("System", FontWeight.BOLD, 10));
+
                 Label finalPriceLbl = new Label(property.getPrice());
                 finalPriceLbl.setTextFill(Color.WHITE);
-                finalPriceLbl.setFont(Font.font("System", FontWeight.BOLD, 22));
+                finalPriceLbl.setFont(Font.font("System", FontWeight.BOLD, 20));
                 footerPrice.getChildren().addAll(totalLbl, finalPriceLbl);
 
                 Button bookBtn = new Button("Book Viewing \ud83d\udcc5");
                 HBox.setHgrow(bookBtn, Priority.ALWAYS);
                 bookBtn.setMaxWidth(Double.MAX_VALUE);
-                bookBtn.setPrefHeight(60);
+                bookBtn.setPrefHeight(52);
                 bookBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 16;");
+                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15; -fx-background-radius: 12;");
                 bookBtn.setOnAction(e -> MainApp.navigateTo(new ScheduleView()));
 
-                footer.getChildren().addAll(footerPrice, bookBtn);
+                footerContent.getChildren().addAll(footerPrice, bookBtn);
+                footer.getChildren().add(footerContent);
 
                 layout.getChildren().addAll(scrollScroll);
 
@@ -282,7 +299,8 @@ public class PropertyDetailView extends StackPane {
                 HBox topNav = new HBox();
                 topNav.setPadding(new Insets(15));
                 topNav.setAlignment(Pos.CENTER_LEFT);
-                topNav.setPickOnBounds(false); // Let clicks pass if not on button
+                topNav.setPickOnBounds(false);
+                topNav.setMaxHeight(Region.USE_PREF_SIZE);
 
                 Button backBtn = createNavBtn("\u2039");
                 backBtn.setOnMouseClicked(e -> MainApp.showHome());

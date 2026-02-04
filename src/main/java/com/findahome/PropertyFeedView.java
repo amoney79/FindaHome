@@ -17,9 +17,9 @@ import javafx.beans.property.*;
 
 public class PropertyFeedView extends VBox {
 
-        private static final String PRIMARY = "#13ec5b";
-        private static final String CARD_BG = "#1c271f";
-        private static final String TEXT_GRAY = "#9db9a6";
+        private static final String PRIMARY = "#135bec";
+        private static final String CARD_BG = "#1c222c";
+        private static final String TEXT_GRAY = "#9ca3af";
 
         private FlowPane propertyList;
         private boolean isLoading = false;
@@ -140,9 +140,8 @@ public class PropertyFeedView extends VBox {
                 clip.setArcHeight(48);
                 iv.setClip(clip);
 
-                Label tag = new Label("STORY");
-                tag.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 8; -fx-font-size: 10;");
+                Label tag = new Label("EXCLUSIVE");
+                tag.setStyle("-fx-background-color: rgba(19, 91, 236, 0.8); -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 8; -fx-font-size: 10;");
                 StackPane.setAlignment(tag, Pos.TOP_LEFT);
                 StackPane.setMargin(tag, new Insets(15));
 

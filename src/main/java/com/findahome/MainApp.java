@@ -19,10 +19,10 @@ import javafx.scene.shape.Circle;
 
 public class MainApp extends Application {
 
-    private static final String BACKGROUND_DARK = "#102216";
-    private static final String CARD_BG = "#1c271f";
-    private static final String PRIMARY = "#13ec5b";
-    private static final String TEXT_GRAY = "#9db9a6";
+    private static final String BACKGROUND_DARK = "#101622";
+    private static final String CARD_BG = "#1c222c";
+    private static final String PRIMARY = "#135bec";
+    private static final String TEXT_GRAY = "#9ca3af";
 
     private static StackPane contentArea;
     private static MainApp instance;
@@ -306,7 +306,8 @@ public class MainApp extends Application {
         bottomNav.setAlignment(Pos.CENTER);
         bottomNav.setPrefHeight(70);
         bottomNav.setStyle(
-                "-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: #333; -fx-border-width: 0.5 0 0 0;");
+                "-fx-background-color: " + BACKGROUND_DARK
+                        + "; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
         bottomNav.getChildren().addAll(
                 createNavItem("Home", "\u2302", true, e -> showHome()),
                 createNavItem("Explore", "\ud83e\udded", false, e -> navigateToMap()),
