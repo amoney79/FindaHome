@@ -47,7 +47,7 @@ public class OnboardingView extends StackPane {
         try {
             iv.setImage(new Image(
                     "https://lh3.googleusercontent.com/aida-public/AB6AXuAnSVYL5mwSVy5JqWMgXYWFaToI8neouep7639-urPJU4o15_q0WJRmz1BltpF16l29DngavcR42kYnUEHgw8nIN4JQpOBX7A2-hMeWAP1Fps__5Cvwlh-5EEeBvT0wG5GfO9WAS0VgEvRbsi-0XrVM_EU4XoFBZIyGizvsv75UCmaTEJ53APlTSNZgp4oGGX8KAo2ZeFc4xmoAP36W3_dofiDX2e5uxW6IxwaDfJDwPrTIeNWOE9WedP_rXWwNtusr9zkkSMOCs-c",
-                    370, 460, false, true));
+                    370, 460, false, true, true));
         } catch (Exception e) {
         }
         iv.setFitWidth(370);

@@ -67,7 +67,7 @@ public class TenantProfileView extends StackPane {
                 try {
                         avatar.setImage(new Image(
                                         "https://lh3.googleusercontent.com/aida-public/AB6AXuBPbDzFW1iSX9BSAjAWstiLdyqjEU_XrOE_rQagBw9Zo0wscais0ff6oequ8lwF9zUh8Fw-f9NAcNmnMWpinEHmlxRsIbLVN5TOQWtRiTHL0Ni5J5NV0R_Oa07Uy0qhFJkro4MZOH9eegFgfgSzCTkgKGkOzRv_pzkDupOMVfQbJEbMsfdKFgnqIyM4ppvF21EOmx_2vxOHLaQUp3x2j6KbNllWcqt-YHDc4FMG3p2ftJPRhaCK_-R0OgywIYZDCfe5DK83RrWQoWU",
-                                        128, 128, true, true));
+                                        128, 128, true, true, true));
                 } catch (Exception e) {
                 }
                 Circle clip = new Circle(64, 64, 64);

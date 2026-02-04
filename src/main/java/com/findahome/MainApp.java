@@ -26,6 +26,7 @@ public class MainApp extends Application {
 
     private static StackPane contentArea;
     private static MainApp instance;
+    private static Node cachedDashboard;
     private Stage stage;
     private double xOffset = 0;
     private double yOffset = 0;
@@ -43,10 +44,11 @@ public class MainApp extends Application {
         contentArea = new StackPane();
 
         // Navigation Areas
-        VBox topNav = createTopNav();
+        this.topNav = createTopNav();
+        this.bottomNav = createBottomNav();
         root.setTop(topNav);
         root.setCenter(contentArea);
-        root.setBottom(createBottomNav());
+        root.setBottom(bottomNav);
 
         // Enable window dragging
         topNav.setOnMousePressed(event -> {
@@ -94,11 +96,13 @@ public class MainApp extends Application {
 
     private BorderPane mainLayout;
     private Button fab;
+    private VBox topNav;
+    private Node bottomNav;
 
     public static void navigateTo(Node view) {
         if (instance.mainLayout.getTop() == null) {
-            instance.mainLayout.setTop(instance.createTopNav());
-            instance.mainLayout.setBottom(instance.createBottomNav());
+            instance.mainLayout.setTop(instance.topNav);
+            instance.mainLayout.setBottom(instance.bottomNav);
             instance.fab.setVisible(true);
         }
         contentArea.getChildren().setAll(view);
@@ -119,8 +123,12 @@ public class MainApp extends Application {
     }
 
     public static void showHome() {
-        navigateTo(new VBox()); // This will reset layout via navigateTo check
-        instance.showDashboard();
+        if (cachedDashboard != null) {
+            navigateTo(new VBox()); // Reset layout state
+            contentArea.getChildren().setAll(cachedDashboard);
+        } else {
+            instance.showDashboard();
+        }
     }
 
     public void showDashboard() {
@@ -200,6 +208,7 @@ public class MainApp extends Application {
         });
 
         contentArea.getChildren().setAll(mainScroll);
+        cachedDashboard = mainScroll;
     }
 
     private VBox createTopNav() {
@@ -332,7 +341,8 @@ public class MainApp extends Application {
 
         ImageView bgImg = new ImageView();
         try {
-            Image img = new Image(imgUrl, 350, 153, false, true);
+            // Enable background loading (6th param) for smoother transitions
+            Image img = new Image(imgUrl, 350, 153, false, true, true);
             bgImg.setImage(img);
         } catch (Exception e) {
         }

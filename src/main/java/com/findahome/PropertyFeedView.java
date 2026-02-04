@@ -127,7 +127,7 @@ public class PropertyFeedView extends VBox {
                 StackPane imgStack = new StackPane();
                 ImageView iv = new ImageView();
                 try {
-                        iv.setImage(new Image(imgUrl, 600, 0, true, true));
+                        iv.setImage(new Image(imgUrl, 600, 0, true, true, true));
                 } catch (Exception e) {
                 }
                 iv.fitWidthProperty().bind(cardWidth);

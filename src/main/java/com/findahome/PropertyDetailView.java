@@ -34,7 +34,7 @@ public class PropertyDetailView extends StackPane {
 
                 ImageView mainImg = new ImageView();
                 try {
-                        Image img = new Image(property.getImageUrl(), 430, 400, false, true);
+                        Image img = new Image(property.getImageUrl(), 430, 500, false, true, true);
                         mainImg.setImage(img);
                 } catch (Exception e) {
                 }
@@ -159,7 +159,7 @@ public class PropertyDetailView extends StackPane {
                 try {
                         Image mImg = new Image(
                                         "https://lh3.googleusercontent.com/aida-public/AB6AXuDmJKi3AjCR1tsFqjXnk8X10w99rFPOyb_vJCEmNpq90mdmykPyJFYThswbvyF1zam4SkcuiMAE67JO8RwF7HkYV5Wmst3h1nx0UYBR3l1Nn8Fote_CNUyiJ1uRGSx37gXe_CNLMio3HC1h9cXJFZP1aQ7FyD5pvXr2iH8Nny_DuiSEgmEXpJnKT6YgfowuMOdBNyNN-_yI89HnYS1Els2s5AUpLi1lPY_KxYp9bFEJqRfVyl5k-3W3wouiPcGVrAhAJ4WgPr_XMrw",
-                                        400, 160, false, true);
+                                        400, 160, false, true, true);
                         mapImg.setImage(mImg);
                 } catch (Exception e) {
                 }
@@ -206,7 +206,7 @@ public class PropertyDetailView extends StackPane {
                 try {
                         avatar.setImage(new Image(
                                         "https://lh3.googleusercontent.com/aida-public/AB6AXuADYVf8eJncumdqgsYLbFLdbO5JZWBSUaW6QfAzQj_wCxAKckepu4JQsmELaxJs1c3xJSvwrtqDYG6h7Rvc0b7V9eZLOcDBrvt-QP61mEq4NKlEKPI0MzRsUpU5gnbicTnnjMtbLHkT0ivL0czKWbCHzepGr-D5cpqtx6wgEih7-1g2PVtq123pu2oIstuKRHLOLtwzxIAb59x6p5scEi-Y-wZ2X_EZfRjm3C4piglsRhbnbrX42ozb61TFblD2ndYxjnLQ65Hxhts",
-                                        48, 48, true, true));
+                                        48, 48, true, true, true));
                 } catch (Exception e) {
                 }
                 avatar.setClip(avatarClip);
