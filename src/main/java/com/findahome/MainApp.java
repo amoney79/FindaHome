@@ -27,6 +27,7 @@ public class MainApp extends Application {
     private static StackPane contentArea;
     private static MainApp instance;
     private static Node cachedDashboard;
+    private static PropertyFeedView feedInstance;
     private Stage stage;
     private double xOffset = 0;
     private double yOffset = 0;
@@ -184,15 +185,15 @@ public class MainApp extends Application {
         recHeader.getChildren().addAll(recTitle, spacer, viewAll);
 
         // Recommended Items Section
-        PropertyFeedView feed = new PropertyFeedView();
-        mainContent.getChildren().add(feed);
+        feedInstance = new PropertyFeedView();
+        mainContent.getChildren().add(feedInstance);
 
         mainContent.getChildren().addAll(carouselScroll, categoryScroll);
 
         // Note: PropertyFeedView already handles its own Recommended header and list.
         // We just need to make sure the main content is laid out well.
         mainContent.getChildren().clear();
-        mainContent.getChildren().addAll(carouselScroll, categoryScroll, feed);
+        mainContent.getChildren().addAll(carouselScroll, categoryScroll, feedInstance);
 
         ScrollPane mainScroll = new ScrollPane(mainContent);
         mainScroll.setFitToWidth(true);
@@ -203,12 +204,16 @@ public class MainApp extends Application {
         // Infinite Scroll Listener
         mainScroll.vvalueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.doubleValue() > 0.95) {
-                feed.loadMoreProperties();
+                feedInstance.loadMoreProperties();
             }
         });
 
         contentArea.getChildren().setAll(mainScroll);
         cachedDashboard = mainScroll;
+    }
+
+    public static PropertyFeedView getFeed() {
+        return feedInstance;
     }
 
     private VBox createTopNav() {
@@ -294,7 +299,7 @@ public class MainApp extends Application {
         Button filterBtn = new Button("\u2312"); // Settings/Filter icon
         filterBtn.setStyle("-fx-background-color: rgba(19, 91, 236, 0.1); -fx-text-fill: " + PRIMARY
                 + "; -fx-background-radius: 12; -fx-min-width: 44; -fx-min-height: 44; -fx-font-size: 18;");
-        filterBtn.setOnAction(e -> navigateToMap());
+        filterBtn.setOnAction(e -> navigateTo(new FilterView()));
 
         searchContainer.getChildren().addAll(searchFieldStack, filterBtn);
         topContainer.getChildren().addAll(windowControls, header, searchContainer);

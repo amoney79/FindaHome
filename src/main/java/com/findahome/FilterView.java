@@ -17,6 +17,11 @@ public class FilterView extends VBox {
         private static final String PRIMARY = "#135bec";
         private static final String TEXT_GRAY = "#9ca3af";
 
+        private String selectedType = "All Types";
+        private String selectedLocation = "";
+        private double maxPrice = 500000;
+        private TextField searchField;
+
         public FilterView() {
                 setSpacing(0);
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
@@ -28,7 +33,13 @@ public class FilterView extends VBox {
                 resultsFab.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
                 VBox.setMargin(resultsFab, new Insets(0, 20, 20, 20));
-                resultsFab.setOnAction(e -> MainApp.showHome());
+                resultsFab.setOnAction(e -> {
+                        selectedLocation = searchField.getText();
+                        java.util.List<Property> filtered = PropertyData.filter(selectedType, selectedLocation, 0,
+                                        maxPrice);
+                        MainApp.getFeed().refresh(filtered);
+                        MainApp.showHome();
+                });
 
                 StackPane mainStack = new StackPane();
 
@@ -70,11 +81,11 @@ public class FilterView extends VBox {
                 StackPane searchFieldStack = new StackPane();
                 HBox.setHgrow(searchFieldStack, Priority.ALWAYS);
 
-                TextField search = new TextField("Nairobi, Westlands");
-                search.setPromptText("Search locations, apartments...");
-                search.setStyle(
+                searchField = new TextField("Nairobi");
+                searchField.setPromptText("Search locations, apartments...");
+                searchField.setStyle(
                                 "-fx-background-color: #282e39; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 10 35 10 35; -fx-font-size: 13;");
-                search.setPrefHeight(48);
+                searchField.setPrefHeight(48);
 
                 Label searchIcon = new Label("\ud83d\udd0d");
                 searchIcon.setTextFill(Color.web("#9ca3af"));
@@ -93,7 +104,7 @@ public class FilterView extends VBox {
                 StackPane.setAlignment(tuneIcon, Pos.CENTER_RIGHT);
                 StackPane.setMargin(tuneIcon, new Insets(0, 15, 0, 0));
 
-                searchFieldStack.getChildren().addAll(search, searchIcon, tuneIcon);
+                searchFieldStack.getChildren().addAll(searchField, searchIcon, tuneIcon);
                 // Keep the search bar click for LocationFilter, but ensure icon click is
                 // handled separately
                 searchFieldStack.setOnMouseClicked(e -> MainApp.navigateTo(new LocationFilterView()));
@@ -147,11 +158,11 @@ public class FilterView extends VBox {
                 HBox chips = new HBox(10);
                 chips.setPadding(new Insets(0, 20, 0, 20));
                 chips.getChildren().addAll(
-                                createChip("All Types", true),
-                                createChip("Apartment", false),
-                                createChip("Bedsitter", false),
-                                createChip("Studio", false),
-                                createChip("Mansionette", false));
+                                createChip(chips, "All Types", true),
+                                createChip(chips, "Apartment", false),
+                                createChip(chips, "Villas", false),
+                                createChip(chips, "Studio", false),
+                                createChip(chips, "Mansionette", false));
                 ScrollPane chipScroll = new ScrollPane(chips);
                 chipScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 chipScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -265,9 +276,21 @@ public class FilterView extends VBox {
                 getChildren().add(mainStack);
         }
 
-        private Button createChip(String text, boolean active) {
+        private Button createChip(HBox parent, String text, boolean active) {
                 Button btn = new Button(text);
                 btn.setPadding(new Insets(8, 20, 8, 20));
+
+                btn.setOnAction(e -> {
+                        selectedType = text;
+                        for (javafx.scene.Node n : parent.getChildren()) {
+                                n.setStyle("-fx-background-color: white; -fx-text-fill: #4b5563; -fx-background-radius: 20; -fx-border-color: #e5e7eb; -fx-border-radius: 20;");
+                        }
+                        btn.setStyle("-fx-background-color: " + PRIMARY
+                                        + "; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: "
+                                        + PRIMARY
+                                        + "; -fx-border-radius: 20;");
+                });
+
                 if (active) {
                         btn.setStyle("-fx-background-color: " + PRIMARY
                                         + "; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: "

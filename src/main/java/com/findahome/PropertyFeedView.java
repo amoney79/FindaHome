@@ -14,6 +14,7 @@ import javafx.scene.text.FontWeight;
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import javafx.beans.property.*;
+import java.util.List;
 
 public class PropertyFeedView extends VBox {
 
@@ -86,9 +87,16 @@ public class PropertyFeedView extends VBox {
                 loadingLabel.setMaxWidth(Double.MAX_VALUE);
 
                 // Load Initial Data
-                loadMoreProperties();
+                refresh(PropertyData.getAll());
 
                 getChildren().addAll(breadcrumb, feedTitle, propertyList, loadingLabel);
+        }
+
+        public void refresh(List<Property> properties) {
+                propertyList.getChildren().clear();
+                for (Property p : properties) {
+                        propertyList.getChildren().add(createLargePropertyCard(p));
+                }
         }
 
         public void loadMoreProperties() {
@@ -101,22 +109,23 @@ public class PropertyFeedView extends VBox {
                 // Simulate network delay
                 PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
                 pause.setOnFinished(e -> {
-                        propertyList.getChildren().addAll(
-                                        createLargePropertyCard("Skyline Luxury Penthouse", "Kilimani, Nairobi",
-                                                        "KSh 250,000",
-                                                        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80"),
-                                        createLargePropertyCard("Garden Oasis Villa", "Karen, Nairobi", "KSh 180,000",
-                                                        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80"),
-                                        createLargePropertyCard("Modern Urban Studio", "Westlands, Nairobi",
-                                                        "KSh 85,000",
-                                                        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=400&q=80"));
+                        // For now just add static variety or more from set
+                        List<Property> more = PropertyData.getAll();
+                        for (Property p : more) {
+                                propertyList.getChildren().add(createLargePropertyCard(p));
+                        }
                         isLoading = false;
                         loadingLabel.setVisible(false);
                 });
                 pause.play();
         }
 
-        private VBox createLargePropertyCard(String title, String loc, String price, String imgUrl) {
+        private VBox createLargePropertyCard(Property pObj) {
+                String title = pObj.getName();
+                String loc = pObj.getLocation();
+                String price = pObj.getPrice();
+                String imgUrl = pObj.getImageUrl();
+
                 VBox card = new VBox(0);
                 card.setStyle("-fx-background-color: " + CARD_BG
                                 + "; -fx-background-radius: 24; -fx-overflow: hidden;");
@@ -173,7 +182,6 @@ public class PropertyFeedView extends VBox {
                 card.getChildren().addAll(imgStack, details);
 
                 card.setOnMouseClicked(e -> {
-                        Property pObj = new Property(title, loc, price, imgUrl, true, "STORY");
                         MainApp.navigateToFullScreen(new PropertyDetailView(pObj));
                 });
 
