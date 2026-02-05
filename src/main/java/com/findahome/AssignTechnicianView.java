@@ -11,6 +11,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AssignTechnicianView extends BorderPane {
 
@@ -21,9 +24,40 @@ public class AssignTechnicianView extends BorderPane {
         private static final String TEXT_GRAY = "#9db9a6";
 
         private String selectedTech = "John Mwangi";
+        private String selectedCategory = "All";
+        private VBox providerListContainer;
+        private HBox chipsContainer;
+
+        private static class TechData {
+                String name, rating, meta, url, category;
+
+                TechData(String n, String r, String m, String u, String c) {
+                        this.name = n;
+                        this.rating = r;
+                        this.meta = m;
+                        this.url = u;
+                        this.category = c;
+                }
+        }
+
+        private final List<TechData> techDatabase = new ArrayList<>();
 
         public AssignTechnicianView(String requestTitle, String requestDesc, String imgUrl) {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+
+                // Initialize Data
+                techDatabase.add(new TechData("John Mwangi", "4.9", "Certified HVAC Specialist \u2022 8yr Exp.",
+                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCz7-beo6cIY29pS734QrRzKL4neto-OrwCH0i5gSHdvzK-_pu47ObeyJFYNqFTsbzNmYBAkBIlS4541CwnFpktD-2IVH7QIZ7Dyexa_dufkZSIJA9ASmj-uVUt0jx64dlZLUxYD07enHZaaDWLXfME2Jl1FA8Vc-Ubp6SNOsgZYemCAy0o2kZuhHKc1xSfq33nri95OJ5zTb9GR45lQoZem8vMPjs-KDqf3tn0NdkchWcKIq6_QUtBU5TmFVjVHXo3jPzBt6XD68Q",
+                                "HVAC"));
+                techDatabase.add(new TechData("Sarah Johnson", "4.7", "General Maintenance \u2022 5yr Exp.",
+                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCba5CtZca7SLDgfS4M4dyWUmlpVAJA8jfymPGw7nsxRbfTN__xfGUNKrkXC8YqHKmyeZ1ReAZlg6tc4zWlL2sz7xKK8SvLKn2AIpjjffPt8UfFudWBHKNf1K6OQd-0jqvgyrKhl9KghincHFrSu4SSbnjwXwilTrDYDMay3o151JB0BtLefNU6hd0BW_j9H5uV5CXNVdFbnhiu520_kKNFWyl0ABlRfmrLK2y5E9LG9CwDEZDZzCtRJx1XVhTO-jqMJnVyoVmsFhg",
+                                "All"));
+                techDatabase.add(new TechData("Peter Kamau", "4.8", "Master Plumber \u2022 12yr Exp.",
+                                "https://lh3.googleusercontent.com/aida-public/AB6AXuB_vD6Z7Xn9y_JzQ-U2GvFj_M3N8P-W9-5-B7D9-4-Y9-Z-B-D-G-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V-X-S-V",
+                                "Plumbers"));
+                techDatabase.add(new TechData("James Oro", "4.6", "Interior Electrician \u2022 6yr Exp.",
+                                "https://lh3.googleusercontent.com/aida-public/AB6AXuDtXq5qN_z_4-vVv-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4-5-6-7-8-9-0-1-2-3-4",
+                                "Electricians"));
 
                 // Header
                 HBox header = new HBox(15);
@@ -59,7 +93,8 @@ public class AssignTechnicianView extends BorderPane {
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
+                scroll.setStyle(
+                                "-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 // Request Summary
                 VBox summarySect = new VBox();
@@ -121,15 +156,13 @@ public class AssignTechnicianView extends BorderPane {
                 searchBox.getChildren().add(bar);
 
                 // Filters
-                HBox chipsScroll = new HBox(10);
-                chipsScroll.setPadding(new Insets(0, 20, 0, 20));
-                chipsScroll.getChildren().addAll(
-                                createChip("All", true),
-                                createChip("Plumbers", false),
-                                createChip("Electricians", false),
-                                createChip("HVAC", false));
-                ScrollPane chipsPane = new ScrollPane(chipsScroll);
+                chipsContainer = new HBox(10);
+                chipsContainer.setPadding(new Insets(0, 20, 0, 20));
+                refreshChips();
+
+                ScrollPane chipsPane = new ScrollPane(chipsContainer);
                 chipsPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                chipsPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 chipsPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
 
                 // Providers Section
@@ -145,15 +178,10 @@ public class AssignTechnicianView extends BorderPane {
                 viewAll.setTextFill(Color.web(PRIMARY));
                 providersHead.getChildren().addAll(pTitle, pSpacer, viewAll);
 
-                VBox providerList = new VBox(12);
-                providerList.getChildren().addAll(
-                                createProviderCard("John Mwangi", "4.9", "Certified HVAC Specialist \u2022 8yr Exp.",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCz7-beo6cIY29pS734QrRzKL4neto-OrwCH0i5gSHdvzK-_pu47ObeyJFYNqFTsbzNmYBAkBIlS4541CwnFpktD-2IVH7QIZ7Dyexa_dufkZSIJA9ASmj-uVUt0jx64dlZLUxYD07enHZaaDWLXfME2Jl1FA8Vc-Ubp6SNOsgZYemCAy0o2kZuhHKc1xSfq33nri95OJ5zTb9GR45lQoZem8vMPjs-KDqf3tn0NdkchWcKIq6_QUtBU5TmFVjVHXo3jPzBt6XD68Q",
-                                                true),
-                                createProviderCard("Sarah Johnson", "4.7", "General Maintenance \u2022 5yr Exp.",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCba5CtZca7SLDgfS4M4dyWUmlpVAJA8jfymPGw7nsxRbfTN__xfGUNKrkXC8YqHKmyeZ1ReAZlg6tc4zWlL2sz7xKK8SvLKn2AIpjjffPt8UfFudWBHKNf1K6OQd-0jqvgyrKhl9KghincHFrSu4SSbnjwXwilTrDYDMay3o151JB0BtLefNU6hd0BW_j9H5uV5CXNVdFbnhiu520_kKNFWyl0ABlRfmrLK2y5E9LG9CwDEZDZzCtRJx1XVhTO-jqMJnVyoVmsFhg",
-                                                false));
-                providersSect.getChildren().addAll(providersHead, providerList);
+                providerListContainer = new VBox(12);
+                refreshProviderList();
+
+                providersSect.getChildren().addAll(providersHead, providerListContainer);
 
                 // Schedule
                 VBox scheduleSect = new VBox(15);
@@ -204,12 +232,11 @@ public class AssignTechnicianView extends BorderPane {
                 confirmBtn.setPrefHeight(56);
                 confirmBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                                 + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
-                confirmBtn.setOnAction(e -> MainApp.navigateCached("success_assignment",
-                                () -> new SuccessView("Assignment Confirmed",
-                                                "John Mwangi has been scheduled for this maintenance task.",
-                                                "Back to Dashboard",
-                                                () -> MainApp.navigateCached("admin_maintenance",
-                                                                AdminMaintenanceDashboardView::new))));
+                confirmBtn.setOnAction(e -> MainApp.navigateCached("success_assignment", () -> new SuccessView(
+                                "Assignment Confirmed",
+                                "John Mwangi has been scheduled for this maintenance task.", "Back to Dashboard",
+                                () -> MainApp.navigateCached("admin_maintenance",
+                                                AdminMaintenanceDashboardView::new))));
 
                 footer.getChildren().addAll(costs, confirmBtn);
 
@@ -218,7 +245,27 @@ public class AssignTechnicianView extends BorderPane {
                 setBottom(footer);
         }
 
-        private Button createChip(String text, boolean active) {
+        private void refreshChips() {
+                chipsContainer.getChildren().clear();
+                String[] cats = { "All", "Plumbers", "Electricians", "HVAC" };
+                for (String c : cats) {
+                        chipsContainer.getChildren().add(createCategoryChip(c, c.equals(selectedCategory)));
+                }
+        }
+
+        private void refreshProviderList() {
+                providerListContainer.getChildren().clear();
+                List<TechData> filtered = selectedCategory.equals("All") ? techDatabase
+                                : techDatabase.stream().filter(t -> t.category.equals(selectedCategory))
+                                                .collect(Collectors.toList());
+
+                for (TechData t : filtered) {
+                        providerListContainer.getChildren().add(createProviderCard(t.name, t.rating, t.meta, t.url,
+                                        t.name.equals(selectedTech)));
+                }
+        }
+
+        private Button createCategoryChip(String text, boolean active) {
                 Button b = new Button(text + (active ? " \u2304" : ""));
                 b.setStyle(active
                                 ? "-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
@@ -226,6 +273,12 @@ public class AssignTechnicianView extends BorderPane {
                                 : "-fx-background-color: #1a2e20; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: "
                                                 + BORDER_COLOR + ";");
                 b.setPadding(new Insets(8, 20, 8, 20));
+                b.setCursor(javafx.scene.Cursor.HAND);
+                b.setOnAction(e -> {
+                        selectedCategory = text;
+                        refreshChips();
+                        refreshProviderList();
+                });
                 return b;
         }
 
@@ -239,6 +292,11 @@ public class AssignTechnicianView extends BorderPane {
                                 : "-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16; -fx-border-color: "
                                                 + BORDER_COLOR
                                                 + "; -fx-opacity: 0.8;");
+                card.setCursor(javafx.scene.Cursor.HAND);
+                card.setOnMouseClicked(e -> {
+                        selectedTech = name;
+                        refreshProviderList();
+                });
 
                 HBox body = new HBox(12);
                 body.setAlignment(Pos.CENTER_LEFT);
