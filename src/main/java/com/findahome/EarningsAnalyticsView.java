@@ -45,7 +45,8 @@ public class EarningsAnalyticsView extends StackPane {
                 Button withdrawBtn = new Button("Withdraw");
                 withdrawBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                                 + "; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 6 20; -fx-font-size: 13;");
-                withdrawBtn.setOnAction(e -> MainApp.navigateTo(new LinkPayoutMethodView()));
+                withdrawBtn.setOnAction(
+                                e -> MainApp.navigateCached("landlord_payout_payout", LinkPayoutMethodView::new));
 
                 header.getChildren().addAll(titleGroup, spacer, withdrawBtn);
 

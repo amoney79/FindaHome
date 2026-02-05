@@ -10,7 +10,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class BankDetailsEntryView extends StackPane {
+public class BankDetailsEntryView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#102216";
         private static final String PRIMARY = "#13ec5b";
@@ -21,9 +21,6 @@ public class BankDetailsEntryView extends StackPane {
         public BankDetailsEntryView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                VBox layout = new VBox(0);
-                layout.setAlignment(Pos.TOP_CENTER);
-
                 // Top Navigation
                 HBox topNav = new HBox(15);
                 topNav.setAlignment(Pos.CENTER_LEFT);
@@ -33,7 +30,6 @@ public class BankDetailsEntryView extends StackPane {
                 Label backIcon = new Label("\u2039");
                 backIcon.setTextFill(Color.WHITE);
                 backIcon.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backIcon.setOnMouseClicked(e -> MainApp.navigateTo(new LinkPayoutMethodView()));
 
                 Label backText = new Label("Back");
                 backText.setTextFill(Color.WHITE);
@@ -42,7 +38,8 @@ public class BankDetailsEntryView extends StackPane {
                 HBox backGroup = new HBox(5, backIcon, backText);
                 backGroup.setAlignment(Pos.CENTER_LEFT);
                 backGroup.setCursor(javafx.scene.Cursor.HAND);
-                backGroup.setOnMouseClicked(e -> MainApp.navigateTo(new LinkPayoutMethodView()));
+                backGroup.setOnMouseClicked(
+                                e -> MainApp.navigateCached("landlord_payout_payout", LinkPayoutMethodView::new));
 
                 Label navTitle = new Label("Enter Bank Details");
                 navTitle.setTextFill(Color.WHITE);
@@ -57,14 +54,13 @@ public class BankDetailsEntryView extends StackPane {
                 // Scroll Content
                 VBox scrollContent = new VBox(0);
                 scrollContent.setAlignment(Pos.TOP_CENTER);
-                scrollContent.setPadding(new Insets(0, 0, 100, 0));
+                scrollContent.setPadding(new Insets(0, 0, 20, 0));
 
                 ScrollPane scroll = new ScrollPane(scrollContent);
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-                VBox.setVgrow(scroll, Priority.ALWAYS);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 // Progress Bar Section
                 VBox progressSect = new VBox(8);
@@ -86,7 +82,7 @@ public class BankDetailsEntryView extends StackPane {
                 track.setStyle("-fx-background-color: rgba(255,255,255,0.1); -fx-background-radius: 3;");
                 Region bar = new Region();
                 bar.setMaxWidth(Double.MAX_VALUE);
-                bar.setPrefWidth(215); // 50% of 430
+                bar.setPrefWidth(215); // 50%
                 bar.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 3;");
                 StackPane.setAlignment(bar, Pos.CENTER_LEFT);
                 track.getChildren().add(bar);
@@ -134,6 +130,7 @@ public class BankDetailsEntryView extends StackPane {
                 HBox.setHgrow(toggleText, Priority.ALWAYS);
 
                 // iOS Toggle Simulation
+                boolean[] isDefault = { true };
                 StackPane iosToggle = new StackPane();
                 iosToggle.setPrefSize(44, 24);
                 iosToggle.setCursor(javafx.scene.Cursor.HAND);
@@ -144,6 +141,19 @@ public class BankDetailsEntryView extends StackPane {
                 StackPane.setAlignment(tThumb, Pos.CENTER_RIGHT);
                 StackPane.setMargin(tThumb, new Insets(0, 2, 0, 0));
                 iosToggle.getChildren().addAll(tBg, tThumb);
+
+                iosToggle.setOnMouseClicked(e -> {
+                        isDefault[0] = !isDefault[0];
+                        if (isDefault[0]) {
+                                tBg.setFill(Color.web(PRIMARY));
+                                StackPane.setAlignment(tThumb, Pos.CENTER_RIGHT);
+                                StackPane.setMargin(tThumb, new Insets(0, 2, 0, 0));
+                        } else {
+                                tBg.setFill(Color.web("#3b5443"));
+                                StackPane.setAlignment(tThumb, Pos.CENTER_LEFT);
+                                StackPane.setMargin(tThumb, new Insets(0, 0, 0, 2));
+                        }
+                });
 
                 toggleRow.getChildren().addAll(toggleText, iosToggle);
 
@@ -164,9 +174,9 @@ public class BankDetailsEntryView extends StackPane {
 
                 // Footer Action
                 VBox footer = new VBox();
-                footer.setPadding(new Insets(15, 20, 30, 20));
-                footer.setStyle("-fx-background-color: linear-gradient(to top, " + BACKGROUND_DARK
-                                + " 80%, transparent);");
+                footer.setPadding(new Insets(15, 20, 35, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK
+                                + "; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
 
                 Button verifyBtn = new Button("Verify Account");
                 verifyBtn.setGraphic(new Label("\u203a"));
@@ -174,15 +184,18 @@ public class BankDetailsEntryView extends StackPane {
                 verifyBtn.setMaxWidth(Double.MAX_VALUE);
                 verifyBtn.setPrefHeight(56);
                 verifyBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
-                verifyBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView("Verification Pending",
-                                "Your bank details are being verified. Payouts will be enabled once approved.")));
+                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
+                verifyBtn.setOnAction(e -> MainApp.navigateCached("success_verify_bank", () -> new SuccessView(
+                                "Verification Pending",
+                                "Your bank details are being verified. Payouts will be enabled once approved.",
+                                "Back to Dashboard",
+                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
 
                 footer.getChildren().add(verifyBtn);
 
-                layout.getChildren().addAll(topNav, scroll);
-                getChildren().addAll(layout, footer);
-                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+                setTop(topNav);
+                setCenter(scroll);
+                setBottom(footer);
         }
 
         private VBox createFormField(String label, String placeholder, boolean optional) {
@@ -230,9 +243,6 @@ public class BankDetailsEntryView extends StackPane {
                 cb.setPrefHeight(56);
                 cb.setStyle("-fx-background-color: " + INPUT_BG + "; -fx-background-radius: 12; -fx-border-color: "
                                 + BORDER_COLOR + "; -fx-border-radius: 12; -fx-padding: 0 10;");
-
-                // Customizing the popup styling would require extra lookup on .list-view but
-                // this covers the core look
 
                 field.getChildren().addAll(l, cb);
                 return field;
