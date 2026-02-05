@@ -5,7 +5,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -13,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class CommuteCalculatorView extends VBox {
+public class CommuteCalculatorView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#221610";
         private static final String PRIMARY = "#f46a25";
@@ -21,17 +20,16 @@ public class CommuteCalculatorView extends VBox {
         private static final String TEXT_GRAY = "#8a6e60";
 
         public CommuteCalculatorView() {
-                setSpacing(0);
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                // --- Header ---
+                // Header
                 HBox header = new HBox(0);
                 header.setAlignment(Pos.CENTER_LEFT);
                 header.setPadding(new Insets(15, 20, 15, 20));
                 header.setStyle("-fx-background-color: " + BACKGROUND_DARK
-                                + "cc; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 0 1 0;");
+                                + "; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 0 1 0;");
 
-                Button backBtn = new Button("\u276E"); // arrow_back_ios
+                Button backBtn = new Button("\u276E");
                 backBtn.setStyle(
                                 "-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-cursor: hand;");
                 backBtn.setOnAction(e -> MainApp.showHome());
@@ -39,264 +37,205 @@ public class CommuteCalculatorView extends VBox {
                 Label title = new Label("Commute Analysis");
                 title.setFont(Font.font("System", FontWeight.BOLD, 18));
                 title.setTextFill(Color.WHITE);
-                title.setAlignment(Pos.CENTER);
                 HBox.setHgrow(title, Priority.ALWAYS);
-                title.setMaxWidth(Double.MAX_VALUE);
+                title.setAlignment(Pos.CENTER);
 
-                Region spacer = new Region();
-                spacer.setPrefWidth(40);
+                header.getChildren().addAll(backBtn, title, new Region() {
+                        {
+                                setPrefWidth(40);
+                        }
+                });
+                setTop(header);
 
-                header.getChildren().addAll(backBtn, title, spacer);
+                // Scroll Content
+                VBox content = new VBox(20);
+                content.setPadding(new Insets(20, 20, 40, 20));
+                content.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                // --- Main Content ---
-                VBox content = new VBox(16);
-                content.setPadding(new Insets(80, 16, 100, 16));
-
-                // 1. Property & Destination Card
+                // 1. Locations
                 VBox locationCard = new VBox(16);
                 locationCard.setPadding(new Insets(16));
                 locationCard.setStyle("-fx-background-color: " + CARD_BG
-                                + "; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 12;");
+                                + "; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.05);");
 
-                // Property Origin
-                HBox originRow = new HBox(12);
-                originRow.setAlignment(Pos.TOP_LEFT);
+                locationCard.getChildren().addAll(
+                                createLocationRow("\u2302", "PROPERTY LOCATION", "123 Kilimani Road, Nairobi", true),
+                                createLocationRow("\uD83D\uDCCD", "DESTINATION", "Two Rivers Mall, Limuru Road",
+                                                false));
 
-                VBox iconCol1 = new VBox(4);
-                iconCol1.setAlignment(Pos.TOP_CENTER);
-                Label homeIcon = new Label("\u2302"); // home
-                homeIcon.setTextFill(Color.web(PRIMARY));
-                homeIcon.setFont(Font.font(20));
-                Region connector = new Region();
-                connector.setPrefHeight(32);
-                connector.setPrefWidth(2);
-                connector.setStyle("-fx-background-color: rgba(255,255,255,0.1);");
-                iconCol1.getChildren().addAll(homeIcon, connector);
+                // 2. Map
+                StackPane mapBox = new StackPane();
+                mapBox.setPrefHeight(240);
+                mapBox.setStyle("-fx-background-color: " + CARD_BG
+                                + "; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.05); -fx-overflow: hidden;");
 
-                VBox originDetails = new VBox(4);
-                HBox.setHgrow(originDetails, Priority.ALWAYS);
-                Label originLabel = new Label("PROPERTY LOCATION");
-                originLabel.setTextFill(Color.web(TEXT_GRAY));
-                originLabel.setFont(Font.font("System", FontWeight.BOLD, 10));
-                Label originAddress = new Label("123 Kilimani Road, Nairobi");
-                originAddress.setTextFill(Color.WHITE);
-                originAddress.setFont(Font.font("System", FontWeight.MEDIUM, 14));
-                originDetails.getChildren().addAll(originLabel, originAddress);
-
-                originRow.getChildren().addAll(iconCol1, originDetails);
-
-                // Destination Input
-                HBox destRow = new HBox(12);
-                destRow.setAlignment(Pos.TOP_LEFT);
-
-                Label destIcon = new Label("\uD83D\uDCCD"); // location_on
-                destIcon.setTextFill(Color.web(TEXT_GRAY));
-                destIcon.setFont(Font.font(20));
-
-                VBox destDetails = new VBox(4);
-                HBox.setHgrow(destDetails, Priority.ALWAYS);
-                Label destLabel = new Label("DESTINATION");
-                destLabel.setTextFill(Color.web(TEXT_GRAY));
-                destLabel.setFont(Font.font("System", FontWeight.BOLD, 10));
-
-                TextField destInput = new TextField("Two Rivers Mall, Limuru Road");
-                destInput.setPromptText("Enter Work or School Address");
-                destInput.setStyle(
-                                "-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: white; -fx-prompt-text-fill: rgba(138,110,96,0.6); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-padding: 10;");
-                destInput.setPrefHeight(48);
-
-                destDetails.getChildren().addAll(destLabel, destInput);
-                destRow.getChildren().addAll(destIcon, destDetails);
-
-                locationCard.getChildren().addAll(originRow, destRow);
-
-                // 2. Interactive Map Section
-                StackPane mapContainer = new StackPane();
-                mapContainer.setPrefHeight(256);
-                mapContainer.setStyle(
-                                "-fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 12;");
-
-                ImageView mapView = new ImageView();
                 try {
-                        Image mapImg = new Image(
-                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDZWdy-HAeLnhUbXaOMGrMhyMzoqdStaYCktLYJepZCjUdaab4rej39c_5LisHVJlYt_u-Js_kGDjSsMm255UqP-lD1BAU17YUs2MZyTskFKGQ7mHJreOFUFATAJi1i1uLA_EUTYQo8PPemFZ67IhQEjxd-LVZBe5MXnDPfB1GvjzG0yffgGiUSfT11GIY27vv9W11DCa8Lp4gtqIfixEXi1k143yxwOyTnOb4HAw8WXrUFLpZTThZYXSaJqZVJsuDNn0V183hJTEM",
-                                        400, 256, false, true);
-                        mapView.setImage(mapImg);
+                        ImageView mv = new ImageView(new Image(
+                                        "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=600&auto=format&fit=crop",
+                                        600, 240, false, true, true));
+                        mv.setFitWidth(400);
+                        mv.setFitHeight(240);
+                        mv.setPreserveRatio(false);
+                        javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle(400, 240);
+                        clip.setArcWidth(32);
+                        clip.setArcHeight(32);
+                        mv.setClip(clip);
+                        mapBox.getChildren().add(mv);
                 } catch (Exception e) {
                 }
-                mapView.setFitWidth(400);
-                mapView.setFitHeight(256);
-                mapView.setPreserveRatio(false);
 
-                // Map markers overlay
-                StackPane markersOverlay = new StackPane();
-
-                VBox homeMarker = new VBox(2);
-                homeMarker.setAlignment(Pos.CENTER);
-                Label homeTag = new Label("HOME");
-                homeTag.setStyle("-fx-background-color: " + CARD_BG
-                                + "; -fx-text-fill: white; -fx-font-size: 10; -fx-font-weight: bold; -fx-padding: 2 6; -fx-background-radius: 4;");
-                Label homePin = new Label("\uD83D\uDCCD");
-                homePin.setTextFill(Color.web(PRIMARY));
-                homePin.setFont(Font.font(24));
-                homeMarker.getChildren().addAll(homeTag, homePin);
-                StackPane.setAlignment(homeMarker, Pos.TOP_LEFT);
-                StackPane.setMargin(homeMarker, new Insets(64, 0, 0, 100));
-
-                VBox workMarker = new VBox(2);
-                workMarker.setAlignment(Pos.CENTER);
-                Label workTag = new Label("WORK");
-                workTag.setStyle("-fx-background-color: " + CARD_BG
-                                + "; -fx-text-fill: white; -fx-font-size: 10; -fx-font-weight: bold; -fx-padding: 2 6; -fx-background-radius: 4;");
-                Label workPin = new Label("\uD83D\uDCCD");
-                workPin.setTextFill(Color.WHITE);
-                workPin.setFont(Font.font(24));
-                workMarker.getChildren().addAll(workTag, workPin);
-                StackPane.setAlignment(workMarker, Pos.BOTTOM_RIGHT);
-                StackPane.setMargin(workMarker, new Insets(0, 100, 85, 0));
-
-                markersOverlay.getChildren().addAll(homeMarker, workMarker);
-
-                // Location button
-                Button locationBtn = new Button("\u2316"); // my_location
-                locationBtn.setStyle("-fx-background-color: rgba(255,255,255,0.9); -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-background-radius: 25; -fx-font-size: 18; -fx-padding: 8;");
-                StackPane.setAlignment(locationBtn, Pos.BOTTOM_RIGHT);
-                StackPane.setMargin(locationBtn, new Insets(0, 16, 16, 0));
-
-                mapContainer.getChildren().addAll(mapView, markersOverlay, locationBtn);
+                // Markers
+                StackPane markers = new StackPane();
+                markers.getChildren().addAll(
+                                createMarker("HOME", Pos.TOP_LEFT, new Insets(40, 0, 0, 80), PRIMARY),
+                                createMarker("WORK", Pos.BOTTOM_RIGHT, new Insets(0, 80, 40, 0), "#ffffff"));
+                mapBox.getChildren().add(markers);
 
                 // 3. Traffic Toggle
-                VBox trafficSection = new VBox(12);
-
-                HBox trafficHeader = new HBox();
-                trafficHeader.setAlignment(Pos.CENTER_LEFT);
-                Label trafficTitle = new Label("Traffic Analysis");
-                trafficTitle.setTextFill(Color.WHITE);
-                trafficTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
-                Region tSpacer = new Region();
-                HBox.setHgrow(tSpacer, Priority.ALWAYS);
-                Label trafficInfo = new Label("\u24D8 Updates live for Thika Road");
-                trafficInfo.setTextFill(Color.web(TEXT_GRAY));
-                trafficInfo.setFont(Font.font(10));
-                trafficInfo.setStyle("-fx-font-style: italic;");
-                trafficHeader.getChildren().addAll(trafficTitle, tSpacer, trafficInfo);
-
                 HBox trafficToggle = new HBox(4);
                 trafficToggle.setPadding(new Insets(4));
-                trafficToggle.setAlignment(Pos.CENTER);
                 trafficToggle.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 12;");
+                Button peak = createTrafficBtn("Peak Traffic", true);
+                Button offPeak = createTrafficBtn("Off-Peak", false);
+                HBox.setHgrow(peak, Priority.ALWAYS);
+                HBox.setHgrow(offPeak, Priority.ALWAYS);
+                trafficToggle.getChildren().addAll(offPeak, peak);
 
-                Button offPeakBtn = createToggleButton("Off-Peak", false);
-                Button peakBtn = createToggleButton("Peak Traffic", true);
-                HBox.setHgrow(offPeakBtn, Priority.ALWAYS);
-                HBox.setHgrow(peakBtn, Priority.ALWAYS);
-
-                trafficToggle.getChildren().addAll(offPeakBtn, peakBtn);
-                trafficSection.getChildren().addAll(trafficHeader, trafficToggle);
-
-                // 4. Transport Breakdown
+                // 4. Results
                 VBox transportList = new VBox(12);
+                transportList.getChildren().addAll(
+                                createResultCard("\uD83D\uDE97", "Driving", "Fastest route via bypass", "25 mins",
+                                                true),
+                                createResultCard("\uD83D\uDE8C", "Matatu", "Stage: Kilimani Mall", "45 mins", false));
 
-                transportList.getChildren().add(createTransportCard(
-                                "\uD83D\uDE97", "Driving", "Fastest route via bypass",
-                                "25 mins", "+8 min traffic", PRIMARY, true));
+                content.getChildren().addAll(locationCard, mapBox, trafficToggle, transportList);
 
-                transportList.getChildren().add(createTransportCard(
-                                "\uD83D\uDE8C", "Matatu", "Stage: Kilimani Mall",
-                                "45 mins", "Incl. walking", TEXT_GRAY, false));
+                ScrollPane scroll = new ScrollPane(content);
+                scroll.setFitToWidth(true);
+                scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
+                setCenter(scroll);
 
-                transportList.getChildren().add(createTransportCard(
-                                "\uD83D\uDEB6", "Walking", "Via safe pedestrian path",
-                                "1.5 hrs", "7.2 km", TEXT_GRAY, false));
-
-                content.getChildren().addAll(locationCard, mapContainer, trafficSection, transportList);
-
-                ScrollPane scrollPane = new ScrollPane(content);
-                scrollPane.setFitToWidth(true);
-                scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-
-                // --- Bottom Action Button ---
-                HBox bottomBar = new HBox();
-                bottomBar.setPadding(new Insets(16));
-                bottomBar.setStyle("-fx-background-color: " + BACKGROUND_DARK
+                // Footer Action (Pinned)
+                VBox footer = new VBox();
+                footer.setPadding(new Insets(20, 20, 35, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK
                                 + "; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1 0 0 0;");
 
                 Button saveBtn = new Button("\uD83D\uDD16  Save Route to Profile");
                 saveBtn.setMaxWidth(Double.MAX_VALUE);
                 saveBtn.setPrefHeight(56);
                 saveBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 12; -fx-font-size: 14;");
-                HBox.setHgrow(saveBtn, Priority.ALWAYS);
+                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
+                saveBtn.setOnAction(e -> MainApp.showHome());
 
-                bottomBar.getChildren().add(saveBtn);
-
-                // Main Layout
-                StackPane root = new StackPane();
-                root.getChildren().addAll(scrollPane, bottomBar);
-                StackPane.setAlignment(bottomBar, Pos.BOTTOM_CENTER);
-
-                getChildren().addAll(header, root);
+                footer.getChildren().add(saveBtn);
+                setBottom(footer);
         }
 
-        private Button createToggleButton(String text, boolean active) {
-                Button btn = new Button(text);
-                btn.setMaxWidth(Double.MAX_VALUE);
-                if (active) {
-                        btn.setStyle("-fx-background-color: " + PRIMARY
-                                        + "; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 13;");
-                } else {
-                        btn.setStyle(
-                                        "-fx-background-color: transparent; -fx-text-fill: rgba(255,255,255,0.6); -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 13;");
-                }
-                btn.setPrefHeight(40);
-                return btn;
+        private HBox createLocationRow(String icon, String label, String value, boolean hasLine) {
+                HBox row = new HBox(12);
+                VBox icBox = new VBox(4);
+                icBox.setAlignment(Pos.TOP_CENTER);
+                Label ic = new Label(icon) {
+                        {
+                                setTextFill(Color.web(PRIMARY));
+                                setFont(Font.font(18));
+                        }
+                };
+                icBox.getChildren().add(ic);
+                if (hasLine)
+                        icBox.getChildren().add(new Region() {
+                                {
+                                        setPrefHeight(20);
+                                        setPrefWidth(2);
+                                        setStyle("-fx-background-color: rgba(255,255,255,0.1);");
+                                }
+                        });
+
+                VBox tx = new VBox(2, new Label(label) {
+                        {
+                                setTextFill(Color.web(TEXT_GRAY));
+                                setFont(Font.font("System", FontWeight.BOLD, 10));
+                        }
+                }, new Label(value) {
+                        {
+                                setTextFill(Color.WHITE);
+                                setFont(Font.font(14));
+                        }
+                });
+                row.getChildren().addAll(icBox, tx);
+                return row;
         }
 
-        private HBox createTransportCard(String icon, String mode, String detail, String time, String subtext,
-                        String iconColor, boolean highlight) {
-                HBox card = new HBox(16);
+        private VBox createMarker(String text, Pos pos, Insets margin, String colorStr) {
+                VBox m = new VBox(2);
+                m.setAlignment(Pos.CENTER);
+                m.getChildren().addAll(
+                                new Label(text) {
+                                        {
+                                                setStyle("-fx-background-color: " + CARD_BG
+                                                                + "; -fx-text-fill: white; -fx-font-size: 9; -fx-padding: 2 6; -fx-background-radius: 4;");
+                                        }
+                                },
+                                new Label("\uD83D\uDCCD") {
+                                        {
+                                                setTextFill(Color.web(colorStr));
+                                                setFont(Font.font(20));
+                                        }
+                                });
+                StackPane.setAlignment(m, pos);
+                StackPane.setMargin(m, margin);
+                return m;
+        }
+
+        private Button createTrafficBtn(String text, boolean active) {
+                Button b = new Button(text);
+                b.setMaxWidth(Double.MAX_VALUE);
+                b.setPrefHeight(40);
+                b.setStyle("-fx-background-color: " + (active ? PRIMARY : "transparent")
+                                + "; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;");
+                return b;
+        }
+
+        private HBox createResultCard(String icon, String mode, String detail, String time, boolean best) {
+                HBox card = new HBox(15);
                 card.setPadding(new Insets(16));
                 card.setAlignment(Pos.CENTER_LEFT);
-                card.setStyle("-fx-background-color: " + CARD_BG
-                                + "; -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.05); -fx-border-radius: 12;");
+                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16; -fx-border-color: "
+                                + (best ? PRIMARY + "40" : "rgba(255,255,255,0.05)") + ";");
 
-                // Icon
-                StackPane iconContainer = new StackPane();
-                iconContainer.setPrefSize(40, 40);
-                iconContainer.setStyle(
-                                "-fx-background-color: " + (highlight ? "rgba(244,106,37,0.1)" : "rgba(138,110,96,0.1)")
-                                                + "; -fx-background-radius: 20;");
-                Label iconLabel = new Label(icon);
-                iconLabel.setTextFill(Color.web(highlight ? PRIMARY : iconColor));
-                iconLabel.setFont(Font.font(20));
-                iconContainer.getChildren().add(iconLabel);
+                StackPane ic = new StackPane(new Label(icon) {
+                        {
+                                setFont(Font.font(20));
+                                setTextFill(best ? Color.web(PRIMARY) : Color.WHITE);
+                        }
+                });
+                ic.setPrefSize(40, 40);
+                ic.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-background-radius: 20;");
 
-                // Details
-                VBox details = new VBox(2);
-                HBox.setHgrow(details, Priority.ALWAYS);
-                Label modeLabel = new Label(mode);
-                modeLabel.setTextFill(Color.WHITE);
-                modeLabel.setFont(Font.font("System", FontWeight.BOLD, 14));
-                Label detailLabel = new Label(detail);
-                detailLabel.setTextFill(Color.web(TEXT_GRAY));
-                detailLabel.setFont(Font.font(12));
-                details.getChildren().addAll(modeLabel, detailLabel);
+                VBox tx = new VBox(2, new Label(mode) {
+                        {
+                                setTextFill(Color.WHITE);
+                                setFont(Font.font("System", FontWeight.BOLD, 14));
+                        }
+                }, new Label(detail) {
+                        {
+                                setTextFill(Color.web(TEXT_GRAY));
+                                setFont(Font.font(12));
+                        }
+                });
+                HBox.setHgrow(tx, Priority.ALWAYS);
 
-                // Time
-                VBox timeBox = new VBox(0);
-                timeBox.setAlignment(Pos.CENTER_RIGHT);
-                Label timeLabel = new Label(time);
-                timeLabel.setTextFill(highlight ? Color.web(PRIMARY) : Color.WHITE);
-                timeLabel.setFont(Font.font("System", FontWeight.BOLD, 18));
-                Label subtextLabel = new Label(subtext.toUpperCase());
-                subtextLabel.setTextFill(Color.web(TEXT_GRAY));
-                subtextLabel.setFont(Font.font(10));
-                timeBox.getChildren().addAll(timeLabel, subtextLabel);
+                Label t = new Label(time) {
+                        {
+                                setTextFill(best ? Color.web(PRIMARY) : Color.WHITE);
+                                setFont(Font.font("System", FontWeight.BOLD, 16));
+                        }
+                };
 
-                card.getChildren().addAll(iconContainer, details, timeBox);
+                card.getChildren().addAll(ic, tx, t);
                 return card;
         }
 }

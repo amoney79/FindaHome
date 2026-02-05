@@ -7,330 +7,286 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class CountyDiscoveryView extends VBox {
+public class CountyDiscoveryView extends BorderPane {
 
-    private static final String BACKGROUND_LIGHT = "#f8f6f5";
-    private static final String PRIMARY = "#f46a25";
-    private static final String TEXT_GRAY = "#64748b";
+        private static final String BACKGROUND_LIGHT = "#f8f6f5";
+        private static final String PRIMARY = "#f46a25";
+        private static final String TEXT_GRAY = "#64748b";
 
-    public CountyDiscoveryView() {
-        setSpacing(0);
-        setStyle("-fx-background-color: " + BACKGROUND_LIGHT + ";");
+        public CountyDiscoveryView() {
+                setStyle("-fx-background-color: " + BACKGROUND_LIGHT + ";");
 
-        // --- iOS Status Bar ---
-        HBox statusBar = new HBox();
-        statusBar.setPadding(new Insets(8, 24, 8, 24));
-        statusBar.setAlignment(Pos.CENTER_LEFT);
-        statusBar.setStyle("-fx-background-color: " + BACKGROUND_LIGHT + ";");
+                // Header Section
+                VBox topArea = new VBox(0);
 
-        Label time = new Label("9:41");
-        time.setFont(Font.font("System", FontWeight.BOLD, 12));
-        time.setTextFill(Color.BLACK);
+                // Status Bar
+                HBox statusBar = new HBox();
+                statusBar.setPadding(new Insets(8, 24, 8, 24));
+                statusBar.getChildren().addAll(new Label("9:41") {
+                        {
+                                setFont(Font.font("System", FontWeight.BOLD, 12));
+                        }
+                }, new Region() {
+                        {
+                                HBox.setHgrow(this, Priority.ALWAYS);
+                        }
+                }, new Label("\uD83D\uDCF6 \uD83D\uDD0B"));
 
-        Region statusSpacer = new Region();
-        HBox.setHgrow(statusSpacer, Priority.ALWAYS);
+                // Header
+                VBox header = new VBox(16);
+                header.setPadding(new Insets(10, 20, 16, 20));
+                HBox topRow = new HBox();
+                topRow.setAlignment(Pos.CENTER_LEFT);
 
-        HBox statusIcons = new HBox(4);
-        statusIcons.setAlignment(Pos.CENTER_RIGHT);
-        Label signal = new Label("\uD83D\uDCF6");
-        Label wifi = new Label("\uD83D\uDCF6");
-        Label battery = new Label("\uD83D\uDD0B");
-        signal.setFont(Font.font(12));
-        wifi.setFont(Font.font(12));
-        battery.setFont(Font.font(12));
-        statusIcons.getChildren().addAll(signal, wifi, battery);
+                HBox logo = new HBox(8);
+                logo.setAlignment(Pos.CENTER_LEFT);
+                StackPane lBox = new StackPane(new Label("\u2302") {
+                        {
+                                setTextFill(Color.WHITE);
+                        }
+                });
+                lBox.setPrefSize(32, 32);
+                lBox.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 8;");
+                logo.getChildren().addAll(lBox, new Label("FindaHome") {
+                        {
+                                setFont(Font.font("System", FontWeight.EXTRA_BOLD, 20));
+                        }
+                });
+                HBox.setHgrow(logo, Priority.ALWAYS);
 
-        statusBar.getChildren().addAll(time, statusSpacer, statusIcons);
+                topRow.getChildren().addAll(logo, new Button("\uD83D\uDD14") {
+                        {
+                                setStyle("-fx-background-color: #e2e8f0; -fx-background-radius: 20; -fx-padding: 8;");
+                        }
+                });
 
-        // --- Header & Search ---
-        VBox headerSection = new VBox(16);
-        headerSection.setPadding(new Insets(8, 20, 16, 20));
-        headerSection.setStyle("-fx-background-color: " + BACKGROUND_LIGHT + ";");
+                // Search
+                HBox search = new HBox(12);
+                search.setAlignment(Pos.CENTER_LEFT);
+                search.setPadding(new Insets(14, 16, 14, 16));
+                search.setStyle("-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+                search.getChildren().addAll(new Label("\uD83D\uDD0D") {
+                        {
+                                setTextFill(Color.web(TEXT_GRAY));
+                        }
+                }, new TextField() {
+                        {
+                                setPromptText("Search for a County...");
+                                setStyle("-fx-background-color: transparent;");
+                                HBox.setHgrow(this, Priority.ALWAYS);
+                        }
+                });
 
-        HBox headerTop = new HBox();
-        headerTop.setAlignment(Pos.CENTER_LEFT);
+                header.getChildren().addAll(topRow, search);
+                topArea.getChildren().addAll(statusBar, header);
+                setTop(topArea);
 
-        HBox logoSection = new HBox(8);
-        logoSection.setAlignment(Pos.CENTER_LEFT);
+                // Scroll Content
+                VBox content = new VBox(32);
+                content.setPadding(new Insets(20, 0, 40, 0));
 
-        StackPane logoBox = new StackPane();
-        logoBox.setPrefSize(32, 32);
-        logoBox.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 8;");
-        Label homeIcon = new Label("\u2302");
-        homeIcon.setTextFill(Color.WHITE);
-        homeIcon.setFont(Font.font(18));
-        logoBox.getChildren().add(homeIcon);
+                // 1. Trending
+                VBox trending = new VBox(16);
+                HBox trendHead = new HBox(new Label("Popular Counties") {
+                        {
+                                setFont(Font.font("System", FontWeight.BOLD, 18));
+                        }
+                }, new Region() {
+                        {
+                                HBox.setHgrow(this, Priority.ALWAYS);
+                        }
+                }, new Button("See All") {
+                        {
+                                setStyle("-fx-background-color: transparent; -fx-text-fill: " + PRIMARY
+                                                + "; -fx-font-weight: bold;");
+                        }
+                });
+                trendHead.setPadding(new Insets(0, 20, 0, 20));
 
-        Label appName = new Label("FindaHome");
-        appName.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 20));
-        appName.setTextFill(Color.BLACK);
+                HBox cards = new HBox(16);
+                cards.setPadding(new Insets(0, 20, 0, 20));
+                cards.getChildren().addAll(
+                                createPopularCard("Nairobi",
+                                                "https://images.unsplash.com/photo-1542665093-8012eba2d4cc?w=400",
+                                                true),
+                                createPopularCard("Mombasa",
+                                                "https://images.unsplash.com/photo-1580216643062-cf460548a66a?w=400",
+                                                false));
 
-        logoSection.getChildren().addAll(logoBox, appName);
-        HBox.setHgrow(logoSection, Priority.ALWAYS);
+                ScrollPane trendScroll = new ScrollPane(cards);
+                trendScroll.setFitToHeight(true);
+                trendScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                trendScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                trendScroll.setStyle(
+                                "-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
-        Button notifBtn = new Button("\uD83D\uDD14");
-        notifBtn.setStyle(
-                "-fx-background-color: #e2e8f0; -fx-background-radius: 20; -fx-padding: 8; -fx-font-size: 16;");
+                trending.getChildren().addAll(trendHead, trendScroll);
 
-        headerTop.getChildren().addAll(logoSection, notifBtn);
+                // 2. County Grid
+                VBox gridSection = new VBox(16);
+                gridSection.setPadding(new Insets(0, 20, 0, 20));
+                gridSection.getChildren().add(new Label("Browse by County") {
+                        {
+                                setFont(Font.font("System", FontWeight.BOLD, 18));
+                        }
+                });
 
-        // Search Bar
-        HBox searchBar = new HBox();
-        searchBar.setAlignment(Pos.CENTER_LEFT);
-        searchBar.setPadding(new Insets(14, 16, 14, 16));
-        searchBar.setStyle(
-                "-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 4, 0, 0, 2);");
+                GridPane grid = new GridPane();
+                grid.setHgap(12);
+                grid.setVgap(12);
+                grid.add(createCountyBox("01", "Mombasa"), 0, 0);
+                grid.add(createCountyBox("12", "Meru"), 1, 0);
+                grid.add(createCountyBox("19", "Nyeri"), 2, 0);
+                grid.add(createCountyBox("30", "Baringo"), 0, 1);
+                grid.add(createCountyBox("32", "Nakuru"), 1, 1);
+                grid.add(createCountyBox("47", "Nairobi", true), 2, 1);
 
-        Label searchIcon = new Label("\uD83D\uDD0D");
-        searchIcon.setTextFill(Color.web(TEXT_GRAY));
-        searchIcon.setFont(Font.font(16));
+                gridSection.getChildren().add(grid);
 
-        TextField searchField = new TextField();
-        searchField.setPromptText("Search for a County or Ward...");
-        searchField.setStyle("-fx-background-color: transparent; -fx-border-width: 0; -fx-prompt-text-fill: "
-                + TEXT_GRAY + "; -fx-text-fill: black;");
-        HBox.setHgrow(searchField, Priority.ALWAYS);
+                content.getChildren().addAll(trending, gridSection);
 
-        searchBar.getChildren().addAll(searchIcon, searchField);
-        headerSection.getChildren().addAll(headerTop, searchBar);
+                ScrollPane mainScroll = new ScrollPane(content);
+                mainScroll.setFitToWidth(true);
+                mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                mainScroll.setStyle(
+                                "-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
+                setCenter(mainScroll);
 
-        // --- Main Content ---
-        VBox content = new VBox(32);
-        content.setPadding(new Insets(16, 0, 100, 0));
+                // Bottom Navigation (Pinned)
+                HBox bottomNav = new HBox();
+                bottomNav.setPadding(new Insets(12, 24, 32, 24));
+                bottomNav.setAlignment(Pos.CENTER);
+                bottomNav.setStyle(
+                                "-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, -2);");
 
-        // 1. Popular Searches Section
-        VBox popularSection = new VBox(16);
+                Region s1 = new Region();
+                HBox.setHgrow(s1, Priority.ALWAYS);
+                Region s2 = new Region();
+                HBox.setHgrow(s2, Priority.ALWAYS);
+                Region s3 = new Region();
+                HBox.setHgrow(s3, Priority.ALWAYS);
+                Region s4 = new Region();
+                HBox.setHgrow(s4, Priority.ALWAYS);
 
-        HBox popularHeader = new HBox();
-        popularHeader.setPadding(new Insets(0, 20, 0, 20));
-        popularHeader.setAlignment(Pos.CENTER_LEFT);
-        Label popularTitle = new Label("Popular Searches");
-        popularTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
-        popularTitle.setTextFill(Color.BLACK);
-        Region pSpacer = new Region();
-        HBox.setHgrow(pSpacer, Priority.ALWAYS);
-        Button seeAllBtn = new Button("See All");
-        seeAllBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: " + PRIMARY
-                + "; -fx-font-weight: bold; -fx-font-size: 13;");
-        popularHeader.getChildren().addAll(popularTitle, pSpacer, seeAllBtn);
+                bottomNav.getChildren().addAll(
+                                createNavItem("\uD83E\uDDED", "Discover", true), s1,
+                                createNavItem("\uD83D\uDDFA", "Map", false), s2,
+                                new VBox() {
+                                        {
+                                                setAlignment(Pos.CENTER);
+                                                getChildren().addAll(new Button("+") {
+                                                        {
+                                                                setStyle("-fx-background-color: " + PRIMARY
+                                                                                + "; -fx-text-fill: white; -fx-background-radius: 25; -fx-font-size: 24; -fx-pref-width: 50; -fx-pref-height: 50;");
+                                                                setTranslateY(-30);
+                                                        }
+                                                }, new Label("List") {
+                                                        {
+                                                                setFont(Font.font(10));
+                                                                setTranslateY(-25);
+                                                        }
+                                                });
+                                        }
+                                }, s3,
+                                createNavItem("\u2665", "Saved", false), s4,
+                                createNavItem("\uD83D\uDC64", "Profile", false));
 
-        ScrollPane popularScroll = new ScrollPane();
-        popularScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        popularScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        popularScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        popularScroll.setPadding(new Insets(0, 0, 16, 0));
-
-        HBox popularCards = new HBox(16);
-        popularCards.setPadding(new Insets(0, 20, 0, 20));
-
-        popularCards.getChildren().addAll(
-                createPopularCard("Nairobi",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuB43Y8fFKzhhoU_6NI0PMTXsPuoqZXDFlWhoHYWg5bDKV7-XydkLOK5qhO_D0hoCwQISgaqbveUoKE0kLIVOFWX056eaTltH1Br1eb0ojPjqSKwrFSRKcdMpytvBFvaAJS5c-kZHTGWQ3y-dmldY9T8TZdUcqjcf4RZC6e9tm3do_Q_RxV_KlL5jxQ_lX6zrGrzNjekx_Wn1kJ5Pj0UrL0sctNnjnY65YKXL5i0VJIPrFUOnkzQQVzqReTtz6dOlXB2RawTnncyeHk",
-                        true, "Westlands", "Kilimani", "Karen"),
-                createPopularCard("Mombasa",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuATUrjGxeu37goNJKcEoBJJlQ4J8CHoKman58MX9GEflZCi6aAgCqppbYCVjvuY0vAmMJt3NrJoMRcj-F9EONiFuzSOtKNPoNSrxGXOSKkSxXRUdoX1oc6hXt_qYDWTQulxT1X3DtpW6O_h0HaVaS6HlnXP_y1rvrzu7NwWfqei3aRoaWsn09X0mvYbcjx12n1fe0fCDEsZeK6Lt7PSmBdsUsMHPy4epykP9cX0WFi7XMcLLE-ZTROHRpHCrsE9NhjrCHFOG5nj6KM",
-                        false, "Nyali", "Bamburi", "Mtwapa"),
-                createPopularCard("Nakuru",
-                        "https://lh3.googleusercontent.com/aida-public/AB6AXuB-YdOlWkf4Qu3E8GxlAyz6KVPGjZYk1neU1Smmu9fwpS6Z8xpCF4y7lDpqF62_iPsUSWgY7L53grEofIE1Q1ylYaMtflhauzFLdaraPuP9DRl7AbOHjCQ1FMxfBWcPVh20vOEaKNXUr1wigWitU7jXTDwSKZ1VdESQneZhv-zEZAUBvUoNE7bjtLq7SuUDmW1rEuQTgx9n4FooKhFcsx3ihWi2h6_yyHtxtvoI3Dw3AWn3F_d_LiCJTDabJI8_T4QbY-v3WJZDF6k",
-                        false, "Naivasha", "Lanet", "Milimani"));
-
-        popularScroll.setContent(popularCards);
-        popularSection.getChildren().addAll(popularHeader, popularScroll);
-
-        // 2. Browse by County Grid
-        VBox countySection = new VBox(16);
-        countySection.setPadding(new Insets(0, 20, 0, 20));
-
-        HBox countyHeader = new HBox();
-        countyHeader.setAlignment(Pos.CENTER_LEFT);
-        Label countyTitle = new Label("Browse by County");
-        countyTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
-        countyTitle.setTextFill(Color.BLACK);
-        Region cSpacer = new Region();
-        HBox.setHgrow(cSpacer, Priority.ALWAYS);
-        HBox mapLink = new HBox(4);
-        mapLink.setAlignment(Pos.CENTER);
-        Label mapIcon = new Label("\uD83D\uDDFA");
-        mapIcon.setTextFill(Color.web(TEXT_GRAY));
-        mapIcon.setFont(Font.font(12));
-        Label mapText = new Label("View Map");
-        mapText.setTextFill(Color.web(TEXT_GRAY));
-        mapText.setFont(Font.font(13));
-        mapLink.getChildren().addAll(mapIcon, mapText);
-        countyHeader.getChildren().addAll(countyTitle, cSpacer, mapLink);
-
-        GridPane countyGrid = new GridPane();
-        countyGrid.setHgap(12);
-        countyGrid.setVgap(12);
-
-        // Add county buttons
-        countyGrid.add(createCountyButton("01", "Mombasa", false), 0, 0);
-        countyGrid.add(createCountyButton("02", "Kwale", false), 1, 0);
-        countyGrid.add(createCountyButton("03", "Kilifi", false), 2, 0);
-        countyGrid.add(createCountyButton("11", "Isiolo", false), 0, 1);
-        countyGrid.add(createCountyButton("12", "Meru", false), 1, 1);
-        countyGrid.add(createCountyButton("19", "Nyeri", false), 2, 1);
-        countyGrid.add(createCountyButton("30", "Baringo", false), 0, 2);
-        countyGrid.add(createCountyButton("32", "Nakuru", false), 1, 2);
-        countyGrid.add(createCountyButton("47", "Nairobi", true), 2, 2);
-
-        Button showAllBtn = new Button("Show All 47 Counties");
-        showAllBtn.setGraphic(createIcon("\u25BC"));
-        showAllBtn.setMaxWidth(Double.MAX_VALUE);
-        showAllBtn.setPrefHeight(48);
-        showAllBtn.setStyle(
-                "-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 12; -fx-background-radius: 12; -fx-text-fill: "
-                        + TEXT_GRAY + "; -fx-font-weight: bold; -fx-font-size: 13;");
-        VBox.setMargin(showAllBtn, new Insets(8, 0, 0, 0));
-
-        countySection.getChildren().addAll(countyHeader, countyGrid, showAllBtn);
-        content.getChildren().addAll(popularSection, countySection);
-
-        ScrollPane mainScroll = new ScrollPane(content);
-        mainScroll.setFitToWidth(true);
-        mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        mainScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        mainScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-
-        // --- Bottom Navigation ---
-        HBox bottomNav = new HBox();
-        bottomNav.setPadding(new Insets(12, 24, 32, 24));
-        bottomNav.setAlignment(Pos.CENTER);
-        bottomNav.setStyle(
-                "-fx-background-color: rgba(255,255,255,0.8); -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, -2);");
-
-        Region n1 = new Region();
-        Region n2 = new Region();
-        Region n3 = new Region();
-        Region n4 = new Region();
-        HBox.setHgrow(n1, Priority.ALWAYS);
-        HBox.setHgrow(n2, Priority.ALWAYS);
-        HBox.setHgrow(n3, Priority.ALWAYS);
-        HBox.setHgrow(n4, Priority.ALWAYS);
-
-        VBox addBtnContainer = new VBox();
-        addBtnContainer.setAlignment(Pos.CENTER);
-        Button addBtn = new Button("+");
-        addBtn.setStyle("-fx-background-color: " + PRIMARY
-                + "; -fx-text-fill: white; -fx-background-radius: 24; -fx-font-size: 24; -fx-font-weight: bold; -fx-pref-width: 48; -fx-pref-height: 48; -fx-effect: dropshadow(three-pass-box, rgba(244,106,37,0.3), 10, 0, 0, 4);");
-        VBox.setMargin(addBtn, new Insets(-32, 0, 0, 0));
-        Label addLabel = new Label("List");
-        addLabel.setFont(Font.font(10));
-        addLabel.setTextFill(Color.web(TEXT_GRAY));
-        addBtnContainer.getChildren().addAll(addBtn, addLabel);
-
-        bottomNav.getChildren().addAll(
-                createNavItem("\uD83E\uDDED", "Discover", true), n1,
-                createNavItem("\uD83D\uDDFA", "Map", false), n2,
-                addBtnContainer, n3,
-                createNavItem("\u2665", "Saved", false), n4,
-                createNavItem("\uD83D\uDC64", "Profile", false));
-
-        StackPane root = new StackPane();
-        root.getChildren().addAll(mainScroll, bottomNav);
-        StackPane.setAlignment(bottomNav, Pos.BOTTOM_CENTER);
-
-        getChildren().addAll(statusBar, headerSection, root);
-    }
-
-    private StackPane createPopularCard(String city, String imageUrl, boolean trending, String... wards) {
-        StackPane card = new StackPane();
-        card.setPrefSize(256, 320);
-        card.setStyle(
-                "-fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 4);");
-
-        ImageView imageView = new ImageView();
-        try {
-            Image img = new Image(imageUrl, 256, 320, false, true);
-            imageView.setImage(img);
-        } catch (Exception e) {
-        }
-        imageView.setFitWidth(256);
-        imageView.setFitHeight(320);
-        imageView.setPreserveRatio(false);
-        imageView.setStyle("-fx-background-radius: 12;");
-
-        VBox overlay = new VBox(8);
-        overlay.setPadding(new Insets(20));
-        overlay.setAlignment(Pos.BOTTOM_LEFT);
-        overlay.setStyle(
-                "-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%); -fx-background-radius: 12;");
-
-        if (trending) {
-            Label trendBadge = new Label("TRENDING");
-            trendBadge.setStyle("-fx-background-color: " + PRIMARY
-                    + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 10; -fx-padding: 2 8; -fx-background-radius: 12;");
-            overlay.getChildren().add(trendBadge);
+                setBottom(bottomNav);
         }
 
-        Label cityName = new Label(city);
-        cityName.setTextFill(Color.WHITE);
-        cityName.setFont(Font.font("System", FontWeight.BOLD, 24));
-
-        HBox wardTags = new HBox(8);
-        for (String ward : wards) {
-            Label tag = new Label(ward);
-            tag.setStyle(
-                    "-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 11; -fx-padding: 4 8; -fx-background-radius: 4;");
-            wardTags.getChildren().add(tag);
+        private StackPane createPopularCard(String city, String url, boolean trending) {
+                StackPane p = new StackPane();
+                p.setPrefSize(240, 300);
+                try {
+                        ImageView iv = new ImageView(new Image(url, 240, 300, false, true, true));
+                        iv.setFitWidth(240);
+                        iv.setFitHeight(300);
+                        iv.setPreserveRatio(false);
+                        Rectangle clip = new Rectangle(240, 300) {
+                                {
+                                        setArcWidth(24);
+                                        setArcHeight(24);
+                                }
+                        };
+                        iv.setClip(clip);
+                        VBox overlay = new VBox(8) {
+                                {
+                                        setPadding(new Insets(20));
+                                        setAlignment(Pos.BOTTOM_LEFT);
+                                        setStyle("-fx-background-color: linear-gradient(to top, rgba(0,0,0,0.8), transparent); -fx-background-radius: 12;");
+                                }
+                        };
+                        if (trending)
+                                overlay.getChildren().add(new Label("TRENDING") {
+                                        {
+                                                setStyle("-fx-background-color: " + PRIMARY
+                                                                + "; -fx-text-fill: white; -fx-font-size: 10; -fx-padding: 3 8; -fx-background-radius: 8;");
+                                        }
+                                });
+                        overlay.getChildren().add(new Label(city) {
+                                {
+                                        setFont(Font.font("System", FontWeight.BOLD, 22));
+                                        setTextFill(Color.WHITE);
+                                }
+                        });
+                        p.getChildren().addAll(iv, overlay);
+                } catch (Exception e) {
+                }
+                return p;
         }
 
-        overlay.getChildren().addAll(cityName, wardTags);
-        card.getChildren().addAll(imageView, overlay);
-        return card;
-    }
-
-    private VBox createCountyButton(String number, String name, boolean highlighted) {
-        VBox button = new VBox(4);
-        button.setAlignment(Pos.CENTER);
-        button.setPadding(new Insets(16));
-        button.setPrefSize(100, 80);
-
-        if (highlighted) {
-            button.setStyle(
-                    "-fx-background-color: rgba(244,106,37,0.05); -fx-background-radius: 12; -fx-border-color: rgba(244,106,37,0.2); -fx-border-width: 2; -fx-border-radius: 12; -fx-cursor: hand;");
-        } else {
-            button.setStyle(
-                    "-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #f1f5f9; -fx-border-width: 1; -fx-border-radius: 12; -fx-cursor: hand;");
+        private VBox createCountyBox(String num, String name) {
+                return createCountyBox(num, name, false);
         }
 
-        Label numLabel = new Label(number);
-        numLabel.setTextFill(Color.web(PRIMARY));
-        numLabel.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 20));
+        private VBox createCountyBox(String num, String name, boolean active) {
+                VBox v = new VBox(4);
+                v.setAlignment(Pos.CENTER);
+                v.setPadding(new Insets(16));
+                v.setPrefSize(100, 80);
+                v.setStyle("-fx-background-color: " + (active ? "rgba(244,106,37,0.05)" : "white")
+                                + "; -fx-background-radius: 12; -fx-border-color: " + (active ? PRIMARY : "#f1f5f9")
+                                + "; -fx-border-radius: 12; -fx-cursor: hand;");
+                v.getChildren().addAll(new Label(num) {
+                        {
+                                setTextFill(Color.web(PRIMARY));
+                                setFont(Font.font("System", FontWeight.EXTRA_BOLD, 18));
+                        }
+                }, new Label(name) {
+                        {
+                                setFont(Font.font(11));
+                        }
+                });
+                return v;
+        }
 
-        Label nameLabel = new Label(name);
-        nameLabel.setTextFill(Color.BLACK);
-        nameLabel.setFont(Font.font("System", highlighted ? FontWeight.BOLD : FontWeight.SEMI_BOLD, 12));
-        nameLabel.setWrapText(true);
-        nameLabel.setAlignment(Pos.CENTER);
-
-        button.getChildren().addAll(numLabel, nameLabel);
-        return button;
-    }
-
-    private Label createIcon(String icon) {
-        Label label = new Label(icon);
-        label.setFont(Font.font(12));
-        label.setTextFill(Color.web(TEXT_GRAY));
-        return label;
-    }
-
-    private VBox createNavItem(String icon, String label, boolean active) {
-        VBox item = new VBox(4);
-        item.setAlignment(Pos.CENTER);
-
-        Label iconLabel = new Label(icon);
-        iconLabel.setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
-        iconLabel.setFont(Font.font(20));
-
-        Label textLabel = new Label(label);
-        textLabel.setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
-        textLabel.setFont(Font.font("System", active ? FontWeight.BOLD : FontWeight.NORMAL, 10));
-
-        item.getChildren().addAll(iconLabel, textLabel);
-        return item;
-    }
+        private VBox createNavItem(String icon, String label, boolean active) {
+                VBox v = new VBox(4);
+                v.setAlignment(Pos.CENTER);
+                v.setCursor(javafx.scene.Cursor.HAND);
+                v.getChildren().addAll(new Label(icon) {
+                        {
+                                setFont(Font.font(20));
+                                setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
+                        }
+                }, new Label(label) {
+                        {
+                                setFont(Font.font(10));
+                                setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
+                        }
+                });
+                if (label.equals("Profile"))
+                        v.setOnMouseClicked(e -> MainApp.navigateCached("profile", TenantProfileView::new));
+                if (label.equals("Saved"))
+                        v.setOnMouseClicked(e -> MainApp.navigateCachedFullScreen("saved_properties",
+                                        SavedPropertiesView::new));
+                if (label.equals("Map"))
+                        v.setOnMouseClicked(e -> MainApp.navigateToMap());
+                return v;
+        }
 }

@@ -28,9 +28,9 @@ public class LeaseAgreementView extends BorderPane {
                 appBar.setStyle("-fx-background-color: rgba(16, 25, 34, 0.8); -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-width: 0 0 1 0;");
 
-                Label backBtn = new Label("‹"); // direct Unicode
+                Label backBtn = new Label("\u276E"); // Standard arrow for Consistency
                 backBtn.setTextFill(Color.WHITE);
-                backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
+                backBtn.setStyle("-fx-font-size: 24; -fx-cursor: hand;");
                 backBtn.setOnMouseClicked(
                                 e -> MainApp.navigateCachedFullScreen("tracker", ApplicationTrackerView::new));
 
