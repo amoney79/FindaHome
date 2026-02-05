@@ -35,10 +35,12 @@ public class FilterView extends VBox {
                                 + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
                 VBox.setMargin(resultsFab, new Insets(0, 20, 20, 20));
                 resultsFab.setOnAction(e -> {
-                        selectedLocation = searchField.getText();
+                        selectedLocation = searchField != null ? searchField.getText() : "";
                         java.util.List<Property> filtered = PropertyData.filter(selectedType, selectedLocation, 0,
                                         maxPrice);
-                        MainApp.getFeed().refresh(filtered);
+                        if (MainApp.getFeed() != null) {
+                                MainApp.getFeed().refresh(filtered);
+                        }
                         MainApp.showHome();
                 });
 
@@ -58,7 +60,7 @@ public class FilterView extends VBox {
                 header.setAlignment(Pos.CENTER_LEFT);
                 header.setPadding(new Insets(10, 20, 10, 20));
 
-                Label backBtn = new Label("\u2190"); // Back icon
+                Label backBtn = new Label("\u2190");
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 20; -fx-cursor: hand;");
                 backBtn.setOnMouseClicked(e -> MainApp.showHome());
@@ -95,21 +97,16 @@ public class FilterView extends VBox {
                 searchIcon.setPadding(new Insets(0, 0, 0, 10));
                 StackPane.setAlignment(searchIcon, Pos.CENTER_LEFT);
 
-                Label tuneIcon = new Label("\u23f3"); // History/Clock icon
+                Label tuneIcon = new Label("\u23f3");
                 tuneIcon.setTextFill(Color.web("#9da6b9"));
                 tuneIcon.setFont(Font.font(18));
                 tuneIcon.setCursor(javafx.scene.Cursor.HAND);
-                tuneIcon.setOnMouseClicked(e -> {
-                        e.consume(); // Prevent bubbling to parent StackPane
-                        MainApp.navigateTo(new SearchHistoryView());
-                });
+                tuneIcon.setOnMouseClicked(e -> MainApp.navigateTo(new SearchHistoryView()));
 
                 StackPane.setAlignment(tuneIcon, Pos.CENTER_RIGHT);
                 StackPane.setMargin(tuneIcon, new Insets(0, 15, 0, 0));
 
                 searchFieldStack.getChildren().addAll(searchField, searchIcon, tuneIcon);
-                // Keep the search bar click for LocationFilter, but ensure icon click is
-                // handled separately
                 searchFieldStack.setOnMouseClicked(e -> MainApp.navigateTo(new LocationFilterView()));
                 searchContainer.getChildren().add(searchFieldStack);
 
@@ -129,18 +126,10 @@ public class FilterView extends VBox {
                 resetBtn.setFont(Font.font("System", FontWeight.MEDIUM, 14));
                 priceHeader.getChildren().addAll(priceTitle, pSpacer, resetBtn);
 
-                StackPane sliderStack = new StackPane();
-                sliderStack.setPadding(new Insets(10, 0, 10, 0));
-                sliderStack.setPrefHeight(80);
-                sliderStack
-                                .setStyle("-fx-background-color: rgba(255,255,255,0.03); -fx-background-radius: 16; -fx-padding: 20;");
-
                 Slider priceSlider = new Slider(0, 500000, 85000);
                 priceSlider.setMaxWidth(Double.MAX_VALUE);
                 priceSlider.setStyle("-fx-control-inner-background: #282e39; -fx-accent: " + PRIMARY + ";");
 
-                VBox priceRangeLabels = new VBox(10);
-                priceRangeLabels.setAlignment(Pos.CENTER);
                 Label rangeValue = new Label("Ksh 0 - Ksh 85,000");
                 rangeValue.setTextFill(Color.web(TEXT_GRAY));
                 rangeValue.setFont(Font.font(14));
@@ -150,6 +139,7 @@ public class FilterView extends VBox {
                         rangeValue.setText(String.format("Ksh 0 - Ksh %,.0f", maxPrice));
                         updateResultsCount();
                 });
+
                 priceSection.getChildren().addAll(priceHeader, priceSlider, rangeValue);
 
                 // Property Type
@@ -174,7 +164,7 @@ public class FilterView extends VBox {
 
                 typeSection.getChildren().addAll(typeTitle, chipScroll);
 
-                // Bedrooms Counter
+                // Bedrooms
                 VBox bedroomSection = new VBox(15);
                 bedroomSection.setPadding(new Insets(0, 20, 0, 20));
                 Label bedTitle = new Label("Bedrooms");
@@ -195,8 +185,7 @@ public class FilterView extends VBox {
                 HBox controls = new HBox(12);
                 controls.setAlignment(Pos.CENTER);
                 Button minus = new Button("-");
-                minus.setStyle(
-                                "-fx-background-color: #282e39; -fx-text-fill: white; -fx-background-radius: 8; -fx-min-width: 32; -fx-min-height: 32;");
+                minus.setStyle("-fx-background-color: #282e39; -fx-text-fill: white; -fx-background-radius: 8; -fx-min-width: 32; -fx-min-height: 32;");
                 Label bedCount = new Label("2");
                 bedCount.setTextFill(Color.WHITE);
                 bedCount.setFont(Font.font("System", FontWeight.BOLD, 16));
@@ -227,10 +216,10 @@ public class FilterView extends VBox {
 
                 amenitiesSection.getChildren().addAll(amTitle, amGrid);
 
-                // Properties Found Header
+                // Results List
                 HBox resultsHeader = new HBox();
                 resultsHeader.setPadding(new Insets(10, 20, 0, 20));
-                Label resultsTitle = new Label("124 Properties Found");
+                Label resultsTitle = new Label("Properties Found");
                 resultsTitle.setTextFill(Color.WHITE);
                 resultsTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
                 Region rSpacer = new Region();
@@ -240,23 +229,17 @@ public class FilterView extends VBox {
                 sortBy.setFont(Font.font(12));
                 resultsHeader.getChildren().addAll(resultsTitle, rSpacer, sortBy);
 
-                // Property Result Cards
                 VBox propertyList = new VBox(20);
                 propertyList.setPadding(new Insets(0, 20, 20, 20));
 
+                // Add some sample cards for preview
                 Property p1 = new Property("Luxury 2BR Apartment", "Westlands, Nairobi", "Ksh 45,000",
-                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCmoqdFqj4fbelhpGNW5sBxu67T2r_SRnonToK4HJsiSM9z2ZJksIe5EXFlaaXniAZEgEj2mjg0AnwKEZERleElDWTfSHmlJt4dsIlhhCjlN3cgsXXtSzlwwe2P9AsdMdTZIncuqQhww9IY1-cqUVpbxMT8IyH_Dlfsf19XEnRCQ51bwm6KzZsPX7P6Pzxi3z7JXlbvfo5EWOBTCAevGNmiRZ3TYUcYV-VXhjgAmqEmMJC6fTwRNxrqLUHOOIRRaREAbZnzOV_MO-g",
+                                "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=400&q=80",
                                 true, "Featured");
-
-                Property p2 = new Property("Urban Studio Lofts", "Kilimani, Nairobi", "Ksh 32,000",
-                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCStI3MNHS8JJNCftkv1v3hpCqhtBT3R9njL1VwQ6BliWmhLM08_zaVM7zEj4hF_R0qPyoyipBL1PTXD53Ecc2_nCeFmcb1WpcOmI-BoaX-GyeRLW5M6M2jCEE5zZb23dZbGWt8WXQF5RFDanwTgFYwUk-GgouqXTslhxWZohr_39wvp52lvVxhNNWtl31ZVwfwTDPVJw_RKL3q-AJNRNpE1q2M9Fw6OQzmERDkYyQ5kizaOR4YihTkaT7xQqQ_tfbhjkHDepVBM1o",
-                                false, null, "1 Bed", "1 Bath", "850 sqft");
-
-                propertyList.getChildren().addAll(createPremiumCard(p1), createPremiumCard(p2));
+                propertyList.getChildren().add(createPremiumCard(p1));
 
                 scrollContent.getChildren().addAll(priceSection, typeSection, bedroomSection, amenitiesSection,
-                                resultsHeader,
-                                propertyList);
+                                resultsHeader, propertyList);
 
                 ScrollPane mainScroll = new ScrollPane(scrollContent);
                 mainScroll.setFitToWidth(true);
@@ -269,10 +252,9 @@ public class FilterView extends VBox {
 
                 StackPane.setAlignment(resultsFab, Pos.BOTTOM_CENTER);
 
-                // Add Map FAB as well
                 Button mapFab = new Button("\ud83d\uddfa");
-                mapFab.setStyle(
-                                "-fx-background-color: white; -fx-text-fill: #101622; -fx-font-size: 20; -fx-background-radius: 30; -fx-min-width: 55; -fx-min-height: 55; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);");
+                mapFab.setStyle("-fx-background-color: white; -fx-text-fill: #101622; -fx-font-size: 20; -fx-background-radius: 30; -fx-min-width: 55; -fx-min-height: 55;");
+                mapFab.setOnAction(e -> MainApp.navigateToMap());
                 StackPane.setAlignment(mapFab, Pos.BOTTOM_RIGHT);
                 StackPane.setMargin(mapFab, new Insets(0, 20, 90, 0));
 
