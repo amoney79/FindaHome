@@ -21,13 +21,14 @@ public class FilterView extends VBox {
         private String selectedLocation = "";
         private double maxPrice = 500000;
         private TextField searchField;
+        private Button resultsFab;
 
         public FilterView() {
                 setSpacing(0);
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
                 // Create FAB results button
-                Button resultsFab = new Button("Show 124 Results \u2192");
+                resultsFab = new Button("Show Results \u2192");
                 resultsFab.setMaxWidth(Double.MAX_VALUE);
                 resultsFab.setPrefHeight(55);
                 resultsFab.setStyle("-fx-background-color: " + PRIMARY
@@ -40,6 +41,8 @@ public class FilterView extends VBox {
                         MainApp.getFeed().refresh(filtered);
                         MainApp.showHome();
                 });
+
+                updateResultsCount();
 
                 StackPane mainStack = new StackPane();
 
@@ -132,21 +135,18 @@ public class FilterView extends VBox {
                 sliderStack
                                 .setStyle("-fx-background-color: rgba(255,255,255,0.03); -fx-background-radius: 16; -fx-padding: 20;");
 
-                ProgressBar pBar = new ProgressBar(0.5);
-                pBar.setMaxWidth(Double.MAX_VALUE);
-                pBar.setPrefHeight(6);
-                pBar.setStyle("-fx-accent: " + PRIMARY + ";");
+                Slider priceSlider = new Slider(0, 500000, 85000);
+                priceSlider.setMaxWidth(Double.MAX_VALUE);
+                priceSlider.setStyle("-fx-control-inner-background: #282e39; -fx-accent: " + PRIMARY + ";");
 
-                sliderStack.getChildren().add(pBar);
-
-                VBox priceRangeLabels = new VBox(2);
-                priceRangeLabels.setAlignment(Pos.BOTTOM_CENTER);
-                Label rangeValue = new Label("Ksh 15,000 - Ksh 85,000");
+                VBox priceRangeLabels = new VBox(10);
+                priceRangeLabels.setAlignment(Pos.CENTER);
+                Label rangeValue = new Label("Ksh 0 - Ksh 85,000");
                 rangeValue.setTextFill(Color.web(TEXT_GRAY));
-                rangeValue.setFont(Font.font(12));
-                priceRangeLabels.getChildren().add(rangeValue);
+                rangeValue.setFont(Font.font(14));
 
-                priceSection.getChildren().addAll(priceHeader, sliderStack, rangeValue);
+                priceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {\n                        maxPrice = newVal.doubleValue();\n                        rangeValue.setText(String.format(\"Ksh 0 - Ksh %,.0f\", maxPrice));\n                        updateResultsCount();\n                });\n
+                priceSection.getChildren().addAll(priceHeader, priceSlider, rangeValue);
 
                 // Property Type
                 VBox typeSection = new VBox(15);
@@ -289,6 +289,7 @@ public class FilterView extends VBox {
                                         + "; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-color: "
                                         + PRIMARY
                                         + "; -fx-border-radius: 20;");
+                        updateResultsCount();
                 });
 
                 if (active) {

@@ -287,7 +287,15 @@ public class MainApp extends Application {
         search.setStyle("-fx-background-color: " + CARD_BG
                 + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-padding: 10 10 10 35; -fx-font-size: 13;");
         search.setPrefHeight(44);
-        search.setOnAction(e -> navigateToMap());
+        search.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (feedInstance != null) {
+                feedInstance.refresh(PropertyData.filter("All Types", newVal, 0, 1000000));
+            }
+        });
+        search.setOnAction(e -> {
+            if (feedInstance == null)
+                navigateToMap();
+        });
 
         Label searchIcon = new Label("\ud83d\udd0d");
         searchIcon.setTextFill(Color.web("#9ca3af"));
@@ -384,6 +392,18 @@ public class MainApp extends Application {
     private VBox createCategory(String label, String icon, String bg, String color) {
         VBox c = new VBox(8);
         c.setAlignment(Pos.CENTER);
+        c.setCursor(javafx.scene.Cursor.HAND);
+        c.setOnMouseClicked(e -> {
+            if (feedInstance != null) {
+                if (label.equals("More")) {
+                    navigateTo(new FilterView());
+                } else {
+                    String type = label.equals("Villas") ? "Villa" : label.equals("Bedsitters") ? "Studio" : label;
+                    feedInstance.refresh(PropertyData.filter(type, "", 0, 1000000));
+                }
+            }
+        });
+
         StackPane iBox = new StackPane(new Label(icon));
         iBox.setPrefSize(55, 55);
         iBox.setStyle("-fx-background-color: " + bg + "; -fx-background-radius: 16;");

@@ -94,8 +94,28 @@ public class PropertyFeedView extends VBox {
 
         public void refresh(List<Property> properties) {
                 propertyList.getChildren().clear();
-                for (Property p : properties) {
-                        propertyList.getChildren().add(createLargePropertyCard(p));
+                if (properties.isEmpty()) {
+                        VBox emptyState = new VBox(20);
+                        emptyState.setAlignment(Pos.CENTER);
+                        emptyState.setPadding(new Insets(50, 20, 50, 20));
+                        emptyState.setMinWidth(400); // Ensure it takes enough space
+
+                        Label emptyIcon = new Label("\ud83d\udd0d");
+                        emptyIcon.setStyle("-fx-font-size: 48;");
+
+                        Label emptyMsg = new Label("No properties found matching your search");
+                        emptyMsg.setTextFill(Color.WHITE);
+                        emptyMsg.setFont(Font.font("System", FontWeight.BOLD, 16));
+
+                        Label subMsg = new Label("Try adjusting your filters or search terms");
+                        subMsg.setTextFill(Color.web(TEXT_GRAY));
+
+                        emptyState.getChildren().addAll(emptyIcon, emptyMsg, subMsg);
+                        propertyList.getChildren().add(emptyState);
+                } else {
+                        for (Property p : properties) {
+                                propertyList.getChildren().add(createLargePropertyCard(p));
+                        }
                 }
         }
 
