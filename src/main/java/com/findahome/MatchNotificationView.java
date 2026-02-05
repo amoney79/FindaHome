@@ -173,7 +173,7 @@ public class MatchNotificationView extends StackPane {
                 dismiss.setPrefHeight(40);
                 dismiss.setStyle(
                                 "-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13; -fx-background-radius: 10; -fx-cursor: hand;");
-                dismiss.setOnAction(e -> MainApp.navigateTo(new ManageAlertsView()));
+                dismiss.setOnAction(e -> MainApp.navigateTo(new NeighborhoodAlertsView()));
 
                 bActions.getChildren().addAll(quickView, dismiss);
 
