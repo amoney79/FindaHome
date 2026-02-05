@@ -33,7 +33,7 @@ public class MaintenanceStatusTrackingView extends StackPane {
         Label backBtn = new Label("\u2039");
         backBtn.setTextFill(Color.WHITE);
         backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-        backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new MaintenanceRequestsListView()));
+        backBtn.setOnMouseClicked(e -> MainApp.navigateCached("maintenance_list", MaintenanceRequestsListView::new));
 
         Label navTitle = new Label("Request Status");
         navTitle.setTextFill(Color.WHITE);

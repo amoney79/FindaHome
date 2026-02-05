@@ -42,7 +42,7 @@ public class MaintenanceRequestsListView extends StackPane {
                 Label backBtn = new Label("\u2039");
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new TenantProfileView()));
+                backBtn.setOnMouseClicked(e -> MainApp.navigateCached("profile", TenantProfileView::new));
 
                 Region s1 = new Region();
                 HBox.setHgrow(s1, Priority.ALWAYS);
@@ -206,7 +206,8 @@ public class MaintenanceRequestsListView extends StackPane {
 
                 ImageView iv = new ImageView();
                 try {
-                        iv.setImage(new Image(imgUrl, 80, 80, false, true));
+                        // backgroundLoading = true (6th param) for smoother UI
+                        iv.setImage(new Image(imgUrl, 80, 80, false, true, true));
                 } catch (Exception e) {
                 }
                 iv.setFitWidth(80);

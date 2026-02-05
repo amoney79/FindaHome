@@ -24,6 +24,10 @@ public class SuccessView extends VBox {
         }
 
         public SuccessView(String titleText, String descText, String btnText) {
+                this(titleText, descText, btnText, MainApp::showHome);
+        }
+
+        public SuccessView(String titleText, String descText, String btnText, Runnable action) {
                 setAlignment(Pos.CENTER);
                 setSpacing(30);
                 setPadding(new Insets(40, 20, 100, 20));
@@ -63,7 +67,7 @@ public class SuccessView extends VBox {
                 chat.setPrefHeight(55);
                 chat.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: #111813; -fx-background-radius: 12; -fx-font-weight: bold;");
-                chat.setOnAction(e -> MainApp.navigateTo(new ChatView()));
+                chat.setOnAction(e -> MainApp.navigateCached("messages", ChatView::new));
 
                 Button cal = new Button("\ud83d\udcc5 Add to Calendar");
                 cal.setMaxWidth(Double.MAX_VALUE);
@@ -74,7 +78,12 @@ public class SuccessView extends VBox {
                 Button actionBtn = new Button(btnText);
                 actionBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: " + PRIMARY
                                 + "; -fx-font-weight: bold;");
-                actionBtn.setOnAction(e -> MainApp.showHome());
+                actionBtn.setOnAction(e -> {
+                        if (action != null)
+                                action.run();
+                        else
+                                MainApp.showHome();
+                });
 
                 if (titleText.toLowerCase().contains("booking") || titleText.toLowerCase().contains("assignment")) {
                         buttons.getChildren().addAll(chat, cal, actionBtn);
