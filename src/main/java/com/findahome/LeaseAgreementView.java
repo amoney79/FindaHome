@@ -168,7 +168,7 @@ public class LeaseAgreementView extends BorderPane {
                 signBtn.setPrefHeight(56);
                 signBtn.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
-                signBtn.setOnAction(e -> MainApp.navigateTo(new DigitalSignatureView()));
+                signBtn.setOnAction(e -> MainApp.navigateCachedFullScreen("signature", DigitalSignatureView::new));
 
                 footer.getChildren().addAll(dlBtn, signBtn);
 
