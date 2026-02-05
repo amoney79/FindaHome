@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class AddPropertyView extends VBox {
+public class AddPropertyView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#101922";
         private static final String CARD_BG = "#1c2127";
@@ -27,7 +27,6 @@ public class AddPropertyView extends VBox {
         private VBox headerArea;
 
         public AddPropertyView() {
-                setSpacing(0);
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
                 // Top Navigation Bar
@@ -42,7 +41,8 @@ public class AddPropertyView extends VBox {
                 Label closeBtn = new Label("\u2715");
                 closeBtn.setTextFill(Color.WHITE);
                 closeBtn.setStyle("-fx-font-size: 20; -fx-cursor: hand;");
-                closeBtn.setOnMouseClicked(e -> MainApp.navigateTo(new LandlordDashboardView()));
+                closeBtn.setOnMouseClicked(
+                                e -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new));
 
                 Label title = new Label("Add New Property");
                 title.setTextFill(Color.WHITE);
@@ -88,20 +88,19 @@ public class AddPropertyView extends VBox {
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-                VBox.setVgrow(scroll, Priority.ALWAYS);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 // Footer container
                 footerArea = new StackPane();
                 footerArea.setPadding(new Insets(15, 20, 35, 20));
                 footerArea.setStyle("-fx-background-color: " + BACKGROUND_DARK
-                                + "e6; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
+                                + "; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
 
-                StackPane mainStack = new StackPane(new VBox(headerArea, scroll), footerArea);
-                StackPane.setAlignment(footerArea, Pos.BOTTOM_CENTER);
+                setTop(headerArea);
+                setCenter(scroll);
+                setBottom(footerArea);
 
                 showStep1();
-                getChildren().add(mainStack);
         }
 
         private void showStep1() {
@@ -192,7 +191,7 @@ public class AddPropertyView extends VBox {
                 div.setStyle("-fx-background-color: rgba(0,0,0,0.2);");
 
                 VBox details = new VBox(25);
-                details.setPadding(new Insets(20, 20, 120, 20));
+                details.setPadding(new Insets(20));
                 Label dt = new Label("Essential Details");
                 dt.setTextFill(Color.WHITE);
                 dt.setFont(Font.font("System", FontWeight.BOLD, 18));
@@ -208,7 +207,7 @@ public class AddPropertyView extends VBox {
                 nextBtn.setMaxWidth(Double.MAX_VALUE);
                 nextBtn.setPrefHeight(56);
                 nextBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16;");
+                                + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16; -fx-cursor: hand;");
                 nextBtn.setOnAction(e -> showStep2());
                 footerArea.getChildren().add(nextBtn);
         }
@@ -222,7 +221,7 @@ public class AddPropertyView extends VBox {
                 pBar.setProgress(0.66);
 
                 VBox content = new VBox(25);
-                content.setPadding(new Insets(20, 20, 120, 20));
+                content.setPadding(new Insets(20));
 
                 Label subHeader = new Label("Almost there! Just a few more details.");
                 subHeader.setTextFill(Color.web(PRIMARY));
@@ -297,7 +296,7 @@ public class AddPropertyView extends VBox {
                 backBtn.setPrefWidth(120);
                 backBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: "
                                 + BORDER_COLOR
-                                + "; -fx-border-radius: 16; -fx-font-weight: bold;");
+                                + "; -fx-border-radius: 16; -fx-font-weight: bold; -fx-cursor: hand;");
                 backBtn.setOnAction(e -> showStep1());
 
                 Button nextBtn = new Button("Next Step");
@@ -305,7 +304,7 @@ public class AddPropertyView extends VBox {
                 HBox.setHgrow(nextBtn, Priority.ALWAYS);
                 nextBtn.setPrefHeight(56);
                 nextBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16;");
+                                + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16; -fx-cursor: hand;");
                 nextBtn.setOnAction(e -> showStep3());
                 footerBtns.getChildren().addAll(backBtn, nextBtn);
                 footerArea.getChildren().add(footerBtns);
@@ -320,7 +319,7 @@ public class AddPropertyView extends VBox {
                 pBar.setProgress(1.0);
 
                 VBox content = new VBox(25);
-                content.setPadding(new Insets(20, 20, 120, 20));
+                content.setPadding(new Insets(20));
 
                 VBox headlineBox = new VBox(5);
                 Label headline = new Label("Location Details");
@@ -353,6 +352,7 @@ public class AddPropertyView extends VBox {
                         clip.setArcWidth(24);
                         clip.setArcHeight(24);
                         mapImg.setClip(clip);
+                        mapRoot.getChildren().add(mapImg);
                 } catch (Exception e) {
                 }
 
@@ -360,7 +360,7 @@ public class AddPropertyView extends VBox {
                 marker.setStyle("-fx-font-size: 32;");
                 marker.setTextFill(Color.web(PRIMARY));
 
-                mapRoot.getChildren().addAll(mapImg, marker);
+                mapRoot.getChildren().add(marker);
                 mapContainer.getChildren().add(mapRoot);
 
                 VBox locationForm = new VBox(15);
@@ -416,8 +416,11 @@ public class AddPropertyView extends VBox {
                 publishBtn.setMaxWidth(Double.MAX_VALUE);
                 publishBtn.setPrefHeight(56);
                 publishBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16;");
-                publishBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView()));
+                                + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16; -fx-cursor: hand;");
+                publishBtn.setOnAction(e -> MainApp.navigateCached("success_publish", () -> new SuccessView(
+                                "Listing Published!",
+                                "Your property is now live and visible to potential tenants.", "View Dashboard",
+                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
 
                 footerContent.getChildren().addAll(feeRow, publishBtn);
                 footerArea.getChildren().add(footerContent);

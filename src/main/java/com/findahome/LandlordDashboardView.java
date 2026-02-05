@@ -66,51 +66,70 @@ public class LandlordDashboardView extends StackPane {
     }
 
     private void showPropertiesView() {
-        VBox view = new VBox(20);
+        BorderPane view = new BorderPane();
         view.setPadding(new Insets(20));
-        view.setAlignment(Pos.TOP_LEFT);
 
         Label title = new Label("Properties");
         title.setTextFill(Color.WHITE);
         title.setFont(Font.font("System", FontWeight.BOLD, 24));
+        BorderPane.setMargin(title, new Insets(0, 0, 20, 0));
+        view.setTop(title);
 
-        Button addBtn = new Button("Add Property");
-        addBtn.setStyle("-fx-background-color: " + PRIMARY
-                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 8;");
-        addBtn.setOnAction(e -> MainApp.navigateToFullScreen(new AddPropertyView())); // Assuming AddPropertyView
-                                                                                      // exists/works
-
+        VBox scrollContent = new VBox(20);
+        scrollContent.setAlignment(Pos.CENTER);
         Label empty = new Label("No properties listed yet.");
         empty.setTextFill(Color.web(TEXT_GRAY));
+        scrollContent.getChildren().add(empty);
 
-        view.getChildren().addAll(title, addBtn, empty);
-
-        // Wrap in scrollpane if content is long
-        ScrollPane scroll = new ScrollPane(view);
+        ScrollPane scroll = new ScrollPane(scrollContent);
         scroll.setFitToWidth(true);
-        scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+        scroll.setStyle(
+                "-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
+        view.setCenter(scroll);
 
-        contentArea.getChildren().setAll(scroll);
+        VBox footer = new VBox();
+        footer.setPadding(new Insets(20, 0, 0, 0));
+        Button addBtn = new Button("Add New Property");
+        addBtn.setMaxWidth(Double.MAX_VALUE);
+        addBtn.setPrefHeight(50);
+        addBtn.setStyle("-fx-background-color: " + PRIMARY
+                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand;");
+        addBtn.setOnAction(e -> MainApp.navigateCachedFullScreen("add_property", AddPropertyView::new));
+        footer.getChildren().add(addBtn);
+        view.setBottom(footer);
+
+        contentArea.getChildren().setAll(view);
     }
 
     // Placeholder views for other tabs
 
     private void showProfileView() {
-        // Re-using functionality or creating specific landlord profile logic
-        // For now, let's create a simple landlord profile view or navigation back to
-        // tenant mode
-        VBox view = new VBox(20);
-        view.setAlignment(Pos.CENTER);
+        BorderPane view = new BorderPane();
+        view.setPadding(new Insets(20));
 
         Label title = new Label("Landlord Profile");
         title.setTextFill(Color.WHITE);
-        title.setFont(Font.font(20));
+        title.setFont(Font.font("System", FontWeight.BOLD, 24));
+        view.setTop(title);
 
+        VBox center = new VBox(10);
+        center.setAlignment(Pos.CENTER);
+        Label sub = new Label("Manage your account and preferences.");
+        sub.setTextFill(Color.web(TEXT_GRAY));
+        center.getChildren().add(sub);
+        view.setCenter(center);
+
+        VBox footer = new VBox();
+        footer.setPadding(new Insets(20, 0, 0, 0));
         Button switchBtn = new Button("Switch to Tenant View");
-        switchBtn.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold;");
-        switchBtn.setOnAction(e -> MainApp.showHome()); // Navigate back to main app
+        switchBtn.setMaxWidth(Double.MAX_VALUE);
+        switchBtn.setPrefHeight(50);
+        switchBtn.setStyle(
+                "-fx-background-color: #ef4444; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 12; -fx-cursor: hand;");
+        switchBtn.setOnAction(e -> MainApp.showHome());
+        footer.getChildren().add(switchBtn);
+        view.setBottom(footer);
 
-        view.getChildren().addAll(title, switchBtn);
         contentArea.getChildren().setAll(view);
     }
 
