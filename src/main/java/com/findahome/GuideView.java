@@ -17,11 +17,13 @@ import javafx.scene.text.FontWeight;
 
 public class GuideView extends VBox {
 
-        private static final String BACKGROUND_DARK = "#101622";
-        private static final String PRIMARY = "#13ec5b";
-        private static final String TEXT_GRAY = "#9da6b9";
-        private static final String CARD_BG = "#1c222c";
-        private static final String DIVIDER_COLOR = "#2a3544";
+        private static final String BACKGROUND_DARK = "#0d1117";
+        private static final String PRIMARY = "#216cf2"; // Blue as in screenshot
+        private static final String SUCCESS = "#05c46b"; // Green for trends
+        private static final String DANGER = "#ff5e57"; // Red for trends
+        private static final String TEXT_GRAY = "#9ca3af";
+        private static final String CARD_BG = "#161b22";
+        private static final String DIVIDER_COLOR = "#30363d";
 
         public GuideView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
@@ -31,8 +33,7 @@ public class GuideView extends VBox {
                 HBox header = new HBox(15);
                 header.setAlignment(Pos.CENTER_LEFT);
                 header.setPadding(new Insets(15, 20, 15, 20));
-                header.setStyle("-fx-background-color: rgba(16, 22, 34, 0.95); -fx-border-color: " + DIVIDER_COLOR
-                                + "; -fx-border-width: 0 0 1 0;");
+                header.setStyle("-fx-background-color: transparent;"); // Transparent to overlay image
 
                 Label backBtn = new Label("\u2039");
                 backBtn.setFont(Font.font("System", FontWeight.BOLD, 28));
@@ -62,76 +63,120 @@ public class GuideView extends VBox {
 
                 VBox content = new VBox(25);
                 content.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+                content.setPadding(new Insets(0, 0, 100, 0)); // Padding to avoid content being hidden by FAB
 
                 // Hero Section
                 StackPane hero = new StackPane();
-                hero.setPrefHeight(300);
+                hero.setPrefHeight(450);
                 try {
                         ImageView heroImg = new ImageView(new Image(
                                         "https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=1000&auto=format&fit=crop",
-                                        600, 300, true, true));
-                        heroImg.setFitWidth(600);
+                                        800, 450, true, true));
+                        heroImg.setPreserveRatio(true);
+                        heroImg.fitWidthProperty().bind(hero.widthProperty());
 
                         Rectangle overlay = new Rectangle();
                         overlay.widthProperty().bind(hero.widthProperty());
                         overlay.heightProperty().bind(hero.heightProperty());
                         overlay.setFill(new LinearGradient(0, 0, 0, 1, true, CycleMethod.NO_CYCLE,
-                                        new Stop(0, Color.rgb(16, 22, 34, 0.2)),
-                                        new Stop(1, Color.rgb(16, 22, 34, 0.8))));
+                                        new Stop(0, Color.TRANSPARENT),
+                                        new Stop(0.6, Color.rgb(13, 17, 23, 0.4)),
+                                        new Stop(1, Color.web(BACKGROUND_DARK))));
 
-                        VBox heroText = new VBox(5);
-                        heroText.setAlignment(Pos.BOTTOM_LEFT);
-                        heroText.setPadding(new Insets(30));
-                        Label ht1 = new Label("KILELESHWA");
-                        ht1.setTextFill(Color.web(PRIMARY));
-                        ht1.setFont(Font.font("System", FontWeight.BOLD, 14));
-                        Label ht2 = new Label("Heart of Nairobi");
-                        ht2.setTextFill(Color.WHITE);
-                        ht2.setFont(Font.font("System", FontWeight.EXTRA_BOLD, 36));
-                        heroText.getChildren().addAll(ht1, ht2);
+                        VBox heroContent = new VBox(10);
+                        heroContent.setAlignment(Pos.BOTTOM_LEFT);
+                        heroContent.setPadding(new Insets(30));
 
-                        hero.getChildren().addAll(heroImg, overlay, heroText);
+                        Label tag = new Label("NEIGHBORHOOD GUIDE");
+                        tag.setTextFill(Color.web(TEXT_GRAY));
+                        tag.setFont(Font.font("System", FontWeight.BOLD, 12));
+                        tag.setStyle("-fx-letter-spacing: 2px;");
+
+                        Label hTitle = new Label("Kileleshwa, Nairobi");
+                        hTitle.setTextFill(Color.WHITE);
+                        hTitle.setFont(Font.font("System", FontWeight.BOLD, 38));
+                        hTitle.setWrapText(true);
+
+                        heroContent.getChildren().addAll(tag, hTitle);
+                        hero.getChildren().addAll(heroImg, overlay, heroContent);
                 } catch (Exception e) {
                 }
 
                 content.getChildren().add(hero);
 
-                // Stats Row
+                // Community Scores
+                VBox scoreSection = new VBox(15);
+                scoreSection.setPadding(new Insets(0, 20, 0, 20));
+                scoreSection.getChildren().add(createSectionHeader("\ud83d\udcc8 Community Scores"));
+
                 HBox statsRow = new HBox(15);
-                statsRow.setPadding(new Insets(0, 20, 0, 20));
                 statsRow.getChildren().addAll(
-                                createScoreCard("Safety", "8.5", "High", "#0bda5e"),
-                                createScoreCard("Noise", "7.2", "Quiet", "#fa6238"));
-                content.getChildren().add(statsRow);
+                                createScoreCard("Safety Score", "8.5", "+5% vs last month", SUCCESS,
+                                                "\ud83d\udee1\ufe0f"),
+                                createScoreCard("Quietness Score", "7.2", "-2% vs last month", DANGER, "\ud83d\udd07"));
+                scoreSection.getChildren().add(statsRow);
+                content.getChildren().add(scoreSection);
 
-                // Amenities
-                VBox amenities = new VBox(20);
-                amenities.setPadding(new Insets(0, 20, 40, 20));
-                amenities.getChildren().add(createSectionHeader("Local Amenities"));
+                // Education
+                VBox education = new VBox(15);
+                education.setPadding(new Insets(0, 20, 0, 20));
+                education.getChildren().add(createSectionHeader("\ud83c\udf93 Education"));
+                education.getChildren().addAll(
+                                createAmenityItem("Kileleshwa Primary School", "Public Institution", "0.4 KM",
+                                                "\ud83d\udcd6"),
+                                createAmenityItem("Lavington School", "Private Secondary", "1.2 KM", "\ud83d\udca0"));
+                content.getChildren().add(education);
 
-                amenities.getChildren().addAll(
-                                createAmenityItem("Kileleshwa Primary", "Education \u2022 0.4 KM", "\ud83d\udcd6"),
-                                createAmenityItem("Medical Plaza", "Health \u2022 0.2 KM", "\ud83c\udfe5"),
-                                createAmenityItem("Ring Road", "Transport \u2022 0.1 KM", "\ud83d\ude8c"));
-                content.getChildren().add(amenities);
+                // Healthcare
+                VBox healthcare = new VBox(15);
+                healthcare.setPadding(new Insets(0, 20, 0, 20));
+                healthcare.getChildren().add(createSectionHeader("\ud83c\udfe5 Healthcare"));
+                healthcare.getChildren().addAll(
+                                createAmenityItem("Kileleshwa Medical Plaza", "24/7 Outpatient", "0.2 KM", "\u2715"),
+                                createAmenityItem("Nairobi Hospital Outpatient", "Lavington Branch", "1.5 KM",
+                                                "\u2731"));
+                content.getChildren().add(healthcare);
+
+                // Transport
+                VBox transport = new VBox(15);
+                transport.setPadding(new Insets(0, 20, 0, 20));
+                transport.getChildren().add(createSectionHeader("\ud83d\ude8c Transport"));
+                transport.getChildren().addAll(
+                                createAmenityItem("Ring Road Kileleshwa", "Major Artery", "0.1 KM", "\ud83d\udd31"),
+                                createAmenityItem("Kandara Road Stage", "Route 48 Matatu Stage", "0.3 KM",
+                                                "\ud83d\ude8c"));
+                content.getChildren().add(transport);
+
+                // Security
+                VBox security = new VBox(15);
+                security.setPadding(new Insets(0, 20, 0, 20));
+                security.getChildren().add(createSectionHeader("\ud83d\udee1\ufe0f Security"));
+                security.getChildren().add(createAmenityItem("Kileleshwa Police Station", "24hr Surveillance", "0.6 KM",
+                                "\ud83d\udee1\ufe0f"));
+                content.getChildren().add(security);
 
                 scrollPane.setContent(content);
 
-                // Footer
-                HBox footer = new HBox();
-                footer.setPadding(new Insets(15, 20, 15, 20));
-                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: " + DIVIDER_COLOR
-                                + "; -fx-border-width: 1 0 0 0;");
-                Button browseBtn = new Button("Browse Nearby Properties \u2192");
+                // Floating Action Button Style for Browse
+                StackPane footer = new StackPane();
+                footer.setPadding(new Insets(20));
+
+                Button browseBtn = new Button("Browse Listings in Kileleshwa \u2192");
                 browseBtn.setMaxWidth(Double.MAX_VALUE);
-                browseBtn.setPrefHeight(50);
+                browseBtn.setPrefHeight(55);
+                browseBtn.setFont(Font.font("System", FontWeight.BOLD, 15));
                 browseBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 12;");
+                                + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(33, 108, 242, 0.3), 15, 0, 0, 5);");
                 browseBtn.setOnAction(e -> MainApp.navigateToMap());
-                HBox.setHgrow(browseBtn, Priority.ALWAYS);
+
                 footer.getChildren().add(browseBtn);
 
-                getChildren().addAll(header, scrollPane, footer);
+                StackPane mainStack = new StackPane();
+                mainStack.getChildren().addAll(scrollPane, header, footer);
+                StackPane.setAlignment(header, Pos.TOP_CENTER);
+                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+
+                getChildren().add(mainStack);
         }
 
         private Label createSectionHeader(String text) {
@@ -141,48 +186,73 @@ public class GuideView extends VBox {
                 return l;
         }
 
-        private VBox createScoreCard(String title, String val, String status, String color) {
-                VBox card = new VBox(5);
-                card.setPadding(new Insets(15));
-                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16;");
+        private VBox createScoreCard(String title, String val, String trend, String trendColor, String icon) {
+                VBox card = new VBox(10);
+                card.setPadding(new Insets(20));
+                card.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 20; -fx-border-color: "
+                                + DIVIDER_COLOR + "; -fx-border-radius: 20;");
                 HBox.setHgrow(card, Priority.ALWAYS);
 
+                HBox header = new HBox();
+                header.setAlignment(Pos.CENTER_LEFT);
                 Label t = new Label(title);
-                t.setTextFill(TEXT_GRAY.equals("") ? Color.GRAY : Color.web(TEXT_GRAY));
-                t.setFont(Font.font(12));
+                t.setTextFill(Color.web(TEXT_GRAY));
+                t.setFont(Font.font(14));
+                Region spacer = new Region();
+                HBox.setHgrow(spacer, Priority.ALWAYS);
+                Label i = new Label(icon);
+                i.setTextFill(Color.web(trendColor));
+                i.setFont(Font.font(16));
+                header.getChildren().addAll(t, spacer, i);
 
+                HBox scoreRow = new HBox(5);
+                scoreRow.setAlignment(Pos.BOTTOM_LEFT);
                 Label v = new Label(val);
                 v.setTextFill(Color.WHITE);
-                v.setFont(Font.font("System", FontWeight.BOLD, 24));
+                v.setFont(Font.font("System", FontWeight.BOLD, 32));
+                Label total = new Label("/10");
+                total.setTextFill(Color.web(TEXT_GRAY));
+                total.setFont(Font.font(14));
+                scoreRow.getChildren().addAll(v, total);
 
-                Label s = new Label(status);
-                s.setTextFill(Color.web(color));
-                s.setFont(Font.font("System", FontWeight.BOLD, 10));
+                Label tr = new Label("\u21dd " + trend); // wavy arrow
+                tr.setTextFill(Color.web(trendColor));
+                tr.setFont(Font.font("System", FontWeight.MEDIUM, 12));
 
-                card.getChildren().addAll(t, v, s);
+                card.getChildren().addAll(header, scoreRow, tr);
                 return card;
         }
 
-        private HBox createAmenityItem(String name, String sub, String icon) {
-                HBox item = new HBox(12);
+        private HBox createAmenityItem(String name, String sub, String distance, String icon) {
+                HBox item = new HBox(15);
                 item.setAlignment(Pos.CENTER_LEFT);
-                item.setPadding(new Insets(12));
-                item.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 12;");
+                item.setPadding(new Insets(15));
+                item.setStyle("-fx-background-color: " + CARD_BG + "; -fx-background-radius: 16; -fx-border-color: "
+                                + DIVIDER_COLOR + "; -fx-border-radius: 16;");
 
+                StackPane iconBox = new StackPane();
+                iconBox.setPrefSize(45, 45);
+                iconBox.setStyle("-fx-background-color: rgba(33, 108, 242, 0.1); -fx-background-radius: 12;");
                 Label i = new Label(icon);
                 i.setTextFill(Color.web(PRIMARY));
                 i.setFont(Font.font(20));
+                iconBox.getChildren().add(i);
 
-                VBox tx = new VBox(2);
+                VBox tx = new VBox(4);
                 Label n = new Label(name);
                 n.setTextFill(Color.WHITE);
-                n.setFont(Font.font("System", FontWeight.BOLD, 14));
+                n.setFont(Font.font("System", FontWeight.BOLD, 15));
                 Label s = new Label(sub);
                 s.setTextFill(Color.web(TEXT_GRAY));
-                s.setFont(Font.font(12));
+                s.setFont(Font.font(13));
                 tx.getChildren().addAll(n, s);
+                HBox.setHgrow(tx, Priority.ALWAYS);
 
-                item.getChildren().addAll(i, tx);
+                Label dist = new Label(distance);
+                dist.setStyle("-fx-background-color: #1c222c; -fx-text-fill: " + TEXT_GRAY
+                                + "; -fx-padding: 4 10; -fx-background-radius: 8; -fx-font-size: 11;");
+
+                item.getChildren().addAll(iconBox, tx, dist);
                 return item;
         }
 }
