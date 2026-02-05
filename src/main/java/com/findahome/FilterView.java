@@ -145,7 +145,11 @@ public class FilterView extends VBox {
                 rangeValue.setTextFill(Color.web(TEXT_GRAY));
                 rangeValue.setFont(Font.font(14));
 
-                priceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {\n                        maxPrice = newVal.doubleValue();\n                        rangeValue.setText(String.format(\"Ksh 0 - Ksh %,.0f\", maxPrice));\n                        updateResultsCount();\n                });\n
+                priceSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                        maxPrice = newVal.doubleValue();
+                        rangeValue.setText(String.format("Ksh 0 - Ksh %,.0f", maxPrice));
+                        updateResultsCount();
+                });
                 priceSection.getChildren().addAll(priceHeader, priceSlider, rangeValue);
 
                 // Property Type
@@ -439,5 +443,14 @@ public class FilterView extends VBox {
                 t.setTextFill(Color.web("#4b5563"));
                 box.getChildren().addAll(i, t);
                 return box;
+        }
+
+        private void updateResultsCount() {
+                if (resultsFab == null)
+                        return;
+                int count = PropertyData
+                                .filter(selectedType, searchField != null ? searchField.getText() : "", 0, maxPrice)
+                                .size();
+                resultsFab.setText("Show " + count + " Results \ud83e\udc46");
         }
 }
