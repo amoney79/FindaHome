@@ -22,34 +22,43 @@ public class AccountDeactivationView extends StackPane {
                 // Decorative background glow
                 Circle glow = new Circle(128, Color.web(PRIMARY, 0.05));
                 glow.setEffect(new GaussianBlur(100));
+                StackPane glowContainer = new StackPane(glow);
+                glowContainer.setMouseTransparent(true);
                 StackPane.setAlignment(glow, Pos.BOTTOM_RIGHT);
                 StackPane.setMargin(glow, new Insets(0, -100, -100, 0));
 
-                VBox layout = new VBox(0);
-                layout.setAlignment(Pos.TOP_CENTER);
+                BorderPane layout = new BorderPane();
+                layout.setStyle("-fx-background-color: transparent;");
 
                 // Top App Bar
                 HBox topBar = new HBox(15);
                 topBar.setAlignment(Pos.CENTER_LEFT);
-                topBar.setPadding(new Insets(15));
+                topBar.setPadding(new Insets(15, 20, 15, 20));
                 topBar.setStyle("-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 1 0;");
 
                 Label backBtn = new Label("\u2039");
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new TenantProfileView()));
+                backBtn.setOnMouseClicked(e -> MainApp.navigateCached("profile", TenantProfileView::new));
 
-                Label title = new Label("Account");
+                Label title = new Label("Account Deactivation");
                 title.setTextFill(Color.WHITE);
                 title.setFont(Font.font("System", FontWeight.BOLD, 18));
+                title.setPadding(new Insets(0, 0, 0, 10));
                 HBox.setHgrow(title, Priority.ALWAYS);
 
                 topBar.getChildren().addAll(backBtn, title);
 
                 // Content
-                VBox content = new VBox(0);
-                content.setAlignment(Pos.TOP_CENTER);
-                VBox.setVgrow(content, Priority.ALWAYS);
+                VBox scrollContent = new VBox(0);
+                scrollContent.setAlignment(Pos.TOP_CENTER);
+                scrollContent.setPadding(new Insets(0, 0, 20, 0));
+
+                ScrollPane scroll = new ScrollPane(scrollContent);
+                scroll.setFitToWidth(true);
+                scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 // Headline Section
                 VBox headlineSect = new VBox(24);
@@ -103,21 +112,24 @@ public class AccountDeactivationView extends StackPane {
                                 createConsequenceItem("\ud83d\udcc4", "Active Applications",
                                                 "Pending applications for rentals will be cancelled."));
 
-                content.getChildren().addAll(headlineSect, listHeader, consequences);
+                scrollContent.getChildren().addAll(headlineSect, listHeader, consequences);
 
                 // Footer Actions
                 VBox footer = new VBox(15);
-                footer.setPadding(new Insets(20, 20, 48, 20));
+                footer.setPadding(new Insets(20, 20, 35, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK
+                                + "; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
 
                 Button keepBtn = new Button("Keep My Account");
                 keepBtn.setMaxWidth(Double.MAX_VALUE);
                 keepBtn.setPrefHeight(56);
                 keepBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
-                keepBtn.setOnAction(e -> MainApp.navigateTo(new TenantProfileView()));
+                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
+                keepBtn.setOnAction(e -> MainApp.navigateCached("profile", TenantProfileView::new));
 
                 Button deactivateBtn = new Button("Continue to Deactivate");
                 deactivateBtn.setMaxWidth(Double.MAX_VALUE);
+                deactivateBtn.setPrefHeight(40);
                 deactivateBtn.setStyle(
                                 "-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;");
                 deactivateBtn.setOnAction(e -> MainApp.navigateTo(new DeactivationSurveyView()));
@@ -126,8 +138,11 @@ public class AccountDeactivationView extends StackPane {
 
                 footer.getChildren().addAll(keepBtn, deactivateBtn);
 
-                layout.getChildren().addAll(topBar, content, footer);
-                getChildren().addAll(glow, layout);
+                layout.setTop(topBar);
+                layout.setCenter(scroll);
+                layout.setBottom(footer);
+
+                getChildren().addAll(glowContainer, layout);
         }
 
         private HBox createConsequenceItem(String icon, String title, String desc) {

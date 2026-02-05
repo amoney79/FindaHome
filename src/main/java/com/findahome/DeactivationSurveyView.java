@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class DeactivationSurveyView extends StackPane {
+public class DeactivationSurveyView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#121212";
         private static final String CARD_BG = "#1e1e1e";
@@ -18,9 +18,6 @@ public class DeactivationSurveyView extends StackPane {
 
         public DeactivationSurveyView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
-
-                VBox layout = new VBox(0);
-                layout.setAlignment(Pos.TOP_CENTER);
 
                 // Header
                 HBox header = new HBox(15);
@@ -32,7 +29,7 @@ public class DeactivationSurveyView extends StackPane {
                 Label backBtn = new Label("\u2039"); // arrow_back_ios
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 24; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
+                backBtn.setOnMouseClicked(e -> MainApp.navigateCached("deactivate", AccountDeactivationView::new));
 
                 Label title = new Label("Deactivate Account");
                 title.setTextFill(Color.WHITE);
@@ -45,20 +42,19 @@ public class DeactivationSurveyView extends StackPane {
                 header.getChildren().addAll(backBtn, title);
 
                 // Scroll Content
-                VBox scrollContent = new VBox(0);
-                scrollContent.setAlignment(Pos.TOP_CENTER);
-                scrollContent.setPadding(new Insets(0, 0, 150, 0)); // Space for footer
+                VBox scrollContent = new VBox(25);
+                scrollContent.setAlignment(Pos.TOP_LEFT);
+                scrollContent.setPadding(new Insets(0, 20, 20, 20));
 
                 ScrollPane scroll = new ScrollPane(scrollContent);
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-                VBox.setVgrow(scroll, Priority.ALWAYS);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 // Headline
                 VBox headline = new VBox(8);
-                headline.setPadding(new Insets(32, 20, 20, 20));
+                headline.setPadding(new Insets(32, 0, 10, 0));
                 Label h1 = new Label("Why are you leaving?");
                 h1.setTextFill(Color.WHITE);
                 h1.setFont(Font.font("System", FontWeight.BOLD, 28));
@@ -67,8 +63,6 @@ public class DeactivationSurveyView extends StackPane {
                 sub.setFont(Font.font(14));
                 sub.setWrapText(true);
                 headline.getChildren().addAll(h1, sub);
-
-                // (Sections are added directly to scrollContent below)
 
                 // Group 1: Primary Reason
                 VBox primaryReasonSect = new VBox(12);
@@ -105,8 +99,8 @@ public class DeactivationSurveyView extends StackPane {
 
                 // Footer
                 VBox footer = new VBox(20);
-                footer.setPadding(new Insets(20, 20, 40, 20));
-                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "f0; -fx-border-color: " + BORDER_DARK
+                footer.setPadding(new Insets(20, 20, 35, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: " + BORDER_DARK
                                 + "; -fx-border-width: 1 0 0 0;");
 
                 HBox warningBox = new HBox(10);
@@ -130,9 +124,9 @@ public class DeactivationSurveyView extends StackPane {
 
                 footer.getChildren().addAll(warningBox, finalBtn);
 
-                layout.getChildren().addAll(header, scroll);
-                getChildren().addAll(layout, footer);
-                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+                setTop(header);
+                setCenter(scroll);
+                setBottom(footer);
         }
 
         private HBox createReasonOption(String text, ToggleGroup group, boolean selected) {
@@ -150,19 +144,14 @@ public class DeactivationSurveyView extends StackPane {
                 RadioButton rb = new RadioButton();
                 rb.setToggleGroup(group);
                 rb.setSelected(selected);
-                // Custom styling for radio buttons in JavaFX is more complex, but we'll use the
-                // default for integration
 
                 row.getChildren().addAll(lbl, rb);
-
                 row.setOnMouseClicked(e -> rb.setSelected(true));
 
-                // Visual feedback for selection
                 rb.selectedProperty().addListener((obs, oldVal, newVal) -> {
                         if (newVal) {
-                                row.setStyle(
-                                                "-fx-background-color: rgba(236, 19, 19, 0.05); -fx-background-radius: 12; -fx-border-color: "
-                                                                + PRIMARY_RED + "; -fx-border-radius: 12;");
+                                row.setStyle("-fx-background-color: rgba(236, 19, 19, 0.05); -fx-background-radius: 12; -fx-border-color: "
+                                                + PRIMARY_RED + "; -fx-border-radius: 12;");
                         } else {
                                 row.setStyle("-fx-background-color: " + CARD_BG
                                                 + "; -fx-background-radius: 12; -fx-border-color: "

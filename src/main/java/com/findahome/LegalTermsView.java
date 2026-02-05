@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class LegalTermsView extends StackPane {
+public class LegalTermsView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#102216";
         private static final String PRIMARY = "#13ec5b";
@@ -17,20 +17,17 @@ public class LegalTermsView extends StackPane {
         public LegalTermsView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                VBox layout = new VBox(0);
-                layout.setAlignment(Pos.TOP_CENTER);
-
                 // Header
                 HBox header = new HBox(15);
                 header.setAlignment(Pos.CENTER_LEFT);
                 header.setPadding(new Insets(15, 20, 15, 20));
                 header.setStyle("-fx-background-color: " + BACKGROUND_DARK
-                                + "cc; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 1 0;");
+                                + "f0; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 1 0;");
 
                 Label backBtn = new Label("\u2039");
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.showHome());
+                backBtn.setOnMouseClicked(e -> MainApp.navigateCached("profile", TenantProfileView::new));
 
                 Label title = new Label("Legal Terms");
                 title.setTextFill(Color.WHITE);
@@ -43,7 +40,7 @@ public class LegalTermsView extends StackPane {
 
                 header.getChildren().addAll(backBtn, title, downloadIconBtn);
 
-                // Progress Bar
+                // Progress Bar container (Top of Center)
                 Region progressBar = new Region();
                 progressBar.setPrefHeight(2);
                 progressBar.setStyle("-fx-background-color: " + PRIMARY + ";");
@@ -51,14 +48,16 @@ public class LegalTermsView extends StackPane {
 
                 // Scroll Content
                 VBox scrollContent = new VBox(25);
-                scrollContent.setPadding(new Insets(30, 20, 150, 20));
+                scrollContent.setPadding(new Insets(30, 20, 30, 20));
                 scrollContent.setAlignment(Pos.TOP_LEFT);
 
                 ScrollPane scroll = new ScrollPane(scrollContent);
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
+
+                VBox centerContainer = new VBox(progressBar, scroll);
                 VBox.setVgrow(scroll, Priority.ALWAYS);
 
                 // Headline
@@ -101,21 +100,25 @@ public class LegalTermsView extends StackPane {
                                 createModernLegalSect("3. Property Listings",
                                                 "Sellers and agents are responsible for the accuracy of their listings. FindaHome reserves the right to remove any listing that violates our community standards."),
                                 createModernLegalSect("4. Privacy & Data",
-                                                "Your privacy is important to us. We collect personal information to provide and improve our services."));
+                                                "Your privacy is important to us. We collect personal information to provide and improve our services."),
+                                createModernLegalSect("5. Limitation of Liability",
+                                                "FindaHome shall not be liable for any indirect, incidental, special, consequential or punitive damages."),
+                                createModernLegalSect("6. Termination",
+                                                "We may terminate or suspend your access to our services immediately, without prior notice or liability, for any reason."));
 
                 scrollContent.getChildren().add(sectionsContainer);
 
-                Label endText = new Label("End of document. Please scroll to the bottom to accept.");
+                Label endText = new Label("End of document. Please accept to continue.");
                 endText.setTextFill(Color.web(TEXT_GRAY));
                 endText.setFont(Font.font("System", FontWeight.NORMAL, 12));
-                endText.setPadding(new Insets(20, 0, 40, 0));
+                endText.setPadding(new Insets(20, 0, 20, 0));
                 endText.setAlignment(Pos.CENTER);
                 endText.setMaxWidth(Double.MAX_VALUE);
                 scrollContent.getChildren().add(endText);
 
                 // Footer
                 VBox footer = new VBox(15);
-                footer.setPadding(new Insets(20));
+                footer.setPadding(new Insets(20, 20, 35, 20));
                 footer.setStyle("-fx-background-color: " + BACKGROUND_DARK
                                 + "; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
 
@@ -139,7 +142,7 @@ public class LegalTermsView extends StackPane {
                 acceptBtn.setMaxWidth(Double.MAX_VALUE);
                 acceptBtn.setPrefHeight(56);
                 acceptBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(19, 236, 91, 0.2), 10, 0, 0, 5);");
+                                + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(19, 236, 91, 0.2), 10, 0, 0, 5);");
                 acceptBtn.setOnAction(e -> MainApp.showHome());
 
                 Button declineBtn = new Button("I do not accept");
@@ -147,13 +150,13 @@ public class LegalTermsView extends StackPane {
                                 + "; -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;");
                 declineBtn.setMaxWidth(Double.MAX_VALUE);
                 declineBtn.setAlignment(Pos.CENTER);
-                declineBtn.setOnMouseClicked(e -> MainApp.showHome());
+                declineBtn.setOnAction(e -> MainApp.navigateCached("profile", TenantProfileView::new));
 
                 footer.getChildren().addAll(agreementRow, acceptBtn, declineBtn);
 
-                layout.getChildren().addAll(header, progressBar, scroll);
-                getChildren().addAll(layout, footer);
-                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+                setTop(header);
+                setCenter(centerContainer);
+                setBottom(footer);
         }
 
         private VBox createModernLegalSect(String title, String content) {
