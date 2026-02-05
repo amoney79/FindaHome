@@ -160,23 +160,41 @@ public class GuideView extends VBox {
                 // Floating Action Button Style for Browse
                 StackPane footer = new StackPane();
                 footer.setPadding(new Insets(20));
+                footer.setPickOnBounds(false);
 
                 Button browseBtn = new Button("Browse Listings in Kileleshwa \u2192");
-                browseBtn.setMaxWidth(Double.MAX_VALUE);
+                browseBtn.setMaxWidth(400);
                 browseBtn.setPrefHeight(55);
                 browseBtn.setFont(Font.font("System", FontWeight.BOLD, 15));
                 browseBtn.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(33, 108, 242, 0.3), 15, 0, 0, 5);");
                 browseBtn.setOnAction(e -> MainApp.navigateToMap());
-
                 footer.getChildren().add(browseBtn);
 
-                StackPane mainStack = new StackPane();
-                mainStack.getChildren().addAll(scrollPane, header, footer);
+                VBox layoutContainer = new VBox(0);
+                layoutContainer.setMaxWidth(600);
+                layoutContainer.setAlignment(Pos.TOP_CENTER);
+                layoutContainer.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+
+                StackPane mainOverlay = new StackPane();
+                mainOverlay.getChildren().addAll(scrollPane, header, footer);
+
                 StackPane.setAlignment(header, Pos.TOP_CENTER);
                 StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
 
-                getChildren().add(mainStack);
+                layoutContainer.getChildren().add(mainOverlay);
+                VBox.setVgrow(mainOverlay, Priority.ALWAYS);
+
+                HBox rootBox = new HBox(layoutContainer);
+                rootBox.setAlignment(Pos.CENTER);
+                HBox.setHgrow(layoutContainer, Priority.ALWAYS);
+                VBox.setVgrow(rootBox, Priority.ALWAYS);
+
+                getChildren().clear();
+                getChildren().add(rootBox);
+
+                // Bind layout container height to GuideView height to enable scrolling
+                layoutContainer.maxHeightProperty().bind(heightProperty());
         }
 
         private Label createSectionHeader(String text) {
