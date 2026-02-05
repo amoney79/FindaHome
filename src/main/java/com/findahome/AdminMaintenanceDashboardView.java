@@ -20,6 +20,10 @@ public class AdminMaintenanceDashboardView extends StackPane {
         private static final String CARD_BG = "#1c271f";
         private static final String TEXT_GRAY = "#9db9a6";
 
+        private VBox taskList;
+        private String selectedPriority = "Critical";
+        private HBox chipsContainer;
+
         public AdminMaintenanceDashboardView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
@@ -86,28 +90,15 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 priorityLabel.setTextFill(Color.web(TEXT_GRAY));
                 priorityLabel.setFont(Font.font("System", FontWeight.BOLD, 10));
 
-                HBox chips = new HBox(10);
-                chips.getChildren().addAll(
-                                createChip("Critical", "#ef4444", true),
-                                createChip("High", TEXT_GRAY, false),
-                                createChip("Medium", TEXT_GRAY, false),
-                                createChip("Low", TEXT_GRAY, false));
-                prioritySect.getChildren().addAll(priorityLabel, chips);
+                chipsContainer = new HBox(10);
+                refreshChips();
+                prioritySect.getChildren().addAll(priorityLabel, chipsContainer);
 
                 // Task List
-                VBox taskList = new VBox(20);
+                taskList = new VBox(20);
                 taskList.setPadding(new Insets(0, 20, 0, 20));
 
-                taskList.getChildren().addAll(
-                                createCriticalTaskCard("Major Pipe Leak - Unit 4B", "Sarah Johnson",
-                                                "Ocean View Apartments, Wing A",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuB7aVUx18rjxzcsXZcZ7ohoAoLnOwRzZp0fyHFLN75BFx968Wk5JBeJrEGmg-aXFTDz5BsQK_Hl80q2ym93mUvqWk57KxEayDkgsIVKuH6IXoCm7IWelg8hfuu58FkRXNMNYjN7d5W9MX2UxmmdZCuZO5lrgDe07cc-nL8_TZr31__SOZubHuNglIkU2KQJsjdxlYV1zg5jDcRvu7onde-9nhv2p_UQQFuNgo-wLqkZLy6SAtHZQUf6lesl8GZ2sz7fTUJ2gRN8p8U"),
-                                createRegularTaskCard("AC Service Maintenance", "Mike Richards", "Sky Tower, PH 02",
-                                                "Medium",
-                                                "#3b82f6",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuDjWrvD3L1z9aEEtlNqtjiuZrm9kg27uHkFYP4jAx-5PLBHBxbvAGQLk1RvSQSlGkO6J7n-b8TLn5X4_s82TlZtsJW0csvwkjaJvtRr6r6qDAh6Umi0t1Kb_WlsREWCF3hvBNPzQ-XrIg4yY6k-Aepmr1MVNxQxCHeiMDYC5ubM22xHKztin1vaPN37x50S7dfCAJrkYUWBmB8_Ce8iH6Bg4VDD9QapP_LHNUb0_IuMqjDfllddIqD6b076uH04RT3YnBOBnF7w4Dk"),
-                                createRegularTaskCard("Broken Door Lock", "Linda Chen", "2 hours ago", "High",
-                                                "#f97316", null));
+                refreshTaskList();
 
                 scrollContent.getChildren().addAll(statsPane, prioritySect, taskList);
 
@@ -115,12 +106,53 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 Button fab = new Button("+");
                 fab.setPrefSize(56, 56);
                 fab.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-size: 28; -fx-font-weight: bold; -fx-background-radius: 28;");
+                                + "; -fx-font-size: 28; -fx-font-weight: bold; -fx-background-radius: 28; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(19,236,91,0.3), 15, 0, 0, 8);");
+                fab.setOnAction(e -> MainApp.navigateCached("success_task", () -> new SuccessView("New Task Logged",
+                                "The maintenance task has been added to the queue.", "Return to Dashboard",
+                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
+
                 StackPane.setAlignment(fab, Pos.BOTTOM_RIGHT);
                 StackPane.setMargin(fab, new Insets(0, 20, 100, 0));
 
                 layout.getChildren().addAll(header, scroll);
                 getChildren().addAll(layout, fab);
+        }
+
+        private void refreshChips() {
+                chipsContainer.getChildren().clear();
+                String[] priorities = { "Critical", "High", "Medium", "Low" };
+                for (String p : priorities) {
+                        chipsContainer.getChildren().add(createChip(p, p.equals(selectedPriority)));
+                }
+        }
+
+        private void refreshTaskList() {
+                taskList.getChildren().clear();
+                if (selectedPriority.equals("Critical")) {
+                        taskList.getChildren().add(createCriticalTaskCard("Major Pipe Leak - Unit 4B", "Sarah Johnson",
+                                        "Ocean View Apartments, Wing A",
+                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuB7aVUx18rjxzcsXZcZ7ohoAoLnOwRzZp0fyHFLN75BFx968Wk5JBeJrEGmg-aXFTDz5BsQK_Hl80q2ym93mUvqWk57KxEayDkgsIVKuH6IXoCm7IWelg8hfuu58FkRXNMNYjN7d5W9MX2UxmmdZCuZO5lrgDe07cc-nL8_TZr31__SOZubHuNglIkU2KQJsjdxlYV1zg5jDcRvu7onde-9nhv2p_UQQFuNgo-wLqkZLy6SAtHZQUf6lesl8GZ2sz7fTUJ2gRN8p8U"));
+                } else if (selectedPriority.equals("High")) {
+                        taskList.getChildren()
+                                        .add(createRegularTaskCard("Broken Door Lock", "Linda Chen", "2 hours ago",
+                                                        "High",
+                                                        "#f97316", null));
+                        taskList.getChildren().addAll(
+                                        createRegularTaskCard("Window Seal Failed", "David K.", "1 day ago", "High",
+                                                        "#f97316", null),
+                                        createRegularTaskCard("Thermostat Malfunction", "Grace L.", "3 hours ago",
+                                                        "High", "#f97316", null));
+                } else if (selectedPriority.equals("Medium")) {
+                        taskList.getChildren().add(createRegularTaskCard("AC Service Maintenance", "Mike Richards",
+                                        "Sky Tower, PH 02", "Medium", "#3b82f6",
+                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDjWrvD3L1z9aEEtlNqtjiuZrm9kg27uHkFYP4jAx-5PLBHBxbvAGQLk1RvSQSlGkO6J7n-b8TLn5X4_s82TlZtsJW0csvwkjaJvtRr6r6qDAh6Umi0t1Kb_WlsREWCF3hvBNPzQ-XrIg4yY6k-Aepmr1MVNxQxCHeiMDYC5ubM22xHKztin1vaPN37x50S7dfCAJrkYUWBmB8_Ce8iH6Bg4VDD9QapP_LHNUb0_IuMqjDfllddIqD6b076uH04RT3YnBOBnF7w4Dk"));
+                } else {
+                        taskList.getChildren().addAll(
+                                        createRegularTaskCard("Squeaky Floorboard", "Tom H.", "3 days ago", "Low",
+                                                        "#94a3b8", null),
+                                        createRegularTaskCard("Cabinet Handle Loose", "Anna S.", "5 days ago", "Low",
+                                                        "#94a3b8", null));
+                }
         }
 
         private Label createCircleAction(String icon) {
@@ -155,17 +187,21 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 return card;
         }
 
-        private HBox createChip(String text, String color, boolean active) {
+        private HBox createChip(String text, boolean active) {
                 HBox chip = new HBox(8);
                 chip.setAlignment(Pos.CENTER);
                 chip.setPadding(new Insets(8, 15, 8, 15));
+                chip.setCursor(javafx.scene.Cursor.HAND);
+
+                String activeColor = text.equals("Critical") ? "#ef4444" : (text.equals("High") ? "#f97316" : PRIMARY);
 
                 if (active) {
-                        chip.setStyle(
-                                        "-fx-background-color: rgba(239, 68, 68, 0.2); -fx-background-radius: 20; -fx-border-color: rgba(239, 68, 68, 0.3);");
-                        Circle dot = new Circle(4, Color.web("#ef4444"));
+                        chip.setStyle("-fx-background-color: " + activeColor
+                                        + "33; -fx-background-radius: 20; -fx-border-color: "
+                                        + activeColor + "66;");
+                        Circle dot = new Circle(4, Color.web(activeColor));
                         Label l = new Label(text.toUpperCase());
-                        l.setTextFill(Color.web("#ef4444"));
+                        l.setTextFill(Color.web(activeColor));
                         l.setFont(Font.font("System", FontWeight.BOLD, 10));
                         chip.getChildren().addAll(dot, l);
                 } else {
@@ -175,6 +211,13 @@ public class AdminMaintenanceDashboardView extends StackPane {
                         l.setFont(Font.font("System", FontWeight.MEDIUM, 12));
                         chip.getChildren().add(l);
                 }
+
+                chip.setOnMouseClicked(e -> {
+                        selectedPriority = text;
+                        refreshChips();
+                        refreshTaskList();
+                });
+
                 return chip;
         }
 
@@ -186,7 +229,7 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 StackPane imgStack = new StackPane();
                 ImageView iv = new ImageView();
                 try {
-                        iv.setImage(new Image(imgUrl, 400, 150, false, true));
+                        iv.setImage(new Image(imgUrl, 400, 150, false, true, true));
                 } catch (Exception e) {
                 }
                 iv.setFitWidth(360);
@@ -232,7 +275,7 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 assignBtn.setMaxWidth(Double.MAX_VALUE);
                 HBox.setHgrow(assignBtn, Priority.ALWAYS);
                 assignBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
+                                + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40; -fx-cursor: hand;");
                 assignBtn.setOnAction(e -> MainApp.navigateTo(
                                 new AssignTechnicianView(title,
                                                 "Major leak reported by tenant. Immediate repair needed.", imgUrl)));
@@ -240,7 +283,7 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 viewBtn.setMaxWidth(Double.MAX_VALUE);
                 HBox.setHgrow(viewBtn, Priority.ALWAYS);
                 viewBtn.setStyle(
-                                "-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
+                                "-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40; -fx-cursor: hand;");
                 actions.getChildren().addAll(assignBtn, viewBtn);
 
                 details.getChildren().addAll(head, meta, actions);
@@ -271,14 +314,12 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 if (avatarUrl != null) {
                         ImageView av = new ImageView();
                         try {
-                                av.setImage(new Image(avatarUrl, 24, 24, true, true));
+                                av.setImage(new Image(avatarUrl, 24, 24, true, true, true));
                         } catch (Exception e) {
                         }
                         av.setFitWidth(24);
                         av.setFitHeight(24);
-                        Rectangle clip = new Rectangle(24, 24);
-                        clip.setArcWidth(24);
-                        clip.setArcHeight(24);
+                        Circle clip = new Circle(12, 12, 12);
                         av.setClip(clip);
                         head.getChildren().addAll(titleBox, s, av);
                 } else {
@@ -301,7 +342,7 @@ public class AdminMaintenanceDashboardView extends StackPane {
                                         "-fx-background-color: " + PRIMARY + "22; -fx-text-fill: " + PRIMARY
                                                         + "; -fx-border-color: "
                                                         + PRIMARY
-                                                        + "44; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
+                                                        + "44; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40; -fx-cursor: hand;");
                         Label chatBtn = createCircleAction("\ud83d\udcac");
                         actions.getChildren().addAll(resBtn, chatBtn);
                 } else {
@@ -309,7 +350,7 @@ public class AdminMaintenanceDashboardView extends StackPane {
                         assignBtn.setMaxWidth(Double.MAX_VALUE);
                         HBox.setHgrow(assignBtn, Priority.ALWAYS);
                         assignBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                        + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40;");
+                                        + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-pref-height: 40; -fx-cursor: hand;");
                         assignBtn.setOnAction(e -> MainApp.navigateTo(new AssignTechnicianView(title,
                                         "General maintenance request regarding " + title.toLowerCase() + ".", null)));
                         actions.getChildren().add(assignBtn);
@@ -331,5 +372,4 @@ public class AdminMaintenanceDashboardView extends StackPane {
                 row.getChildren().addAll(i, t);
                 return row;
         }
-
 }

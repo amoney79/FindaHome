@@ -144,11 +144,14 @@ public class LandlordDashboardView extends StackPane {
         nav.getChildren().addAll(
                 createNavItem("Properties", "\ud83c\udfe2", true, e -> showPropertiesView()),
                 createNavItem("Requests", "\ud83d\udee0", false,
-                        e -> contentArea.getChildren().setAll(new AdminMaintenanceDashboardView())),
+                        e -> contentArea.getChildren().setAll(
+                                MainApp.getCachedView("admin_maintenance", AdminMaintenanceDashboardView::new))),
                 createNavItem("Revenue", "\ud83d\udcb3", false,
-                        e -> contentArea.getChildren().setAll(new EarningsAnalyticsView())),
+                        e -> contentArea.getChildren()
+                                .setAll(MainApp.getCachedView("landlord_revenue", EarningsAnalyticsView::new))),
                 createNavItem("Stats", "\ud83d\udcc8", false,
-                        e -> contentArea.getChildren().setAll(new PropertyPerformanceView())),
+                        e -> contentArea.getChildren()
+                                .setAll(MainApp.getCachedView("landlord_stats", PropertyPerformanceView::new))),
                 createNavItem("Profile", "\ud83d\udc64", false, e -> showProfileView()));
 
         return nav;

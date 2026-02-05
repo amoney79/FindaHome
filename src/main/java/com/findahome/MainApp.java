@@ -278,6 +278,15 @@ public class MainApp extends Application {
         navigateToFullScreen(view);
     }
 
+    public static <T extends Node> Node getCachedView(String key, java.util.function.Supplier<T> creator) {
+        Node view = viewCache.get(key);
+        if (view == null) {
+            view = creator.get();
+            viewCache.put(key, view);
+        }
+        return view;
+    }
+
     public static PropertyFeedView getFeed() {
         return feedInstance;
     }
