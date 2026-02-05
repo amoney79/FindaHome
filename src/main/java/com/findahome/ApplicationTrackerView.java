@@ -114,7 +114,32 @@ public class ApplicationTrackerView extends StackPane {
                                 createActionItem("help", "Support"));
 
                 layout.getChildren().addAll(appBar, tabs, scroll);
-                getChildren().addAll(layout, bottomPanel);
+
+                // Desktop Centralization Wrapper
+                VBox layoutContainer = new VBox(0);
+                layoutContainer.setMaxWidth(600); // Desktop width limit
+                layoutContainer.setAlignment(Pos.TOP_CENTER);
+                layoutContainer.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+
+                StackPane mainOverlay = new StackPane();
+                mainOverlay.getChildren().addAll(layout, bottomPanel);
+
+                StackPane.setAlignment(bottomPanel, Pos.BOTTOM_CENTER);
+
+                layoutContainer.getChildren().add(mainOverlay);
+                VBox.setVgrow(mainOverlay, Priority.ALWAYS);
+
+                HBox rootBox = new HBox(layoutContainer);
+                rootBox.setAlignment(Pos.CENTER);
+                HBox.setHgrow(layoutContainer, Priority.ALWAYS);
+                VBox.setVgrow(rootBox, Priority.ALWAYS);
+
+                getChildren().clear();
+                getChildren().add(rootBox);
+
+                // Bind layout container height to enable scrolling
+                layoutContainer.maxHeightProperty().bind(heightProperty());
+                scroll.maxHeightProperty().bind(layoutContainer.heightProperty());
         }
 
         private VBox createTab(String text, boolean active) {

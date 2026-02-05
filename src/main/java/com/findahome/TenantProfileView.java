@@ -189,6 +189,7 @@ public class TenantProfileView extends StackPane {
 
                 settingsList.getChildren().addAll(
                                 createSettingRow("Personal Information", "\ud83d\udc64"),
+                                createSettingRow("Application Tracker", "\ud83d\udcc4"),
                                 createSettingRow("Document Vault", "\ud83d\udcc1"),
                                 createSettingRow("Maintenance Support", "\ud83d\udee0"),
                                 createSettingRow("Switch to Landlord View", "\ud83c\udfe2"),
@@ -226,7 +227,7 @@ public class TenantProfileView extends StackPane {
                 // Link Viewing Schedule to ScheduleView
                 if (title.contains("Viewing")) {
                         card.setOnMouseClicked(e -> MainApp.navigateTo(new ScheduleView()));
-                } else if (title.contains("Applications")) {
+                } else if (title.contains("Application")) {
                         card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new ApplicationTrackerView()));
                 } else if (title.contains("Saved")) {
                         card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new SavedPropertiesView()));
@@ -313,6 +314,8 @@ public class TenantProfileView extends StackPane {
                         row.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
                 } else if (text.contains("Personal")) {
                         row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new EditProfileView()));
+                } else if (text.contains("Application")) {
+                        row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new ApplicationTrackerView()));
                 }
 
                 return row;
