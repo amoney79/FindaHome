@@ -1,5 +1,6 @@
 package com.findahome;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,6 +13,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
@@ -26,7 +30,7 @@ public class MainApp extends Application {
 
     private static StackPane contentArea;
     private static MainApp instance;
-    private static Node cachedDashboard;
+    private static final Map<String, Node> viewCache = new HashMap<>();
     private static PropertyFeedView feedInstance;
     private Stage stage;
     private double xOffset = 0;
@@ -101,32 +105,76 @@ public class MainApp extends Application {
     private Node bottomNav;
 
     public static void navigateTo(Node view) {
-        if (instance.mainLayout.getTop() == null) {
-            instance.mainLayout.setTop(instance.topNav);
-            instance.mainLayout.setBottom(instance.bottomNav);
-            instance.fab.setVisible(true);
-        }
-        contentArea.getChildren().setAll(view);
+        applyTransition(view, false);
     }
 
     public static void navigateToFullScreen(Node view) {
-        instance.mainLayout.setTop(null);
-        instance.mainLayout.setBottom(null);
-        instance.fab.setVisible(false);
-        contentArea.getChildren().setAll(view);
+        applyTransition(view, true);
+    }
+
+    private static void applyTransition(Node view, boolean fullScreen) {
+        if (fullScreen) {
+            instance.mainLayout.setTop(null);
+            instance.mainLayout.setBottom(null);
+            instance.fab.setVisible(false);
+        } else {
+            if (instance.mainLayout.getTop() == null) {
+                instance.mainLayout.setTop(instance.topNav);
+                instance.mainLayout.setBottom(instance.bottomNav);
+                instance.fab.setVisible(true);
+            }
+        }
+
+        // SMOOTH CROSS-FADE
+        Node oldView = contentArea.getChildren().isEmpty() ? null : contentArea.getChildren().get(0);
+
+        view.setOpacity(0);
+        contentArea.getChildren().add(view);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), view);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        if (oldView != null) {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(150), oldView);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(e -> contentArea.getChildren().remove(oldView));
+            fadeOut.play();
+        }
+
+        fadeIn.play();
+        updateBottomNavStyles(view);
+    }
+
+    private static void updateBottomNavStyles(Node currentView) {
+        if (instance.bottomNav instanceof HBox) {
+            HBox nav = (HBox) instance.bottomNav;
+            for (Node n : nav.getChildren()) {
+                if (n instanceof VBox) {
+                    VBox item = (VBox) n;
+                    Label label = (Label) item.getChildren().get(1);
+                    boolean isMatch = currentView.getClass().getSimpleName().contains(label.getText());
+                    // Special case for Home
+                    if (label.getText().equals("Home")
+                            && (currentView instanceof ScrollPane || currentView instanceof PropertyFeedView))
+                        isMatch = true;
+
+                    String color = isMatch ? PRIMARY : TEXT_GRAY;
+                    ((Label) item.getChildren().get(0)).setTextFill(Color.web(color));
+                    label.setTextFill(Color.web(color));
+                }
+            }
+        }
     }
 
     public static void navigateToMap() {
-        instance.mainLayout.setTop(null);
-        instance.mainLayout.setBottom(null);
-        instance.fab.setVisible(false);
-        contentArea.getChildren().setAll(new PropertyMapView());
+        navigateCached("explore", PropertyMapView::new);
     }
 
     public static void showHome() {
-        if (cachedDashboard != null) {
-            navigateTo(new VBox()); // Reset layout state
-            contentArea.getChildren().setAll(cachedDashboard);
+        if (viewCache.containsKey("dashboard")) {
+            navigateTo(viewCache.get("dashboard"));
         } else {
             instance.showDashboard();
         }
@@ -208,8 +256,26 @@ public class MainApp extends Application {
             }
         });
 
-        contentArea.getChildren().setAll(mainScroll);
-        cachedDashboard = mainScroll;
+        viewCache.put("dashboard", mainScroll);
+        navigateTo(mainScroll);
+    }
+
+    public static <T extends Node> void navigateCached(String key, java.util.function.Supplier<T> creator) {
+        Node view = viewCache.get(key);
+        if (view == null) {
+            view = creator.get();
+            viewCache.put(key, view);
+        }
+        navigateTo(view);
+    }
+
+    public static <T extends Node> void navigateCachedFullScreen(String key, java.util.function.Supplier<T> creator) {
+        Node view = viewCache.get(key);
+        if (view == null) {
+            view = creator.get();
+            viewCache.put(key, view);
+        }
+        navigateToFullScreen(view);
     }
 
     public static PropertyFeedView getFeed() {
@@ -324,9 +390,10 @@ public class MainApp extends Application {
         bottomNav.getChildren().addAll(
                 createNavItem("Home", "\u2302", true, e -> showHome()),
                 createNavItem("Explore", "\ud83e\udded", false, e -> navigateToMap()),
-                createNavItem("Service", "\ud83d\udee0", false, e -> navigateTo(new ServiceHubView())),
-                createNavItem("Messages", "\ud83d\udcac", false, e -> navigateTo(new ChatView())),
-                createNavItem("Profile", "\ud83d\udc64", false, e -> navigateTo(new TenantProfileView())));
+                createNavItem("Service", "\ud83d\udee0", false, e -> navigateCached("service", ServiceHubView::new)),
+                createNavItem("Messages", "\ud83d\udcac", false, e -> navigateCached("messages", ChatView::new)),
+                createNavItem("Profile", "\ud83d\udc64", false,
+                        e -> navigateCached("profile", TenantProfileView::new)));
         return bottomNav;
     }
 

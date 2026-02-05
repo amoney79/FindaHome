@@ -146,7 +146,7 @@ public class TenantProfileView extends StackPane {
                 completeBtn.setPrefHeight(40);
                 completeBtn.setStyle("-fx-background-color: rgba(19, 127, 236, 0.1); -fx-text-fill: " + PRIMARY
                                 + "; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
-                completeBtn.setOnAction(e -> MainApp.navigateToFullScreen(new EditProfileView()));
+                completeBtn.setOnAction(e -> MainApp.navigateCachedFullScreen("edit_profile", EditProfileView::new));
 
                 strengthCard.getChildren().addAll(meterHead, pb, meterDesc, completeBtn);
                 strengthSec.getChildren().add(strengthCard);
@@ -226,13 +226,16 @@ public class TenantProfileView extends StackPane {
 
                 // Link Viewing Schedule to ScheduleView
                 if (title.contains("Viewing")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateTo(new ScheduleView()));
+                        card.setOnMouseClicked(e -> MainApp.navigateCached("schedule", ScheduleView::new));
                 } else if (title.contains("Application")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new ApplicationTrackerView()));
+                        card.setOnMouseClicked(
+                                        e -> MainApp.navigateCachedFullScreen("tracker", ApplicationTrackerView::new));
                 } else if (title.contains("Saved")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new SavedPropertiesView()));
+                        card.setOnMouseClicked(e -> MainApp.navigateCachedFullScreen("saved_properties",
+                                        SavedPropertiesView::new));
                 } else if (title.contains("Payment")) {
-                        card.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new PaymentHistoryView()));
+                        card.setOnMouseClicked(e -> MainApp.navigateCachedFullScreen("payment_history",
+                                        PaymentHistoryView::new));
                 }
 
                 StackPane iconStack = new StackPane();
@@ -297,25 +300,29 @@ public class TenantProfileView extends StackPane {
                                 .setStyle("-fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 0 0 1 0; -fx-cursor: hand;"));
 
                 if (text.contains("Invite")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new InviteRewardView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("invite", InviteRewardView::new));
                 } else if (text.contains("Vault")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new DocumentVaultView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("vault", DocumentVaultView::new));
                 } else if (text.contains("Maintenance")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new MaintenanceRequestsListView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("maintenance_list",
+                                        MaintenanceRequestsListView::new));
                 } else if (text.contains("Landlord")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new LandlordDashboardView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCachedFullScreen("landlord_dashboard",
+                                        LandlordDashboardView::new));
                 } else if (text.contains("Help")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new HelpSupportView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("help", HelpSupportView::new));
                 } else if (text.contains("Notifications")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new NotificationView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("notifications", NotificationView::new));
                 } else if (text.contains("Legal") || text.contains("Privacy")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new LegalTermsView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("legal", LegalTermsView::new));
                 } else if (text.contains("Deactivate")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateTo(new AccountDeactivationView()));
+                        row.setOnMouseClicked(e -> MainApp.navigateCached("deactivate", AccountDeactivationView::new));
                 } else if (text.contains("Personal")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new EditProfileView()));
+                        row.setOnMouseClicked(
+                                        e -> MainApp.navigateCachedFullScreen("edit_profile", EditProfileView::new));
                 } else if (text.contains("Application")) {
-                        row.setOnMouseClicked(e -> MainApp.navigateToFullScreen(new ApplicationTrackerView()));
+                        row.setOnMouseClicked(
+                                        e -> MainApp.navigateCachedFullScreen("tracker", ApplicationTrackerView::new));
                 }
 
                 return row;
