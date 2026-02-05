@@ -221,7 +221,7 @@ public class AgentRatingProfileView extends StackPane {
                 chatBtn.setMaxWidth(Double.MAX_VALUE);
                 chatBtn.setPrefHeight(56);
                 chatBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-font-weight: 900; -fx-font-size: 16; -fx-background-radius: 12;");
+                                + "; -fx-text-fill: white; -fx-font-weight: black; -fx-font-size: 16; -fx-background-radius: 12;");
 
                 Button calBtn = new Button("\ud83d\udcc5");
                 calBtn.setPrefSize(56, 56);

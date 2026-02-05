@@ -13,10 +13,10 @@ import javafx.scene.text.FontWeight;
 
 public class WardBoundarySelectionView extends StackPane {
 
-    private static final String BACKGROUND_DARK = "#102216";
-    private static final String PRIMARY = "#13ec5b";
-    private static final String CARD_BG = "#1c271f";
-    private static final String TEXT_GRAY = "#9db9a6";
+    private static final String BACKGROUND_DARK = "#101622";
+    private static final String PRIMARY = "#135bec";
+    private static final String CARD_BG = "#1c222c";
+    private static final String TEXT_GRAY = "#9ca3af";
 
     public WardBoundarySelectionView() {
         setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
