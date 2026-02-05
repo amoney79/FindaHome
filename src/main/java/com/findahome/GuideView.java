@@ -157,7 +157,12 @@ public class GuideView extends VBox {
 
                 scrollPane.setContent(content);
 
-                // Floating Action Button Style for Browse
+                // Header (Sticky at top)
+                header.setStyle("-fx-background-color: rgba(13, 17, 23, 0.7);"); // Dark semi-transparent for back
+                                                                                 // button
+                header.setPadding(new Insets(10, 20, 10, 20));
+
+                // Floating Action Button Style for Browse (Sticky at bottom)
                 StackPane footer = new StackPane();
                 footer.setPadding(new Insets(20));
                 footer.setPickOnBounds(false);
@@ -184,6 +189,9 @@ public class GuideView extends VBox {
 
                 layoutContainer.getChildren().add(mainOverlay);
                 VBox.setVgrow(mainOverlay, Priority.ALWAYS);
+
+                // Force ScrollPane to respect parent height
+                scrollPane.maxHeightProperty().bind(layoutContainer.heightProperty());
 
                 HBox rootBox = new HBox(layoutContainer);
                 rootBox.setAlignment(Pos.CENTER);
