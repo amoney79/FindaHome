@@ -8,14 +8,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class MovingChecklistView extends VBox {
+public class MovingChecklistView extends BorderPane {
 
     private static final String BACKGROUND_DARK = "#221610";
     private static final String PRIMARY = "#f46a25";
 
     public MovingChecklistView() {
         setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
-        setSpacing(0);
 
         // Header
         HBox header = new HBox(15);
@@ -34,15 +33,9 @@ public class MovingChecklistView extends VBox {
         HBox.setHgrow(title, Priority.ALWAYS);
 
         header.getChildren().addAll(backBtn, title);
+        setTop(header);
 
         // Scroll Content
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-        VBox.setVgrow(scrollPane, Priority.ALWAYS);
-
         VBox content = new VBox(25);
         content.setPadding(new Insets(20, 20, 40, 20));
         content.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
@@ -74,39 +67,40 @@ public class MovingChecklistView extends VBox {
         content.getChildren().addAll(
                 createSection("\uD83D\uDCC5", "1 Month Before", "Notice to landlord", "Declutter stuff"),
                 createSection("\u23F0", "2 Weeks Before", "Book movers", "Change address"),
-                createSection("\uD83D\uDE9A", "Moving Day", "Final meter readings"));
+                createSection("\uD83D\uDE9A", "Moving Day", "Final meter readings"),
+                createSection("\uD83D\uDCE6", "Packing Strategy", "Buy bubble wrap", "Label all boxes"),
+                createSection("\uD83D\uDCDD", "Documentation", "Sign lease agreement", "Update voter registration"));
 
-        scrollPane.setContent(content);
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setStyle(
+                "-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
+        setCenter(scrollPane);
 
-        // Footer Nav
+        // Footer Nav (Pinned)
         HBox footer = new HBox();
-        footer.setPadding(new Insets(10, 0, 10, 0));
+        footer.setPadding(new Insets(12, 0, 32, 0));
         footer.setAlignment(Pos.CENTER);
         footer.setStyle("-fx-background-color: " + BACKGROUND_DARK
                 + "; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 1 0 0 0;");
 
         footer.getChildren().addAll(
                 createNavItem("\ud83d\udd0d", "Market", false),
-                new Region() {
-                    {
-                        HBox.setHgrow(this, Priority.ALWAYS);
-                    }
-                },
+                createSpacer(),
                 createNavItem("\u2713", "Checklist", true),
-                new Region() {
-                    {
-                        HBox.setHgrow(this, Priority.ALWAYS);
-                    }
-                },
+                createSpacer(),
                 createNavItem("\ud83d\uddfa", "Map", false),
-                new Region() {
-                    {
-                        HBox.setHgrow(this, Priority.ALWAYS);
-                    }
-                },
+                createSpacer(),
                 createNavItem("\ud83d\udc64", "Profile", false));
+        setBottom(footer);
+    }
 
-        getChildren().addAll(header, scrollPane, footer);
+    private Region createSpacer() {
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        return spacer;
     }
 
     private VBox createSection(String icon, String title, String... tasks) {
@@ -142,6 +136,7 @@ public class MovingChecklistView extends VBox {
         VBox v = new VBox(4);
         v.setAlignment(Pos.CENTER);
         v.setPadding(new Insets(0, 20, 0, 20));
+        v.setCursor(javafx.scene.Cursor.HAND);
         Label i = new Label(icon);
         i.setFont(Font.font(20));
         i.setTextFill(active ? Color.web(PRIMARY) : Color.GRAY);
@@ -149,6 +144,14 @@ public class MovingChecklistView extends VBox {
         l.setFont(Font.font(10));
         l.setTextFill(active ? Color.web(PRIMARY) : Color.GRAY);
         v.getChildren().addAll(i, l);
+
+        if (label.equals("Market"))
+            v.setOnMouseClicked(e -> MainApp.navigateCached("market_trends", MarketTrendsView::new));
+        if (label.equals("Profile"))
+            v.setOnMouseClicked(e -> MainApp.navigateCached("profile", TenantProfileView::new));
+        if (label.equals("Map"))
+            v.setOnMouseClicked(e -> MainApp.navigateToMap());
+
         return v;
     }
 }
