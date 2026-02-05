@@ -105,7 +105,7 @@ public class MaintenanceRequestsListView extends StackPane {
                 fab.setPrefSize(60, 60);
                 fab.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                                 + "; -fx-font-size: 30; -fx-font-weight: bold; -fx-background-radius: 30; -fx-effect: dropshadow(gaussian, rgba(19,236,91,0.2), 20, 0, 0, 10); -fx-cursor: hand;");
-                fab.setOnAction(e -> MainApp.navigateTo(new MaintenanceRequestView()));
+                fab.setOnAction(e -> MainApp.navigateCached("maintenance_form", MaintenanceRequestView::new));
 
                 StackPane.setAlignment(fab, Pos.BOTTOM_RIGHT);
                 StackPane.setMargin(fab, new Insets(0, 20, 100, 0));
