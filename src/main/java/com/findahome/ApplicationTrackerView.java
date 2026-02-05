@@ -1,7 +1,9 @@
 package com.findahome;
 
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 public class ApplicationTrackerView extends VBox {
 
@@ -24,7 +27,9 @@ public class ApplicationTrackerView extends VBox {
                         String updated) {
         }
 
-        private VBox entryList;
+        private VBox activeList;
+        private VBox pastList;
+        private StackPane contentStack;
         private VBox activeTab;
         private VBox pastTab;
 
@@ -32,22 +37,30 @@ public class ApplicationTrackerView extends VBox {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
                 setAlignment(Pos.CENTER);
 
-                // Entry List Initialization
-                entryList = new VBox(25);
+                // Initialize Views for fast switching
+                activeList = new VBox(25);
+                pastList = new VBox(25);
+                contentStack = new StackPane();
 
                 // Header Section
                 VBox headerArea = createHeaderArea();
 
                 // Scroll Content
-                VBox scrollContent = new VBox(0);
-                ScrollPane scroll = createScrollPane(scrollContent);
+                VBox scrollContainer = new VBox(0);
+                ScrollPane scroll = createScrollPane(scrollContainer);
 
                 // Timeline & Entries
-                StackPane timelineContainer = createTimelineContainer(entryList);
-                scrollContent.getChildren().add(timelineContainer);
+                StackPane activeTimeline = createTimelineContainer(activeList);
+                StackPane pastTimeline = createTimelineContainer(pastList);
 
-                // Initial Populate
-                showActiveApplications();
+                pastTimeline.setVisible(false);
+                pastTimeline.setOpacity(0);
+                contentStack.getChildren().addAll(activeTimeline, pastTimeline);
+                scrollContainer.getChildren().add(contentStack);
+
+                // Pre-populate data
+                populateAllData();
+                switchToTab(true); // Show active applications initially
 
                 // Bottom Actions (Docked)
                 HBox bottomPanel = createBottomPanel();
@@ -97,10 +110,10 @@ public class ApplicationTrackerView extends VBox {
                                 + "; -fx-border-width: 0 0 1 0;");
 
                 activeTab = createTab("Active (3)", true);
-                activeTab.setOnMouseClicked(e -> showActiveApplications());
+                activeTab.setOnMouseClicked(e -> switchToTab(true));
 
                 pastTab = createTab("Past", false);
-                pastTab.setOnMouseClicked(e -> showPastApplications());
+                pastTab.setOnMouseClicked(e -> switchToTab(false));
 
                 HBox.setHgrow(activeTab, Priority.ALWAYS);
                 HBox.setHgrow(pastTab, Priority.ALWAYS);
@@ -135,10 +148,8 @@ public class ApplicationTrackerView extends VBox {
                 return container;
         }
 
-        private void showActiveApplications() {
-                updateTabStyles(activeTab, true);
-                updateTabStyles(pastTab, false);
-
+        private void populateAllData() {
+                // Active Data
                 var activeData = java.util.List.of(
                                 new ApplicationData("Modern 2BR Apartment", "Nairobi West • $1,200/mo", "SUBMITTED", 1,
                                                 "https://images.unsplash.com/photo-1545324418-f1d3c5b53571?q=80&w=400&auto=format&fit=crop",
@@ -150,13 +161,7 @@ public class ApplicationTrackerView extends VBox {
                                                 "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=400&auto=format&fit=crop",
                                                 "📄", "3 days ago"));
 
-                populateEntries(activeData);
-        }
-
-        private void showPastApplications() {
-                updateTabStyles(activeTab, false);
-                updateTabStyles(pastTab, true);
-
+                // Past Data
                 var pastData = java.util.List.of(
                                 new ApplicationData("Sunset Villa", "Runda • $3,500/mo", "EXPIRED", 0,
                                                 "https://images.unsplash.com/photo-1512918728675-ed5a9ecde9d7?q=80&w=400&auto=format&fit=crop",
@@ -165,7 +170,33 @@ public class ApplicationTrackerView extends VBox {
                                                 "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=400&auto=format&fit=crop",
                                                 "✘", "1 month ago"));
 
-                populateEntries(pastData);
+                for (var item : activeData)
+                        activeList.getChildren().add(createApplicationEntry(item));
+                for (var item : pastData)
+                        pastList.getChildren().add(createApplicationEntry(item));
+        }
+
+        private void switchToTab(boolean showActive) {
+                updateTabStyles(activeTab, showActive);
+                updateTabStyles(pastTab, !showActive);
+
+                Node activeNode = contentStack.getChildren().get(0);
+                Node pastNode = contentStack.getChildren().get(1);
+
+                Node appearing = showActive ? activeNode : pastNode;
+                Node disappearing = showActive ? pastNode : activeNode;
+
+                if (appearing.isVisible())
+                        return;
+
+                disappearing.setVisible(false);
+                disappearing.setOpacity(0);
+
+                appearing.setVisible(true);
+                FadeTransition ft = new FadeTransition(Duration.millis(300), appearing);
+                ft.setFromValue(0);
+                ft.setToValue(1);
+                ft.play();
         }
 
         private void updateTabStyles(VBox tab, boolean active) {
@@ -175,13 +206,6 @@ public class ApplicationTrackerView extends VBox {
                 l.setFont(Font.font("System", active ? FontWeight.BOLD : FontWeight.MEDIUM, 14));
                 r.setStyle("-fx-background-color: " + (active ? PRIMARY : "transparent")
                                 + "; -fx-background-radius: 3 3 0 0;");
-        }
-
-        private void populateEntries(java.util.List<ApplicationData> data) {
-                entryList.getChildren().clear();
-                for (var item : data) {
-                        entryList.getChildren().add(createApplicationEntry(item));
-                }
         }
 
         private HBox createApplicationEntry(ApplicationData item) {
@@ -307,16 +331,43 @@ public class ApplicationTrackerView extends VBox {
                                 + "; -fx-border-width: 1 0 0 0;");
 
                 panel.getChildren().addAll(
-                                createActionItem("forum", "Agent Chats"),
-                                createActionItem("share", "Share List"),
-                                createActionItem("help", "Support"));
+                                createActionItem("forum", "Agent Chats", e -> MainApp.navigateTo(new ChatView())),
+                                createActionItem("share", "Share List", e -> showShareSuccess()),
+                                createActionItem("help", "Support", e -> MainApp.navigateTo(new HelpSupportView())));
                 return panel;
         }
 
-        private VBox createActionItem(String icon, String label) {
+        private void showShareSuccess() {
+                Label toast = new Label("Application list shared successfully! 🚀");
+                toast.setStyle("-fx-background-color: #059669; -fx-text-fill: white; -fx-padding: 12 25; -fx-background-radius: 25; -fx-font-weight: bold;");
+                toast.setOpacity(0);
+
+                StackPane root = (StackPane) getChildren().get(0);
+                root.getChildren().add(toast);
+                StackPane.setAlignment(toast, Pos.TOP_CENTER);
+                StackPane.setMargin(toast, new Insets(100, 0, 0, 0));
+
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), toast);
+                fadeIn.setFromValue(0);
+                fadeIn.setToValue(1);
+
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(300), toast);
+                fadeOut.setFromValue(1);
+                fadeOut.setToValue(0);
+                fadeOut.setDelay(Duration.seconds(2));
+                fadeOut.setOnFinished(e -> root.getChildren().remove(toast));
+
+                fadeIn.setOnFinished(e -> fadeOut.play());
+                fadeIn.play();
+        }
+
+        private VBox createActionItem(String icon, String label,
+                        javafx.event.EventHandler<? super javafx.scene.input.MouseEvent> clickHandler) {
                 VBox v = new VBox(6);
                 v.setAlignment(Pos.CENTER);
                 v.setCursor(javafx.scene.Cursor.HAND);
+                if (clickHandler != null)
+                        v.setOnMouseClicked(clickHandler);
 
                 StackPane iconBox = new StackPane();
                 iconBox.setPrefSize(42, 42);
