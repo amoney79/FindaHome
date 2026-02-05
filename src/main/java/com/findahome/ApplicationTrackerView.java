@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class ApplicationTrackerView extends StackPane {
+public class ApplicationTrackerView extends VBox {
 
         private static final String BACKGROUND_DARK = "#0b0e11";
         private static final String CARD_DARK = "#161b22";
@@ -21,17 +21,16 @@ public class ApplicationTrackerView extends StackPane {
 
         public ApplicationTrackerView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
-
-                VBox layout = new VBox(0);
+                setAlignment(Pos.CENTER);
 
                 // Top App Bar
                 HBox appBar = new HBox();
                 appBar.setAlignment(Pos.CENTER_LEFT);
                 appBar.setPadding(new Insets(15, 20, 15, 20));
-                appBar.setStyle("-fx-background-color: rgba(11, 14, 17, 0.8); -fx-border-color: " + BORDER_COLOR
+                appBar.setStyle("-fx-background-color: rgba(11, 14, 17, 0.9); -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-width: 0 0 1 0;");
 
-                Label backBtn = new Label("\u2039");
+                Label backBtn = new Label("‹"); // direct Unicode char
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
                 backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new TenantProfileView()));
@@ -43,7 +42,7 @@ public class ApplicationTrackerView extends StackPane {
                 title.setMaxWidth(Double.MAX_VALUE);
                 HBox.setHgrow(title, Priority.ALWAYS);
 
-                Label tuneBtn = new Label("\u22b0");
+                Label tuneBtn = new Label("⊰"); // direct Unicode char
                 tuneBtn.setTextFill(Color.WHITE);
                 tuneBtn.setStyle("-fx-font-size: 20; -fx-cursor: hand;");
 
@@ -52,7 +51,8 @@ public class ApplicationTrackerView extends StackPane {
                 // Tabs
                 HBox tabs = new HBox(0);
                 tabs.setPadding(new Insets(0, 20, 0, 20));
-                tabs.setStyle("-fx-border-color: " + BORDER_COLOR + "; -fx-border-width: 0 0 1 0;");
+                tabs.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: " + BORDER_COLOR
+                                + "; -fx-border-width: 0 0 1 0;");
 
                 VBox activeTab = createTab("Active (3)", true);
                 VBox pastTab = createTab("Past", false);
@@ -65,7 +65,7 @@ public class ApplicationTrackerView extends StackPane {
                 ScrollPane scroll = new ScrollPane(scrollContent);
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // FIXED
                 scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
                 VBox.setVgrow(scroll, Priority.ALWAYS);
 
@@ -73,27 +73,26 @@ public class ApplicationTrackerView extends StackPane {
                 StackPane timelineContainer = new StackPane();
                 timelineContainer.setPadding(new Insets(25, 20, 150, 20));
 
-                // Vertical Line
                 Region line = new Region();
                 line.setStyle("-fx-background-color: #3b4754; -fx-background-radius: 2;");
                 line.setPrefWidth(2);
                 line.setMaxWidth(2);
-                line.setMaxHeight(Double.MAX_VALUE); // Fill height
+                line.setMaxHeight(Double.MAX_VALUE);
                 StackPane.setAlignment(line, Pos.TOP_LEFT);
-                StackPane.setMargin(line, new Insets(15, 0, 15, 14)); // Align with bullet centers
+                StackPane.setMargin(line, new Insets(15, 0, 15, 14));
 
                 VBox entryList = new VBox(25);
                 entryList.getChildren().addAll(
-                                createApplicationEntry("Modern 2BR Apartment", "Nairobi West \u2022 $1,200/mo",
+                                createApplicationEntry("Modern 2BR Apartment", "Nairobi West • $1,200/mo",
                                                 "SUBMITTED", 1,
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCq4YqtYpihlp3p4CrolbtVFw4XpBUuB2S3YFFGyxHvjNFVNmax3IuCpeDMGTTHNEzWuwQ8-A7p59POFKodS8-kel3zgijZQou5XC1MSzGSmBqAKb_-D5JGoIxHHxWuNmEwZeD9ncej1QRuEC9nQRRp5__PCMWymVdnwuQBDN0oJml5uIxS7tWwCjO2ykmj2WnFPGSR_d2aICJe7LoQqaB_lctSIN4Zioq641QJyBemCOMReLdJVbc-Sj2Obg5BqXPTDgB-AUsKWog",
-                                                "\u2714"),
-                                createApplicationEntry("Greenwood Estate", "Karen \u2022 $2,500/mo", "UNDER REVIEW", 2,
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCZ597PLjDM-ScbEnRLc8EPrcoDoB4ZVwtzmAWkIIsP8972q5IT1Dm7lt4DOSJc4ZDDv1P6fTqePqYYuCyR0VjquBzfwwongBw7KQxjmm6n8py3Z6Jivm2ZLGdooO_dTObcWj1weD9eyeLhNXx-glJHJm7tAtLeLWlZNwW2pGdknGw1erNe6XHgVdGsBxPiRrerYFphOXpW4KwnsN7s78sPBZSIk3bdL2EBHqAHPz35aYq2UxlmWKvXSM6loHclcDe88OCLMBoNtns",
-                                                "\u231b"),
-                                createApplicationEntry("Urban Loft", "Kilimani \u2022 $950/mo", "BACKGROUND CHECK", 3,
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuBc7elV-2H5Cx1qkLpTxKpGfS-mk57rmhy66JM51n4VEWlscQtR0Q4826dGCJpqS9YzPcFb8LidO8R2qcwIs-tA1Gdn3ttdQNu3j7HVHB5MMOz03HAoWVNBFJE70i3mEQZslM0Ms6IBqLOtuCJ7eZdRqJTCqCQu6cSmiU8vEsllRV5pCU-upUQspbNc5aNChzmccp2j4rUShmDzlekviB6NVwoWr3hU3XcxQeVqQJft2EhgnAUDfRgM5X_IZ1SK-jmtUTSAIi67sCM",
-                                                "\ud83d\udcc4"));
+                                                "https://images.unsplash.com/photo-1545324418-f1d3c5b53571?q=80&w=400&auto=format&fit=crop",
+                                                "✔"),
+                                createApplicationEntry("Greenwood Estate", "Karen • $2,500/mo", "UNDER REVIEW", 2,
+                                                "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=400&auto=format&fit=crop",
+                                                "⏳"),
+                                createApplicationEntry("Urban Loft", "Kilimani • $950/mo", "BACKGROUND CHECK", 3,
+                                                "https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=400&auto=format&fit=crop",
+                                                "📄"));
 
                 timelineContainer.getChildren().addAll(line, entryList);
                 scrollContent.getChildren().add(timelineContainer);
@@ -105,41 +104,32 @@ public class ApplicationTrackerView extends StackPane {
                 bottomPanel.setStyle(
                                 "-fx-background-color: " + CARD_DARK + "; -fx-background-radius: 20; -fx-border-color: "
                                                 + BORDER_COLOR + ";");
-                StackPane.setAlignment(bottomPanel, Pos.BOTTOM_CENTER);
-                StackPane.setMargin(bottomPanel, new Insets(0, 25, 40, 25));
 
                 bottomPanel.getChildren().addAll(
                                 createActionItem("forum", "Agent Chats"),
                                 createActionItem("share", "Share List"),
                                 createActionItem("help", "Support"));
 
-                layout.getChildren().addAll(appBar, tabs, scroll);
+                // Layout with BorderPane (FIXED)
+                BorderPane layout = new BorderPane();
+                layout.setTop(new VBox(appBar, tabs));
+                layout.setCenter(scroll);
+                layout.setBottom(bottomPanel);
 
-                // Desktop Centralization Wrapper
-                VBox layoutContainer = new VBox(0);
-                layoutContainer.setMaxWidth(600); // Desktop width limit
-                layoutContainer.setAlignment(Pos.TOP_CENTER);
-                layoutContainer.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+                VBox desktopColumn = new VBox(layout);
+                desktopColumn.setMaxWidth(600);
+                desktopColumn.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
+                VBox.setVgrow(desktopColumn, Priority.ALWAYS);
 
-                StackPane mainOverlay = new StackPane();
-                mainOverlay.getChildren().addAll(layout, bottomPanel);
+                HBox centerer = new HBox(desktopColumn);
+                centerer.setAlignment(Pos.CENTER);
+                HBox.setHgrow(desktopColumn, Priority.ALWAYS);
+                VBox.setVgrow(centerer, Priority.ALWAYS);
 
-                StackPane.setAlignment(bottomPanel, Pos.BOTTOM_CENTER);
+                getChildren().setAll(centerer);
 
-                layoutContainer.getChildren().add(mainOverlay);
-                VBox.setVgrow(mainOverlay, Priority.ALWAYS);
-
-                HBox rootBox = new HBox(layoutContainer);
-                rootBox.setAlignment(Pos.CENTER);
-                HBox.setHgrow(layoutContainer, Priority.ALWAYS);
-                VBox.setVgrow(rootBox, Priority.ALWAYS);
-
-                getChildren().clear();
-                getChildren().add(rootBox);
-
-                // Bind layout container height to enable scrolling
-                layoutContainer.maxHeightProperty().bind(heightProperty());
-                scroll.maxHeightProperty().bind(layoutContainer.heightProperty());
+                // Offset content for sticky header
+                scrollContent.setPadding(new Insets(120, 0, 150, 0));
         }
 
         private VBox createTab(String text, boolean active) {
@@ -147,7 +137,7 @@ public class ApplicationTrackerView extends StackPane {
                 v.setAlignment(Pos.CENTER);
                 Label l = new Label(text);
                 l.setTextFill(active ? Color.web(PRIMARY) : Color.web(TEXT_GRAY));
-                l.setFont(Font.font("System", active ? FontWeight.BOLD : FontWeight.MEDIUM, 14));
+                l.setFont(Font.font("System", active ? FontWeight.BOLD : FontWeight.NORMAL, 14)); // FIXED
                 Region indicator = new Region();
                 indicator.setPrefHeight(2);
                 indicator.setStyle("-fx-background-color: " + (active ? PRIMARY : "transparent") + ";");
@@ -164,7 +154,6 @@ public class ApplicationTrackerView extends StackPane {
                 // Timeline Bullet
                 StackPane bullet = new StackPane();
                 bullet.setPrefSize(30, 30);
-                bullet.setMinSize(30, 30);
                 bullet.setStyle("-fx-background-color: " + PRIMARY + "; -fx-background-radius: 15; -fx-border-color: "
                                 + BACKGROUND_DARK + "; -fx-border-width: 4; -fx-border-radius: 15;");
                 Label icon = new Label(iconSymbol);
@@ -186,6 +175,7 @@ public class ApplicationTrackerView extends StackPane {
                 try {
                         iv.setImage(new Image(imgUrl, 80, 80, false, true));
                 } catch (Exception e) {
+                        System.err.println("Image failed: " + e.getMessage()); // FIXED logging
                 }
                 iv.setFitWidth(80);
                 iv.setFitHeight(80);
@@ -231,7 +221,7 @@ public class ApplicationTrackerView extends StackPane {
                                 + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13; -fx-background-radius: 8;");
                 viewBtn.setOnAction(e -> MainApp.navigateTo(new LeaseAgreementView()));
 
-                Button chatBtn = new Button("\ud83d\udcac");
+                Button chatBtn = new Button("💬");
                 chatBtn.setPrefSize(36, 36);
                 chatBtn.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: " + PRIMARY
                                 + "; -fx-background-radius: 8; -fx-font-size: 16;");
@@ -252,7 +242,7 @@ public class ApplicationTrackerView extends StackPane {
                 StackPane iconBox = new StackPane();
                 iconBox.setPrefSize(40, 40);
                 iconBox.setStyle("-fx-background-color: rgba(19, 127, 236, 0.1); -fx-background-radius: 20;");
-                Label i = new Label(icon.equals("forum") ? "\ud83d\udcac" : icon.equals("share") ? "\u27a6" : "\u2753");
+                Label i = new Label(icon.equals("forum") ? "💬" : icon.equals("share") ? "➚" : "❓");
                 i.setTextFill(Color.web(PRIMARY));
                 i.setStyle("-fx-font-size: 18;");
                 iconBox.getChildren().add(i);
