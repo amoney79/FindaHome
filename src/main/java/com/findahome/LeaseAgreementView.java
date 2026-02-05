@@ -10,30 +10,29 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-public class LeaseAgreementView extends StackPane {
+public class LeaseAgreementView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#101922";
         private static final String CARD_DARK = "#1a1f2e";
-        private static final String PRIMARY = "#137fec"; // Using app brand color for consistency
+        private static final String PRIMARY = "#137fec"; // brand color
         private static final String BORDER_COLOR = "rgba(255,255,255,0.1)";
         private static final String TEXT_GRAY = "#94a3b8";
 
         public LeaseAgreementView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
-                VBox layout = new VBox(0);
-
-                // Top App Bar
+                // --- Top App Bar ---
                 HBox appBar = new HBox();
                 appBar.setAlignment(Pos.CENTER_LEFT);
                 appBar.setPadding(new Insets(15, 20, 15, 20));
                 appBar.setStyle("-fx-background-color: rgba(16, 25, 34, 0.8); -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-width: 0 0 1 0;");
 
-                Label backBtn = new Label("\u2039");
+                Label backBtn = new Label("‹"); // direct Unicode
                 backBtn.setTextFill(Color.WHITE);
                 backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-                backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new ApplicationTrackerView()));
+                backBtn.setOnMouseClicked(
+                                e -> MainApp.navigateCachedFullScreen("tracker", ApplicationTrackerView::new));
 
                 Label title = new Label("Review Lease Agreement");
                 title.setTextFill(Color.WHITE);
@@ -43,17 +42,17 @@ public class LeaseAgreementView extends StackPane {
                 HBox.setHgrow(title, Priority.ALWAYS);
 
                 Region spacer = new Region();
-                spacer.setPrefWidth(28); // Balance the back button
+                spacer.setPrefWidth(28);
 
                 appBar.getChildren().addAll(backBtn, title, spacer);
 
-                // Scrollable Content
+                // --- Scrollable Content ---
                 VBox scrollContent = new VBox(0);
                 ScrollPane scroll = new ScrollPane(scrollContent);
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+                scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
                 VBox.setVgrow(scroll, Priority.ALWAYS);
 
                 // Page Indicators
@@ -70,7 +69,6 @@ public class LeaseAgreementView extends StackPane {
                 Region dot3 = new Region();
                 dot3.setPrefSize(6, 6);
                 dot3.setStyle("-fx-background-color: #3b4754; -fx-background-radius: 3;");
-
                 indicators.getChildren().addAll(dot1, dot2, dot3);
 
                 // Instruction Panel
@@ -93,11 +91,12 @@ public class LeaseAgreementView extends StackPane {
                 instrDesc.setFont(Font.font(13));
                 instrDesc.setWrapText(true);
 
-                Label helpBtn = new Label("Help Center \u27a4");
+                Label helpBtn = new Label("Help Center ➔");
                 helpBtn.setTextFill(Color.web(PRIMARY));
                 helpBtn.setFont(Font.font("System", FontWeight.BOLD, 13));
                 helpBtn.setPadding(new Insets(5, 0, 0, 0));
                 helpBtn.setCursor(javafx.scene.Cursor.HAND);
+                helpBtn.setOnMouseClicked(e -> MainApp.navigateCached("help", HelpSupportView::new));
 
                 instrCard.getChildren().addAll(instrTitle, instrDesc, helpBtn);
                 instructionPanel.getChildren().add(instrCard);
@@ -144,40 +143,39 @@ public class LeaseAgreementView extends StackPane {
                 ScrollPane docScroll = new ScrollPane(createDocumentContent());
                 docScroll.setFitToWidth(true);
                 docScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                docScroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
+                docScroll.setStyle(
+                                "-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 docHolder.getChildren().add(docScroll);
                 docSec.getChildren().addAll(docTitle, docHolder);
 
                 scrollContent.getChildren().addAll(indicators, instructionPanel, summarySec, docSec);
 
-                // Fixed Bottom Bar
+                // --- Persistent Footer ---
                 HBox footer = new HBox(12);
                 footer.setPadding(new Insets(15, 20, 35, 20));
                 footer.setStyle("-fx-background-color: " + BACKGROUND_DARK + "; -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-width: 1 0 0 0;");
 
-                Button dlBtn = new Button("\u2913");
+                Button dlBtn = new Button("⬇"); // safer symbol
                 dlBtn.setPrefSize(56, 56);
-                dlBtn.setStyle(
-                                "-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: white; -fx-background-radius: 12; -fx-font-size: 20; -fx-border-color: "
-                                                + BORDER_COLOR + ";");
+                dlBtn.setStyle("-fx-background-color: rgba(255,255,255,0.05); -fx-text-fill: white; -fx-background-radius: 12; "
+                                + "-fx-font-size: 20; -fx-border-color: " + BORDER_COLOR + ";");
 
-                Button signBtn = new Button("Continue to Sign  \u270e");
+                Button signBtn = new Button("Continue to Sign ✎");
                 HBox.setHgrow(signBtn, Priority.ALWAYS);
                 signBtn.setMaxWidth(Double.MAX_VALUE);
                 signBtn.setPrefHeight(56);
                 signBtn.setStyle("-fx-background-color: " + PRIMARY
-                                + "; -fx-text-fill: white; -fx-font-weight: black; -fx-font-size: 16; -fx-background-radius: 12;");
+                                + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12;");
                 signBtn.setOnAction(e -> MainApp.navigateTo(new DigitalSignatureView()));
 
                 footer.getChildren().addAll(dlBtn, signBtn);
 
-                layout.getChildren().add(scroll);
-
-                getChildren().addAll(layout, appBar, footer);
-                StackPane.setAlignment(appBar, Pos.TOP_CENTER);
-                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+                // --- Assemble Layout ---
+                setTop(appBar);
+                setCenter(scroll);
+                setBottom(footer);
         }
 
         private HBox createSummaryRow(String lbl, String val, boolean border) {

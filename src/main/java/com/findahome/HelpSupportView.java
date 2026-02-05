@@ -275,7 +275,7 @@ public class HelpSupportView extends StackPane {
 
                 btn.setOnAction(e -> {
                         if (title.equals("Live Chat")) {
-                                MainApp.navigateTo(new ChatView());
+                                MainApp.navigateCached("messages", ChatView::new);
                         }
                 });
 

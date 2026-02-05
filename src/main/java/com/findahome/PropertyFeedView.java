@@ -50,7 +50,8 @@ public class PropertyFeedView extends VBox {
 
                 breadcrumb.getChildren().addAll(locationIcon, locationText, chevron);
                 breadcrumb.setCursor(javafx.scene.Cursor.HAND);
-                breadcrumb.setOnMouseClicked(e -> MainApp.navigateTo(new WardBoundarySelectionView()));
+                breadcrumb.setOnMouseClicked(e -> MainApp.navigateCachedFullScreen("ward_selection",
+                                WardBoundarySelectionView::new));
 
                 // Feed Title
                 Label feedTitle = new Label("Recommended for You");

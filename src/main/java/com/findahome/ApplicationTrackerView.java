@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
 
-public class ApplicationTrackerView extends VBox {
+public class ApplicationTrackerView extends StackPane {
 
         private static final String BACKGROUND_DARK = "#0b0e11";
         private static final String CARD_DARK = "#161b22";
@@ -35,7 +35,6 @@ public class ApplicationTrackerView extends VBox {
 
         public ApplicationTrackerView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
-                setAlignment(Pos.CENTER);
 
                 // Initialize Views for fast switching
                 activeList = new VBox(25);
@@ -92,7 +91,8 @@ public class ApplicationTrackerView extends VBox {
                 appBar.setStyle("-fx-background-color: rgba(11, 14, 17, 0.95); -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-width: 0 0 1 0;");
 
-                Label backBtn = createStyledIcon("‹", 28, e -> MainApp.navigateTo(new TenantProfileView()));
+                Label backBtn = createStyledIcon("‹", 28,
+                                e -> MainApp.navigateCached("profile", TenantProfileView::new));
 
                 Label title = new Label("Application Tracker");
                 title.setTextFill(Color.WHITE);
@@ -263,8 +263,9 @@ public class ApplicationTrackerView extends VBox {
 
                 HBox btnRow = new HBox(10);
                 Button viewBtn = createStyledButton("View Details", true,
-                                e -> MainApp.navigateTo(new LeaseAgreementView()));
-                Button chatBtn = createStyledButton("💬", false, e -> MainApp.navigateTo(new ChatView()));
+                                e -> MainApp.navigateCachedFullScreen("lease", LeaseAgreementView::new));
+                Button chatBtn = createStyledButton("💬", false,
+                                e -> MainApp.navigateCached("messages", ChatView::new));
                 btnRow.getChildren().addAll(viewBtn, chatBtn);
 
                 card.getChildren().addAll(topInfo, stepper, btnRow);
@@ -339,11 +340,12 @@ public class ApplicationTrackerView extends VBox {
 
         private void showShareSuccess() {
                 Label toast = new Label("Application list shared successfully! 🚀");
-                toast.setStyle("-fx-background-color: #059669; -fx-text-fill: white; -fx-padding: 12 25; -fx-background-radius: 25; -fx-font-weight: bold;");
+                toast.setStyle("-fx-background-color: #059669; -fx-text-fill: white; -fx-padding: 12 25; " +
+                                "-fx-background-radius: 25; -fx-font-weight: bold; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);");
                 toast.setOpacity(0);
+                toast.setMouseTransparent(true); // Don't block clicks
 
-                StackPane root = (StackPane) getChildren().get(0);
-                root.getChildren().add(toast);
+                this.getChildren().add(toast);
                 StackPane.setAlignment(toast, Pos.TOP_CENTER);
                 StackPane.setMargin(toast, new Insets(100, 0, 0, 0));
 
@@ -354,8 +356,8 @@ public class ApplicationTrackerView extends VBox {
                 FadeTransition fadeOut = new FadeTransition(Duration.millis(300), toast);
                 fadeOut.setFromValue(1);
                 fadeOut.setToValue(0);
-                fadeOut.setDelay(Duration.seconds(2));
-                fadeOut.setOnFinished(e -> root.getChildren().remove(toast));
+                fadeOut.setDelay(Duration.seconds(2.5));
+                fadeOut.setOnFinished(e -> this.getChildren().remove(toast));
 
                 fadeIn.setOnFinished(e -> fadeOut.play());
                 fadeIn.play();

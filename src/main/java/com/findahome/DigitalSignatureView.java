@@ -39,7 +39,7 @@ public class DigitalSignatureView extends StackPane {
         Label backBtn = new Label("\u2039");
         backBtn.setTextFill(Color.WHITE);
         backBtn.setStyle("-fx-font-size: 28; -fx-cursor: hand;");
-        backBtn.setOnMouseClicked(e -> MainApp.navigateTo(new LeaseAgreementView()));
+        backBtn.setOnMouseClicked(e -> MainApp.navigateCached("lease", LeaseAgreementView::new));
 
         Label title = new Label("Digital Signature");
         title.setTextFill(Color.WHITE);
@@ -196,7 +196,7 @@ public class DigitalSignatureView extends StackPane {
         signBtn.setPrefHeight(56);
         signBtn.setStyle("-fx-background-color: " + PRIMARY
                 + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
-        signBtn.setOnAction(e -> MainApp.navigateTo(new LeaseSigningCompleteView()));
+        signBtn.setOnAction(e -> MainApp.navigateCachedFullScreen("lease_complete", LeaseSigningCompleteView::new));
 
         actions.getChildren().addAll(clearBtn, signBtn);
         content.getChildren().add(actions);
