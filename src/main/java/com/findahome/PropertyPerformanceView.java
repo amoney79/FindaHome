@@ -11,7 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class PropertyPerformanceView extends StackPane {
+public class PropertyPerformanceView extends BorderPane {
 
         private static final String BACKGROUND_DARK = "#102216";
         private static final String PRIMARY = "#13ec5b";
@@ -20,9 +20,6 @@ public class PropertyPerformanceView extends StackPane {
 
         public PropertyPerformanceView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
-
-                VBox layout = new VBox(0);
-                layout.setAlignment(Pos.TOP_CENTER);
 
                 // Header
                 HBox header = new HBox(15);
@@ -50,8 +47,7 @@ public class PropertyPerformanceView extends StackPane {
                 scroll.setFitToWidth(true);
                 scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
                 scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
-                VBox.setVgrow(scroll, Priority.ALWAYS);
+                scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent; -fx-viewport-background-color: transparent;");
 
                 // Tabs
                 HBox tabs = new HBox(30);
@@ -118,7 +114,7 @@ public class PropertyPerformanceView extends StackPane {
 
                 HBox bars = new HBox(15);
                 bars.setAlignment(Pos.BOTTOM_CENTER);
-                bars.setPrefHeight(200);
+                bars.setPrefHeight(150);
                 bars.getChildren().addAll(
                                 createBar("90%", 0.90, "Greenwood"),
                                 createBar("75%", 0.75, "Urban Loft"),
@@ -221,7 +217,7 @@ public class PropertyPerformanceView extends StackPane {
 
                 // Asset Selector
                 VBox assetSection = new VBox(12);
-                assetSection.setPadding(new Insets(0, 0, 150, 0));
+                assetSection.setPadding(new Insets(0, 0, 20, 0));
                 Label assetTitle = new Label("SELECTED PROPERTY");
                 assetTitle.setTextFill(Color.web(TEXT_GRAY));
                 assetTitle.setOpacity(0.6);
@@ -229,7 +225,7 @@ public class PropertyPerformanceView extends StackPane {
                 assetTitle.setPadding(new Insets(0, 20, 0, 20));
 
                 HBox assetList = new HBox(12);
-                assetList.setPadding(new Insets(0, 20, 0, 20));
+                assetList.setPadding(new Insets(0, 20, 10, 20));
                 assetList.getChildren().addAll(
                                 createPropertyAsset("Greenwood Villa", "Primary Asset",
                                                 "https://lh3.googleusercontent.com/aida-public/AB6AXuAoQ2Akzg0BvILO6Zqjo-Ru5sdfOQjsyZUXAct1CqrCYXfi1EocZtjOVuFsKsLKEjMg03hAlzQwm66JWdNgZFPRPcmloI-gNPOzOEYgwRaZBGPAOH_NgC8knwjvnF5w6r6Q9ImF2WlQ1AO8wbAZBGkk_I7D2DQ_46U-uz-iOzbXW60kt7-QXDSjNIVOxdfIZZRCeyxT7jjevzG9WTc1lHFhLPa3caaUNjCbXMJPGHxZ3ELdbPUlOEHt4inyCCGpSGTxnu7tF0fgIqM",
@@ -247,9 +243,9 @@ public class PropertyPerformanceView extends StackPane {
 
                 // Sticky Footer
                 HBox footer = new HBox(12);
-                footer.setPadding(new Insets(30, 20, 20, 20));
-                footer.setStyle("-fx-background-color: linear-gradient(to top, " + BACKGROUND_DARK
-                                + " 80%, transparent);");
+                footer.setPadding(new Insets(20, 20, 35, 20));
+                footer.setStyle("-fx-background-color: " + BACKGROUND_DARK
+                                + "; -fx-border-color: rgba(255,255,255,0.05); -fx-border-width: 1 0 0 0;");
 
                 Button csvBtn = new Button("Export CSV");
                 csvBtn.setGraphic(new Label("\ud83d\udcc4"));
@@ -257,9 +253,11 @@ public class PropertyPerformanceView extends StackPane {
                 csvBtn.setMaxWidth(Double.MAX_VALUE);
                 csvBtn.setPrefHeight(56);
                 csvBtn.setStyle(
-                                "-fx-background-color: #28392e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.1);");
-                csvBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView("Export Successful",
-                                "Financial report (CSV) has been saved to your downloads.")));
+                                "-fx-background-color: #28392e; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 16; -fx-border-color: rgba(255,255,255,0.1); -fx-cursor: hand;");
+                csvBtn.setOnAction(e -> MainApp.navigateCached("success_export_csv", () -> new SuccessView(
+                                "Export Successful",
+                                "Financial report (CSV) has been saved to your downloads.", "Back to Dashboard",
+                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
 
                 Button pdfBtn = new Button("Export PDF");
                 pdfBtn.setGraphic(new Label("\ud83d\uddbc"));
@@ -267,15 +265,17 @@ public class PropertyPerformanceView extends StackPane {
                 pdfBtn.setMaxWidth(Double.MAX_VALUE);
                 pdfBtn.setPrefHeight(56);
                 pdfBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
-                                + "; -fx-font-weight: bold; -fx-background-radius: 16;");
-                pdfBtn.setOnAction(e -> MainApp.navigateTo(new SuccessView("Export Successful",
-                                "Performance summary (PDF) has been saved to your downloads.")));
+                                + "; -fx-font-weight: bold; -fx-background-radius: 16; -fx-cursor: hand;");
+                pdfBtn.setOnAction(e -> MainApp.navigateCached("success_export_pdf", () -> new SuccessView(
+                                "Export Successful",
+                                "Performance summary (PDF) has been saved to your downloads.", "Back to Dashboard",
+                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
 
                 footer.getChildren().addAll(csvBtn, pdfBtn);
 
-                layout.getChildren().addAll(header, scroll);
-                getChildren().addAll(layout, footer);
-                StackPane.setAlignment(footer, Pos.BOTTOM_CENTER);
+                setTop(header);
+                setCenter(scroll);
+                setBottom(footer);
         }
 
         private VBox createTab(String text, boolean active) {
@@ -312,8 +312,6 @@ public class PropertyPerformanceView extends StackPane {
                 ProgressBar pb = new ProgressBar(progress);
                 pb.setMaxWidth(Double.MAX_VALUE);
                 pb.setPrefHeight(6);
-                pb.getStyleClass().add("performance-bar");
-                // CSS in MainApp will handle coloring via lookup
                 pb.setStyle("-fx-accent: " + color + ";");
                 return pb;
         }
@@ -348,7 +346,7 @@ public class PropertyPerformanceView extends StackPane {
 
                 ImageView iv = new ImageView();
                 try {
-                        iv.setImage(new Image(url, 48, 48, false, true));
+                        iv.setImage(new Image(url, 48, 48, false, true, true));
                 } catch (Exception e) {
                 }
                 iv.setFitWidth(48);
