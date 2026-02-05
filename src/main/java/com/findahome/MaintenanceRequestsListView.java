@@ -21,6 +21,8 @@ public class MaintenanceRequestsListView extends StackPane {
         private static final String TEXT_GRAY = "#9db9a6";
 
         private VBox scrollContent;
+        private Button activeTab, pastTab;
+        private boolean showingActive = true;
 
         public MaintenanceRequestsListView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
@@ -65,12 +67,15 @@ public class MaintenanceRequestsListView extends StackPane {
                 segmented.setStyle("-fx-background-color: #1a2e20; -fx-background-radius: 12;");
                 segmented.setMaxWidth(350);
 
-                Button activeTab = createTabButton("Active", true);
-                Button pastTab = createTabButton("Past", false);
+                activeTab = createTabButton("Active", true);
+                pastTab = createTabButton("Past", false);
                 activeTab.setMaxWidth(Double.MAX_VALUE);
                 pastTab.setMaxWidth(Double.MAX_VALUE);
                 HBox.setHgrow(activeTab, Priority.ALWAYS);
                 HBox.setHgrow(pastTab, Priority.ALWAYS);
+
+                activeTab.setOnAction(e -> switchTab(true));
+                pastTab.setOnAction(e -> switchTab(false));
 
                 segmented.getChildren().addAll(activeTab, pastTab);
 
@@ -88,17 +93,8 @@ public class MaintenanceRequestsListView extends StackPane {
                 scroll.setStyle("-fx-background: transparent; -fx-background-color: transparent;");
                 VBox.setVgrow(scroll, Priority.ALWAYS);
 
-                // Mock Data
-                scrollContent.getChildren().addAll(
-                                createRequestCard("Leaking Kitchen Sink", "June 15, 2023", "In Progress", PRIMARY,
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuDyIpPyswoXMWIuZt47ze4eWAZzeOLz2FdD3yKO5PASSC3qNbeNlDJyvvxlUuXBfKKn52QRK91gag4HSlO166S_FIKwk_zwhO6WE0D_8rD0cV-VktpfqMGSxEM5VR5MFzfnbyD8T4wJ-N1FQBrUpNCKSIu7QzkDCcdPqYo6WDXt1E8mfL3K7XgAY0LobMpNVkXdq16rExOI6gTuZuvICDPHzBcoF4pcKFXV4FoChMg-jNJpGaXVpdNHm-FQRaxQ5U7eCQTfU5Scl84",
-                                                true),
-                                createRequestCard("Broken AC Unit", "June 12, 2023", "Technician Assigned", "#60a5fa",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCXclCObvoIbbYQ5bCTReSJ83TCrhD6m2VSdpS9Qq2gbeMcqQPRYK6DMK4mUK6sHYMdoHU-oavk6_KUmCU1hFTVaQJLsZ1UWb6Xn6TtW3qLmFXJQYsbSY-eHJ8-eCxNkjkRbQA82GHGiwKlefpNTlt6tvXKpvNHL-hanKhJ0W5fcqts6onkWgWopYzaQsvuuR1xSCdQeM4STLvNx-x96ng11venBoScGsSzUbmuGqNEunlNj9Mtbu93xIXoOetAD1WGaF5ufCkxXf4",
-                                                false),
-                                createRequestCard("Clogged Drain", "June 14, 2023", "Reported", "#94a3b8",
-                                                "https://lh3.googleusercontent.com/aida-public/AB6AXuCz4vlCvCcw-0lJIK7vbLFl67DogZAy1sCZ9_HePUoBgL2UnRp8EfYeH3sHUAeYIonWZuN9xFRPG8UAseEo9p8csmaIKSgWG2xJvCUIvqlTWJqL8GSPd9Wn86Nal3JEMo2uIIUacHtMyxG8Fcg6f4bCo7rO3Q8EHxICzT10jhBBT1hYGW3HyT8a8ZcDURzofAvsa_mZtfGOrggPIaufy6wb__8H831TEaqpl6Rx8tPmGbUhKynHUW5dyQFqMXmeRrOf0wf6c4H0CmE",
-                                                false));
+                // Initial load
+                refreshList();
 
                 // Floating Action Button
                 Button fab = new Button("+");
@@ -112,6 +108,50 @@ public class MaintenanceRequestsListView extends StackPane {
 
                 layout.getChildren().addAll(header, segContainer, scroll);
                 getChildren().addAll(layout, fab);
+        }
+
+        private void switchTab(boolean active) {
+                if (showingActive == active)
+                        return;
+                showingActive = active;
+                updateTabStyles();
+                refreshList();
+        }
+
+        private void updateTabStyles() {
+                String activeStyle = "-fx-background-color: " + BACKGROUND_DARK + "; -fx-text-fill: " + PRIMARY
+                                + "; -fx-font-weight: bold; -fx-background-radius: 8;";
+                String inactiveStyle = "-fx-background-color: transparent; -fx-text-fill: #9db9a6; -fx-font-weight: bold;";
+
+                activeTab.setStyle(showingActive ? activeStyle : inactiveStyle);
+                pastTab.setStyle(!showingActive ? activeStyle : inactiveStyle);
+        }
+
+        private void refreshList() {
+                scrollContent.getChildren().clear();
+
+                if (showingActive) {
+                        scrollContent.getChildren().addAll(
+                                        createRequestCard("Leaking Kitchen Sink", "June 15, 2023", "In Progress",
+                                                        PRIMARY,
+                                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDyIpPyswoXMWIuZt47ze4eWAZzeOLz2FdD3yKO5PASSC3qNbeNlDJyvvxlUuXBfKKn52QRK91gag4HSlO166S_FIKwk_zwhO6WE0D_8rD0cV-VktpfqMGSxEM5VR5MFzfnbyD8T4wJ-N1FQBrUpNCKSIu7QzkDCcdPqYo6WDXt1E8mfL3K7XgAY0LobMpNVkXdq16rExOI6gTuZuvICDPHzBcoF4pcKFXV4FoChMg-jNJpGaXVpdNHm-FQRaxQ5U7eCQTfU5Scl84",
+                                                        true),
+                                        createRequestCard("Broken AC Unit", "June 12, 2023", "Technician Assigned",
+                                                        "#60a5fa",
+                                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCXclCObvoIbbYQ5bCTReSJ83TCrhD6m2VSdpS9Qq2gbeMcqQPRYK6DMK4mUK6sHYMdoHU-oavk6_KUmCU1hFTVaQJLsZ1UWb6Xn6TtW3qLmFXJQYsbSY-eHJ8-eCxNkjkRbQA82GHGiwKlefpNTlt6tvXKpvNHL-hanKhJ0W5fcqts6onkWgWopYzaQsvuuR1xSCdQeM4STLvNx-x96ng11venBoScGsSzUbmuGqNEunlNj9Mtbu93xIXoOetAD1WGaF5ufCkxXf4",
+                                                        false),
+                                        createRequestCard("Clogged Drain", "June 14, 2023", "Reported", "#94a3b8",
+                                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCz4vlCvCcw-0lJIK7vbLFl67DogZAy1sCZ9_HePUoBgL2UnRp8EfYeH3sHUAeYIonWZuN9xFRPG8UAseEo9p8csmaIKSgWG2xJvCUIvqlTWJqL8GSPd9Wn86Nal3JEMo2uIIUacHtMyxG8Fcg6f4bCo7rO3Q8EHxICzT10jhBBT1hYGW3HyT8a8ZcDURzofAvsa_mZtfGOrggPIaufy6wb__8H831TEaqpl6Rx8tPmGbUhKynHUW5dyQFqMXmeRrOf0wf6c4H0CmE",
+                                                        false));
+                } else {
+                        scrollContent.getChildren().addAll(
+                                        createRequestCard("Flickering Lights", "May 10, 2023", "Resolved", "#10b981",
+                                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCHXb-p-q-G-z-H-D-E-F-G-H-I-J-K-L-M-N-O-P-Q-R-S-T-U-V-W-X-Y-Z",
+                                                        false),
+                                        createRequestCard("Squeaky Door", "April 22, 2023", "Resolved", "#10b981",
+                                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuCHXb-p-q-G-z-H-D-E-F-G-H-I-J-K-L-M-N-O-P-Q-R-S-T-U-V-W-X-Y-Z",
+                                                        false));
+                }
         }
 
         private Label createActionCircle(String icon) {
@@ -149,10 +189,6 @@ public class MaintenanceRequestsListView extends StackPane {
                 HBox statusBox = new HBox(6);
                 statusBox.setAlignment(Pos.CENTER_LEFT);
                 Circle dot = new Circle(3, Color.web(statusColor));
-                if (status.equals("In Progress")) {
-                        // Animation mock: we can't easily animate pulses here without timeline, so just
-                        // static dot
-                }
                 Label statusLbl = new Label(status.toUpperCase());
                 statusLbl.setTextFill(Color.web(statusColor));
                 statusLbl.setFont(Font.font("System", FontWeight.BOLD, 10));
@@ -190,11 +226,9 @@ public class MaintenanceRequestsListView extends StackPane {
                 if (showTechnician) {
                         HBox techStack = new HBox(-8);
                         techStack.setAlignment(Pos.CENTER_LEFT);
-                        for (int i = 0; i < 1; i++) {
-                                Circle techCircle = new Circle(14);
-                                techCircle.setFill(Color.web("#3b82f6"));
-                                techStack.getChildren().add(techCircle);
-                        }
+                        Circle techCircle = new Circle(14);
+                        techCircle.setFill(Color.web("#3b82f6"));
+                        techStack.getChildren().add(techCircle);
                         Label techPlus = new Label("+1");
                         techPlus.setPrefSize(28, 28);
                         techPlus.setAlignment(Pos.CENTER);
@@ -205,7 +239,8 @@ public class MaintenanceRequestsListView extends StackPane {
                 } else {
                         Label hint = new Label(
                                         status.equals("Reported") ? "Pending management approval"
-                                                        : "Next: Visit scheduled for tomorrow");
+                                                        : status.equals("Resolved") ? "Closed on June 20, 2023"
+                                                                        : "Next: Visit scheduled for tomorrow");
                         hint.setTextFill(Color.web("#64748b"));
                         hint.setFont(Font.font(11));
                         foot.getChildren().add(hint);
