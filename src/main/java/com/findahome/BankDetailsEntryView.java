@@ -185,11 +185,8 @@ public class BankDetailsEntryView extends BorderPane {
                 verifyBtn.setPrefHeight(56);
                 verifyBtn.setStyle("-fx-background-color: " + PRIMARY + "; -fx-text-fill: " + BACKGROUND_DARK
                                 + "; -fx-font-weight: bold; -fx-font-size: 16; -fx-background-radius: 12; -fx-cursor: hand;");
-                verifyBtn.setOnAction(e -> MainApp.navigateCached("success_verify_bank", () -> new SuccessView(
-                                "Verification Pending",
-                                "Your bank details are being verified. Payouts will be enabled once approved.",
-                                "Back to Dashboard",
-                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
+                verifyBtn.setOnAction(e -> MainApp.navigateCached("bank_verification_success",
+                                BankVerificationSuccessView::new));
 
                 footer.getChildren().add(verifyBtn);
 
