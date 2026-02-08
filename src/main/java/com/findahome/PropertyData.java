@@ -1,7 +1,6 @@
 package com.findahome;
 
 import com.findahome.backend.PropertyRepository;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PropertyData {
@@ -53,33 +52,13 @@ public class PropertyData {
         }
 
         public static List<Property> filter(String type, String location, double minPrice, double maxPrice) {
-                // Simple manual filtering for now, or delegate to repo SQL filtering
-                // Actually, let's just use repo.getAll() and filter in stream if needed, or
-                // implement SQL filtering.
-                // But implementing SQL filtering is better for backend evolution.
-                // However, repo.filterProperties() is buggy? No, I wrote it.
-                // Wait, passing parameters to `filterProperties`:
-                if (type != null && type.equals("All Types"))
-                        type = null;
-                // The signature of repo.filterProperties expects strings
-                // But my repo implementation handled `type != null` check.
-                // Let's implement basic filtering here using SQL if possible or reuse existing
-                // logic.
-                // Given I have written `filterProperties` on repo, let's try to use it.
-                // But wait, `filterProperties` signature in repo: (String type, String
-                // location, double minPrice, double maxPrice)
+                // Determine the effective type to filter by
+                final String effectiveType = (type != null && type.equals("All Types")) ? null : type;
 
-                // Let's adapt
-                List<Property> all = repo.getAllProperties(); // Fetch all for now to avoid SQL complexity mismatches
-                                                              // with previous logic unless I'm confident.
-                // Actually, let's use stream filtering on ALL properties for consistency with
-                // previous behavior, unless performance is key (which it isn't yet for < 100
-                // items).
-                // It's safer to replicate the exact logic.
+                List<Property> all = repo.getAllProperties();
 
                 return all.stream()
-                                .filter(p -> (type == null || type.equals("All Types")
-                                                || p.getType().equalsIgnoreCase(type)))
+                                .filter(p -> (effectiveType == null || p.getType().equalsIgnoreCase(effectiveType)))
                                 .filter(p -> (location == null || location.isEmpty()
                                                 || p.getLocation().toLowerCase().contains(location.toLowerCase())))
                                 .filter(p -> (p.getPriceValue() >= minPrice && p.getPriceValue() <= maxPrice))
