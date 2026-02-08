@@ -3,7 +3,7 @@ package com.findahome;
 public class User {
     private int id;
     private String username;
-    private String password;
+
     private String fullName;
     private String role;
     private String avatarUrl;
