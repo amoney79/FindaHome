@@ -36,12 +36,22 @@ public class MainApp extends Application {
     private double xOffset = 0;
     private double yOffset = 0;
 
+    public static User currentUser;
+
     @Override
     public void start(Stage primaryStage) {
         this.stage = primaryStage;
         instance = this;
 
         primaryStage.initStyle(StageStyle.UNDECORATED);
+
+        // Initialize Database
+        com.findahome.backend.DatabaseManager.initialize();
+        com.findahome.PropertyData.seedResults(); // Ensure data is present
+
+        com.findahome.backend.UserRepository userRepo = new com.findahome.backend.UserRepository();
+        userRepo.seedDefaultUser();
+        currentUser = userRepo.getUserByUsername("jdoe");
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
