@@ -123,6 +123,7 @@ public class MainApp extends Application {
             // Special case for Map: Fullscreen feel but with Bottom Nav
             instance.mainLayout.setTop(null);
             instance.mainLayout.setBottom(instance.bottomNav);
+            instance.bottomNav.setVisible(true); // Ensure visibility
             instance.fab.setVisible(false); // Map has its own FABs
         } else if (fullScreen) {
             instance.mainLayout.setTop(null);

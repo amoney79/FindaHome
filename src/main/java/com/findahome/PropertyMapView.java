@@ -33,9 +33,11 @@ public class PropertyMapView extends StackPane {
                 // Bind to StackPane size to avoid forcing layout growth
                 mapBackground.fitWidthProperty().bind(widthProperty());
                 mapBackground.fitHeightProperty().bind(heightProperty());
-                // Use false to allow stretching to fill
                 mapBackground.setPreserveRatio(false);
                 mapBackground.setOpacity(0.4);
+                // IMPORTANT: Set unmanaged to prevent StackPane from using Image size for its
+                // own preferred size calculation
+                mapBackground.setManaged(false);
 
                 // Clip to bounds to prevent overflowing into navigation bar
                 Rectangle clipRect = new Rectangle();
