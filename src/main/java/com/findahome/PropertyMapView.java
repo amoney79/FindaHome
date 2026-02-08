@@ -29,8 +29,12 @@ public class PropertyMapView extends StackPane {
                                         800, 1200, false, true, true));
                 } catch (Exception e) {
                 }
-                mapBackground.setFitWidth(800);
-                mapBackground.setFitHeight(1200);
+
+                // Bind to StackPane size to avoid forcing layout growth
+                mapBackground.fitWidthProperty().bind(widthProperty());
+                mapBackground.fitHeightProperty().bind(heightProperty());
+                // Use false to allow stretching to fill
+                mapBackground.setPreserveRatio(false);
                 mapBackground.setOpacity(0.4);
 
                 // Clip to bounds to prevent overflowing into navigation bar
@@ -81,7 +85,40 @@ public class PropertyMapView extends StackPane {
                                 createFilterChip("Apartments", false),
                                 createFilterChip("Price", false),
                                 createFilterChip("2+ Bedrooms", true));
-                topOverlay.getChildren().addAll(searchContainer, chips);
+                // Breadcrumb / Location Header
+                HBox breadcrumb = new HBox(5);
+                breadcrumb.setAlignment(Pos.CENTER_LEFT);
+                breadcrumb.setPadding(new Insets(10, 15, 10, 15));
+                breadcrumb.setStyle("-fx-background-color: " + CARD_BG
+                                + "; -fx-background-radius: 25; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5); -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 25;");
+                breadcrumb.setMaxWidth(Double.MAX_VALUE); // Let it expand or use distinct width
+                // Actually better to have it sized to content or fixed width? wrapper VBox has
+                // padding 20.
+                // Let's make it inline-block-ish or fill width.
+
+                Label locationIcon = new Label("\ud83d\udccd");
+                locationIcon.setTextFill(Color.web(PRIMARY));
+                locationIcon.setStyle("-fx-font-size: 16;");
+
+                Label locationText = new Label("Westlands, Nairobi");
+                locationText.setTextFill(Color.WHITE);
+                locationText.setFont(Font.font("System", FontWeight.BOLD, 14));
+
+                Label chevron = new Label("\u2304"); // Down arrow
+                chevron.setTextFill(Color.GRAY);
+                chevron.setStyle("-fx-font-size: 12; -fx-padding: 0 0 0 5;");
+
+                Region spacerBC = new Region();
+                HBox.setHgrow(spacerBC, Priority.ALWAYS);
+
+                breadcrumb.getChildren().addAll(locationIcon, locationText, chevron, spacerBC);
+                breadcrumb.setCursor(javafx.scene.Cursor.HAND);
+                breadcrumb.setOnMouseClicked(e -> MainApp.navigateCachedFullScreen("ward_selection",
+                                WardBoundarySelectionView::new));
+
+                VBox.setMargin(breadcrumb, new Insets(0, 0, 10, 0));
+
+                topOverlay.getChildren().addAll(breadcrumb, searchContainer, chips);
 
                 // Map Controls
                 VBox controls = new VBox(10);
