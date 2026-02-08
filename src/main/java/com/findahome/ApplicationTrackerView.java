@@ -193,7 +193,7 @@ public class ApplicationTrackerView extends StackPane {
                 disappearing.setOpacity(0);
 
                 appearing.setVisible(true);
-                FadeTransition ft = new FadeTransition(Duration.millis(300), appearing);
+                FadeTransition ft = new FadeTransition(Duration.millis(10), appearing);
                 ft.setFromValue(0);
                 ft.setToValue(1);
                 ft.play();

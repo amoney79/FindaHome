@@ -128,7 +128,7 @@ public class PropertyFeedView extends VBox {
                 loadingLabel.setVisible(true);
 
                 // Simulate network delay
-                PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+                PauseTransition pause = new PauseTransition(Duration.millis(50));
                 pause.setOnFinished(e -> {
                         // For now just add static variety or more from set
                         List<Property> more = PropertyData.getAll();

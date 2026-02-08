@@ -131,12 +131,12 @@ public class MainApp extends Application {
         view.setOpacity(0);
         contentArea.getChildren().add(view);
 
-        FadeTransition fadeIn = new FadeTransition(Duration.millis(200), view);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(10), view);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
 
         if (oldView != null) {
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(150), oldView);
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(10), oldView);
             fadeOut.setFromValue(1);
             fadeOut.setToValue(0);
             fadeOut.setOnFinished(e -> contentArea.getChildren().remove(oldView));
