@@ -113,7 +113,12 @@ public class MainApp extends Application {
     }
 
     private static void applyTransition(Node view, boolean fullScreen) {
-        if (fullScreen) {
+        if (view instanceof PropertyMapView) {
+            // Special case for Map: Fullscreen feel but with Bottom Nav
+            instance.mainLayout.setTop(null);
+            instance.mainLayout.setBottom(instance.bottomNav);
+            instance.fab.setVisible(false); // Map has its own FABs
+        } else if (fullScreen) {
             instance.mainLayout.setTop(null);
             instance.mainLayout.setBottom(null);
             instance.fab.setVisible(false);

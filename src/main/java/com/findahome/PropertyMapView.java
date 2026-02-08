@@ -23,14 +23,21 @@ public class PropertyMapView extends StackPane {
                 // Map Background
                 ImageView mapBackground = new ImageView();
                 try {
+                        // Enable background loading (last parameter true)
                         mapBackground.setImage(new Image(
                                         "https://lh3.googleusercontent.com/aida-public/AB6AXuDwtauKyKjYN3jluMyQ6Rbeype-DIhS6PV91dnbXPj5LzqdH76LstPtprFPYM4XWygs3tCi2efX3jLUpW3dmnoWvK8KyIIfWgZa5S86HWJlYUxbzwhK05BG8vflEee6ja-OqAERejqYgWypKpEnIDot0efCAylWTY56B9hx42qxw_2y4Dk_CLQM2SfdvPldN6_L8qKtiWNPBAcd_hIPSH6fq5gyssD2S3zzxccIoF7HAEwBFR4uhttXIdVeuQCNkCgazTW1nU9CzOo",
-                                        800, 1200, false, true));
+                                        800, 1200, false, true, true));
                 } catch (Exception e) {
                 }
                 mapBackground.setFitWidth(800);
                 mapBackground.setFitHeight(1200);
                 mapBackground.setOpacity(0.4);
+
+                // Clip to bounds to prevent overflowing into navigation bar
+                Rectangle clipRect = new Rectangle();
+                clipRect.widthProperty().bind(widthProperty());
+                clipRect.heightProperty().bind(heightProperty());
+                setClip(clipRect);
 
                 // Map Interaction Layer
                 Pane interactionLayer = new Pane();
