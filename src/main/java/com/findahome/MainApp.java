@@ -96,6 +96,12 @@ public class MainApp extends Application {
         primaryStage.setTitle("FindaHome Marketplace");
         primaryStage.setScene(scene);
         ResizeHelper.addResizeListener(primaryStage);
+
+        // Pre-load expensive views in background or immediately
+        // Here we do it immediately on FX thread, but since image is background loaded,
+        // it's fine.
+        viewCache.put("explore", new PropertyMapView());
+
         primaryStage.show();
     }
 
