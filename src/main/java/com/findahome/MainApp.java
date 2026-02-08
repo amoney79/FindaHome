@@ -46,12 +46,17 @@ public class MainApp extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
 
         // Initialize Database
-        com.findahome.backend.DatabaseManager.initialize();
-        com.findahome.PropertyData.seedResults(); // Ensure data is present
+        try {
+            com.findahome.backend.DatabaseManager.initialize();
+            com.findahome.PropertyData.seedResults(); // Ensure data is present
 
-        com.findahome.backend.UserRepository userRepo = new com.findahome.backend.UserRepository();
-        userRepo.seedDefaultUser();
-        currentUser = userRepo.getUserByUsername("jdoe");
+            com.findahome.backend.UserRepository userRepo = new com.findahome.backend.UserRepository();
+            userRepo.seedDefaultUser();
+            currentUser = userRepo.getUserByUsername("jdoe");
+        } catch (Throwable e) {
+            System.err.println("WARNING: Database failed to initialize.");
+            e.printStackTrace();
+        }
 
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");

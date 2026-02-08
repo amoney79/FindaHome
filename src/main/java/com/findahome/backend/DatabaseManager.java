@@ -18,8 +18,9 @@ public class DatabaseManager {
             try {
                 connection = DriverManager.getConnection(DB_URL);
                 System.out.println("Connected to database.");
-            } catch (SQLException e) {
-                System.err.println("Could not connect to database: " + e.getMessage());
+            } catch (Throwable e) {
+                System.err.println("CRITICAL ERROR: Could not connect to database.");
+                e.printStackTrace();
             }
         }
         return connection;
@@ -69,8 +70,10 @@ public class DatabaseManager {
                     ")");
 
             System.out.println("Database tables initialized.");
-        } catch (SQLException e) {
-            System.err.println("Error initializing database: " + e.getMessage());
+        } catch (Throwable e) {
+            System.err
+                    .println("CRITICAL ERROR: Could not initialize database. Application will run in simplistic mode.");
+            e.printStackTrace();
         }
     }
 
