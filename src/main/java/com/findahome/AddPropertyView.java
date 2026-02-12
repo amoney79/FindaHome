@@ -209,21 +209,18 @@ public class AddPropertyView extends BorderPane {
                 dt.setTextFill(Color.WHITE);
                 dt.setFont(Font.font("System", FontWeight.BOLD, 18));
 
-                VBox tfBox = createField("Property Title", "e.g. Modern 2 Bedroom in Kilimani");
-                TextField tf = (TextField) tfBox.getChildren().get(1);
+                TextField tf = createField(details, "Property Title", "e.g. Modern 2 Bedroom in Kilimani");
                 tf.setText(propertyName);
 
-                VBox cfBox = createChoiceField("Category", "Select property type", "Apartment", "Bedsitter",
-                                "Mansionette",
+                ComboBox<String> cf = createChoiceField(details, "Category", "Select property type", "Apartment",
+                                "Bedsitter", "Mansionette",
                                 "Studio", "Office Space");
-                ComboBox<String> cf = (ComboBox<String>) cfBox.getChildren().get(1);
                 cf.setValue(propertyType);
 
-                VBox rfBox = createPriceField("Monthly Rent", "0.00");
-                TextField rf = (TextField) ((HBox) rfBox.getChildren().get(1)).getChildren().get(1);
+                TextField rf = createPriceField(details, "Monthly Rent", "0.00");
                 rf.setText(propertyPrice);
 
-                details.getChildren().addAll(dt, tfBox, cfBox, rfBox);
+                details.getChildren().add(0, dt); // Re-add title at top
                 scrollContent.getChildren().addAll(photoSection, div, details);
 
                 Button nextBtn = new Button("Next: Location Details \u2192");
@@ -262,13 +259,13 @@ public class AddPropertyView extends BorderPane {
                 specsHeader.setFont(Font.font("System", FontWeight.BOLD, 18));
 
                 HBox specGrid = new HBox(15);
-                VBox bedsBox = createChoiceField("Bedrooms", "Select", "Studio", "1", "2", "3", "4+");
-                ComboBox<String> beds = (ComboBox<String>) bedsBox.getChildren().get(1);
+                ComboBox<String> beds = createChoiceField(null, "Bedrooms", "Select", "Studio", "1", "2", "3", "4+");
                 beds.setValue(propertyBeds);
+                VBox bedsBox = (VBox) beds.getParent();
 
-                VBox bathsBox = createChoiceField("Bathrooms", "Select", "1", "1.5", "2", "2.5", "3+");
-                ComboBox<String> baths = (ComboBox<String>) bathsBox.getChildren().get(1);
+                ComboBox<String> baths = createChoiceField(null, "Bathrooms", "Select", "1", "1.5", "2", "2.5", "3+");
                 baths.setValue(propertyBaths);
+                VBox bathsBox = (VBox) baths.getParent();
 
                 HBox.setHgrow(bedsBox, Priority.ALWAYS);
                 HBox.setHgrow(bathsBox, Priority.ALWAYS);
@@ -405,28 +402,28 @@ public class AddPropertyView extends BorderPane {
                 mapRoot.getChildren().add(marker);
                 mapContainer.getChildren().add(marker);
 
-                VBox countyBox = createChoiceField("County", "Select County", "Nairobi", "Mombasa", "Kiambu", "Nakuru",
+                VBox locationForm = new VBox(15);
+                ComboBox<String> county = createChoiceField(locationForm, "County", "Select County", "Nairobi",
+                                "Mombasa", "Kiambu", "Nakuru",
                                 "Uasin Gishu");
-                ComboBox<String> county = (ComboBox<String>) countyBox.getChildren().get(1);
                 county.setValue(propertyCounty);
 
-                VBox wardBox = createChoiceField("Sub-County / Ward", "Select Ward", "Kilimani", "Kileleshwa",
+                ComboBox<String> ward = createChoiceField(locationForm, "Sub-County / Ward", "Select Ward", "Kilimani",
+                                "Kileleshwa",
                                 "Westlands", "Parklands", "Lavington");
-                ComboBox<String> ward = (ComboBox<String>) wardBox.getChildren().get(1);
                 ward.setValue(propertyWard);
 
-                VBox estateBox = createIconField("Estate / Building", "e.g. Ocean View Apts, Wing A", "\ud83c\udfe2");
-                TextField estate = (TextField) ((HBox) estateBox.getChildren().get(1)).getChildren().get(1);
+                TextField estate = createIconField(locationForm, "Estate / Building", "e.g. Ocean View Apts, Wing A",
+                                "\ud83c\udfe2");
                 estate.setText(propertyEstate);
 
-                VBox addrBox = createIconField("Specific Address", "e.g. House 4, 3rd Floor, Ngong Rd",
+                TextField addr = createIconField(locationForm, "Specific Address", "e.g. House 4, 3rd Floor, Ngong Rd",
                                 "\ud83d\udccd");
-                TextField addr = (TextField) ((HBox) addrBox.getChildren().get(1)).getChildren().get(1);
                 addr.setText(propertyAddress);
 
-                VBox locationForm = new VBox(15);
-                locationForm.getChildren().addAll(countyBox, wardBox, estateBox, addrBox,
-                                createIconField("Nearest Landmark", "e.g. Near Junction Mall", "\ud83c\udfaf"));
+                locationForm.getChildren().add(
+                                createIconField(null, "Nearest Landmark", "e.g. Near Junction Mall", "\ud83c\udfaf")
+                                                .getParent().getParent());
 
                 // Privacy Toggle
                 HBox privacyBox = new HBox(12);
@@ -518,7 +515,7 @@ public class AddPropertyView extends BorderPane {
                         // Refresh feed if it exists
                         PropertyFeedView feed = MainApp.getFeed();
                         if (feed != null) {
-                            feed.refresh(PropertyData.getAll());
+                                feed.refresh(PropertyData.getAll());
                         }
 
                         MainApp.navigateCached("success_publish", () -> new SuccessView(
@@ -533,7 +530,7 @@ public class AddPropertyView extends BorderPane {
                 }
         }
 
-        private VBox createIconField(String label, String prompt, String icon) {
+        private TextField createIconField(Pane container, String label, String prompt, String icon) {
                 VBox v = new VBox(8);
                 Label lbl = new Label(label);
                 lbl.setTextFill(Color.WHITE);
@@ -557,7 +554,9 @@ public class AddPropertyView extends BorderPane {
 
                 box.getChildren().addAll(i, tf);
                 v.getChildren().addAll(lbl, box);
-                return v;
+                if (container != null)
+                        container.getChildren().add(v);
+                return tf;
         }
 
         private HBox createAmenityToggle(String name, String icon) {
@@ -592,7 +591,7 @@ public class AddPropertyView extends BorderPane {
                 return slot;
         }
 
-        private VBox createField(String label, String prompt) {
+        private TextField createField(Pane container, String label, String prompt) {
                 VBox v = new VBox(8);
                 Label lbl = new Label(label);
                 lbl.setTextFill(Color.WHITE);
@@ -604,10 +603,12 @@ public class AddPropertyView extends BorderPane {
                                 + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-radius: 12; -fx-padding: 0 15;");
                 v.getChildren().addAll(lbl, tf);
-                return v;
+                if (container != null)
+                        container.getChildren().add(v);
+                return tf;
         }
 
-        private VBox createChoiceField(String label, String prompt, String... options) {
+        private ComboBox<String> createChoiceField(Pane container, String label, String prompt, String... options) {
                 VBox v = new VBox(8);
                 Label lbl = new Label(label);
                 lbl.setTextFill(Color.WHITE);
@@ -621,10 +622,12 @@ public class AddPropertyView extends BorderPane {
                                 + "; -fx-text-fill: white; -fx-background-radius: 12; -fx-border-color: " + BORDER_COLOR
                                 + "; -fx-border-radius: 12;");
                 v.getChildren().addAll(lbl, cb);
-                return v;
+                if (container != null)
+                        container.getChildren().add(v);
+                return cb;
         }
 
-        private VBox createPriceField(String label, String prompt) {
+        private TextField createPriceField(Pane container, String label, String prompt) {
                 VBox v = new VBox(8);
                 Label lbl = new Label(label);
                 lbl.setTextFill(Color.WHITE);
@@ -646,6 +649,8 @@ public class AddPropertyView extends BorderPane {
                 HBox.setHgrow(tf, Priority.ALWAYS);
                 inputField.getChildren().addAll(currency, tf);
                 v.getChildren().addAll(lbl, inputField);
-                return v;
+                if (container != null)
+                        container.getChildren().add(v);
+                return tf;
         }
 }
