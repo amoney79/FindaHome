@@ -26,6 +26,19 @@ public class AddPropertyView extends BorderPane {
         private StackPane footerArea;
         private VBox headerArea;
 
+        // Data fields for persistence
+        private String propertyName = "";
+        private String propertyType = "Apartment";
+        private String propertyPrice = "";
+        private String propertyImage = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=400&q=80";
+        private String propertyBeds = "2";
+        private String propertyBaths = "2";
+        private String propertySqft = "1,200 sqft";
+        private String propertyCounty = "Nairobi";
+        private String propertyWard = "Kilimani";
+        private String propertyEstate = "";
+        private String propertyAddress = "";
+
         public AddPropertyView() {
                 setStyle("-fx-background-color: " + BACKGROUND_DARK + ";");
 
@@ -166,7 +179,7 @@ public class AddPropertyView extends BorderPane {
                 imgSlot.setPrefSize(120, 120);
                 try {
                         ImageView iv = new ImageView(new Image(
-                                        "https://lh3.googleusercontent.com/aida-public/AB6AXuDCjJVqxz3cTT5HFaSA8q7kqjg8W_WuBHqtFY9PtgqXOpjj5j4qRz1HBe5yYia93Qeb7oyP67S0EEw-eCPuCBPu-RAw474quwU4TGQaG6Su0Sm5zY2Fu6XsyQQPorQM8XtKIDvatVdmO8BTwBVdWyVn4Gf9TtDM6dX2D2I_G3DAeILA-f2LxOUNOzvvHZD4KEBrtXlQlG_rp1EaZN-AMuGnPRHN-2uPFG31T1dV8qVtJLN5j4XZ0HjT3xWjbOK_1ZQUCY0Q5FTixSw",
+                                        propertyImage,
                                         120, 120, false, true));
                         iv.setFitWidth(120);
                         iv.setFitHeight(120);
@@ -195,12 +208,22 @@ public class AddPropertyView extends BorderPane {
                 Label dt = new Label("Essential Details");
                 dt.setTextFill(Color.WHITE);
                 dt.setFont(Font.font("System", FontWeight.BOLD, 18));
-                VBox tf = createField("Property Title", "e.g. Modern 2 Bedroom in Kilimani");
-                VBox cf = createChoiceField("Category", "Select property type", "Apartment", "Bedsitter", "Mansionette",
-                                "Studio", "Office Space");
-                VBox rf = createPriceField("Monthly Rent", "0.00");
 
-                details.getChildren().addAll(dt, tf, cf, rf);
+                VBox tfBox = createField("Property Title", "e.g. Modern 2 Bedroom in Kilimani");
+                TextField tf = (TextField) tfBox.getChildren().get(1);
+                tf.setText(propertyName);
+
+                VBox cfBox = createChoiceField("Category", "Select property type", "Apartment", "Bedsitter",
+                                "Mansionette",
+                                "Studio", "Office Space");
+                ComboBox<String> cf = (ComboBox<String>) cfBox.getChildren().get(1);
+                cf.setValue(propertyType);
+
+                VBox rfBox = createPriceField("Monthly Rent", "0.00");
+                TextField rf = (TextField) ((HBox) rfBox.getChildren().get(1)).getChildren().get(1);
+                rf.setText(propertyPrice);
+
+                details.getChildren().addAll(dt, tfBox, cfBox, rfBox);
                 scrollContent.getChildren().addAll(photoSection, div, details);
 
                 Button nextBtn = new Button("Next: Location Details \u2192");
@@ -208,7 +231,12 @@ public class AddPropertyView extends BorderPane {
                 nextBtn.setPrefHeight(56);
                 nextBtn.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16; -fx-cursor: hand;");
-                nextBtn.setOnAction(e -> showStep2());
+                nextBtn.setOnAction(e -> {
+                        propertyName = tf.getText();
+                        propertyType = cf.getValue();
+                        propertyPrice = rf.getText();
+                        showStep2();
+                });
                 footerArea.getChildren().add(nextBtn);
         }
 
@@ -234,11 +262,17 @@ public class AddPropertyView extends BorderPane {
                 specsHeader.setFont(Font.font("System", FontWeight.BOLD, 18));
 
                 HBox specGrid = new HBox(15);
-                VBox beds = createChoiceField("Bedrooms", "Select", "Studio", "1", "2", "3", "4+");
-                VBox baths = createChoiceField("Bathrooms", "Select", "1", "1.5", "2", "2.5", "3+");
-                HBox.setHgrow(beds, Priority.ALWAYS);
-                HBox.setHgrow(baths, Priority.ALWAYS);
-                specGrid.getChildren().addAll(beds, baths);
+                VBox bedsBox = createChoiceField("Bedrooms", "Select", "Studio", "1", "2", "3", "4+");
+                ComboBox<String> beds = (ComboBox<String>) bedsBox.getChildren().get(1);
+                beds.setValue(propertyBeds);
+
+                VBox bathsBox = createChoiceField("Bathrooms", "Select", "1", "1.5", "2", "2.5", "3+");
+                ComboBox<String> baths = (ComboBox<String>) bathsBox.getChildren().get(1);
+                baths.setValue(propertyBaths);
+
+                HBox.setHgrow(bedsBox, Priority.ALWAYS);
+                HBox.setHgrow(bathsBox, Priority.ALWAYS);
+                specGrid.getChildren().addAll(bedsBox, bathsBox);
                 specs.getChildren().addAll(specsHeader, specGrid);
 
                 // Amenities
@@ -297,7 +331,11 @@ public class AddPropertyView extends BorderPane {
                 backBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: "
                                 + BORDER_COLOR
                                 + "; -fx-border-radius: 16; -fx-font-weight: bold; -fx-cursor: hand;");
-                backBtn.setOnAction(e -> showStep1());
+                backBtn.setOnAction(e -> {
+                        propertyBeds = beds.getValue();
+                        propertyBaths = baths.getValue();
+                        showStep1();
+                });
 
                 Button nextBtn = new Button("Next Step");
                 nextBtn.setMaxWidth(Double.MAX_VALUE);
@@ -305,7 +343,11 @@ public class AddPropertyView extends BorderPane {
                 nextBtn.setPrefHeight(56);
                 nextBtn.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16; -fx-cursor: hand;");
-                nextBtn.setOnAction(e -> showStep3());
+                nextBtn.setOnAction(e -> {
+                        propertyBeds = beds.getValue();
+                        propertyBaths = baths.getValue();
+                        showStep3();
+                });
                 footerBtns.getChildren().addAll(backBtn, nextBtn);
                 footerArea.getChildren().add(footerBtns);
         }
@@ -361,17 +403,29 @@ public class AddPropertyView extends BorderPane {
                 marker.setTextFill(Color.web(PRIMARY));
 
                 mapRoot.getChildren().add(marker);
-                mapContainer.getChildren().add(mapRoot);
+                mapContainer.getChildren().add(marker);
+
+                VBox countyBox = createChoiceField("County", "Select County", "Nairobi", "Mombasa", "Kiambu", "Nakuru",
+                                "Uasin Gishu");
+                ComboBox<String> county = (ComboBox<String>) countyBox.getChildren().get(1);
+                county.setValue(propertyCounty);
+
+                VBox wardBox = createChoiceField("Sub-County / Ward", "Select Ward", "Kilimani", "Kileleshwa",
+                                "Westlands", "Parklands", "Lavington");
+                ComboBox<String> ward = (ComboBox<String>) wardBox.getChildren().get(1);
+                ward.setValue(propertyWard);
+
+                VBox estateBox = createIconField("Estate / Building", "e.g. Ocean View Apts, Wing A", "\ud83c\udfe2");
+                TextField estate = (TextField) ((HBox) estateBox.getChildren().get(1)).getChildren().get(1);
+                estate.setText(propertyEstate);
+
+                VBox addrBox = createIconField("Specific Address", "e.g. House 4, 3rd Floor, Ngong Rd",
+                                "\ud83d\udccd");
+                TextField addr = (TextField) ((HBox) addrBox.getChildren().get(1)).getChildren().get(1);
+                addr.setText(propertyAddress);
 
                 VBox locationForm = new VBox(15);
-                locationForm.getChildren().addAll(
-                                createChoiceField("County", "Select County", "Nairobi", "Mombasa", "Kiambu", "Nakuru",
-                                                "Uasin Gishu"),
-                                createChoiceField("Sub-County / Ward", "Select Ward", "Kilimani", "Kileleshwa",
-                                                "Westlands", "Parklands", "Lavington"),
-                                createIconField("Estate / Building", "e.g. Ocean View Apts, Wing A", "\ud83c\udfe2"),
-                                createIconField("Specific Address", "e.g. House 4, 3rd Floor, Ngong Rd",
-                                                "\ud83d\udccd"),
+                locationForm.getChildren().addAll(countyBox, wardBox, estateBox, addrBox,
                                 createIconField("Nearest Landmark", "e.g. Near Junction Mall", "\ud83c\udfaf"));
 
                 // Privacy Toggle
@@ -397,7 +451,7 @@ public class AddPropertyView extends BorderPane {
 
                 privacyBox.getChildren().addAll(privTxt, pSpacer, pCheck);
 
-                content.getChildren().addAll(headlineBox, mapContainer, locationForm, privacyBox);
+                content.getChildren().addAll(headlineBox, mapRoot, locationForm, privacyBox);
                 scrollContent.getChildren().add(content);
 
                 // Footer
@@ -417,13 +471,66 @@ public class AddPropertyView extends BorderPane {
                 publishBtn.setPrefHeight(56);
                 publishBtn.setStyle("-fx-background-color: " + PRIMARY
                                 + "; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-weight: bold; -fx-font-size: 16; -fx-cursor: hand;");
-                publishBtn.setOnAction(e -> MainApp.navigateCached("success_publish", () -> new SuccessView(
-                                "Listing Published!",
-                                "Your property is now live and visible to potential tenants.", "View Dashboard",
-                                () -> MainApp.navigateCached("landlord_dashboard", LandlordDashboardView::new))));
+                publishBtn.setOnAction(e -> {
+                        // Capture last fields
+                        propertyCounty = county.getValue();
+                        propertyWard = ward.getValue();
+                        propertyEstate = estate.getText();
+                        propertyAddress = addr.getText();
+
+                        // Perform Save
+                        savePropertyToDatabase();
+                });
 
                 footerContent.getChildren().addAll(feeRow, publishBtn);
                 footerArea.getChildren().add(footerContent);
+        }
+
+        private void savePropertyToDatabase() {
+                try {
+                        double priceVal = 0;
+                        try {
+                                priceVal = Double.parseDouble(propertyPrice.replaceAll("[^0-9.]", ""));
+                        } catch (Exception ignore) {
+                        }
+
+                        String fullLocation = propertyWard + ", " + propertyCounty;
+                        if (!propertyEstate.isEmpty()) {
+                                fullLocation = propertyEstate + ", " + fullLocation;
+                        }
+
+                        Property newProperty = new Property(
+                                        propertyName,
+                                        fullLocation,
+                                        "KSh " + String.format("%,.0f", priceVal),
+                                        priceVal,
+                                        propertyImage,
+                                        false, // Not verified by default
+                                        "NEW",
+                                        propertyBeds + " Beds",
+                                        propertyBaths + " Baths",
+                                        propertySqft,
+                                        propertyType);
+
+                        com.findahome.backend.PropertyRepository repo = new com.findahome.backend.PropertyRepository();
+                        repo.addProperty(newProperty);
+
+                        // Refresh feed if it exists
+                        PropertyFeedView feed = MainApp.getFeed();
+                        if (feed != null) {
+                            feed.refresh(PropertyData.getAll());
+                        }
+
+                        MainApp.navigateCached("success_publish", () -> new SuccessView(
+                                        "Listing Published!",
+                                        "Your property is now live and visible to potential tenants.", "View Dashboard",
+                                        () -> MainApp.navigateCached("landlord_dashboard",
+                                                        LandlordDashboardView::new)));
+
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                        // Handle error (maybe show a toast or alert)
+                }
         }
 
         private VBox createIconField(String label, String prompt, String icon) {
